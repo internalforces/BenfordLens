@@ -1,0 +1,43 @@
+<!--
+Purpose:        External dependency tracking and version constraints
+Owner:          Architect / Implementer
+Update Trigger: Dependency added, removed, or version changed (HUMAN APPROVAL required)
+Harness Version: 1.1
+-->
+
+# dependencies.md — Benford Lens Dependencies
+
+_Last updated: 2026-08-04_
+
+## Core Dependencies
+
+| Package | Version | Purpose | License |
+|---------|---------|---------|---------|
+| PySide6 | latest stable (TBD at implementation) | Desktop UI framework | LGPL-3.0 |
+| pandas | latest stable (TBD) | Tabular data loading and preprocessing | BSD-3-Clause |
+| numpy | latest stable (TBD) | Numerical operations underlying Pandas/SciPy | BSD-3-Clause |
+| scipy | latest stable (TBD) | Chi-square / KS statistical tests | BSD-3-Clause |
+| matplotlib | latest stable (TBD) | Expected vs. actual distribution charts (MVP) | PSF-based (BSD-style) |
+| openpyxl (or equivalent) | latest stable (TBD) | XLSX reading via Pandas | MIT |
+
+## Dev Dependencies
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| pytest | latest stable (TBD) | Test runner |
+| ruff | latest stable (TBD) | Linting and formatting |
+| mypy | latest stable (TBD) | Static type checking |
+| pyinstaller | latest stable (TBD) | Packaging into a standalone executable |
+
+## External Services / APIs
+
+| Service | Purpose | Auth | Notes |
+|---------|---------|------|-------|
+| — | (none) | — | By design: Benford Lens makes no external API or network calls of any kind (see AGENTS.md Absolute Restrictions) |
+
+## Version Policy
+
+- Major upgrades: HUMAN APPROVAL + full test suite required
+- Minor / patch: Reviewer sign-off then proceed
+- Security patches: Apply immediately, Reviewer reviews after
+- Any **new** dependency (not just upgrades) requires HUMAN APPROVAL, with explicit confirmation that it makes no network calls
