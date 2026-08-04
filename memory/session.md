@@ -29,7 +29,7 @@ ADR-004, but explicitly did not start implementation — `src/`/`tests/` did not
 - [x] Write full implementation plan: `docs/superpowers/plans/2026-08-04-m1-mvp.md`
 - [x] Execute all 8 plan tasks via subagent-driven-development (fresh implementer + reviewer subagent per task)
 - [x] Harness bookkeeping (this update)
-- [ ] Final whole-branch code review (next step, most capable model)
+- [x] Final whole-branch code review (opus) — found 1 Critical + 6 Important + 1 Minor, all fixed in one wave and scoped-re-reviewed clean (1 Minor test-coverage gap parked as TD-002)
 - [ ] Human approval before merge to `main` (per `ORCHESTRATOR.md` Feature Workflow — not yet requested)
 
 ## Completed This Session
@@ -49,14 +49,15 @@ ADR-004, but explicitly did not start implementation — `src/`/`tests/` did not
 - **ADR-005** (`memory/decisions.md`): pinned dev environment to Python 3.11 (`.python-version`) after a numpy/mypy type-stub incompatibility surfaced mid-implementation (see ADR-005 for full root cause). Matches the project's existing `requires-python` floor and CI's runtime — no scope change.
 - **TD-001** (`memory/known-issues.md`): CSV encoding detection is a fixed try-in-order fallback, not real content-based detection — accepted limitation for M1, avoids adding a new dependency.
 - **ENV-001** (`memory/known-issues.md`): local macOS-only `.venv` hidden-flag quirk can crash `pytest` after certain file edits; workaround `chflags -R nohidden .venv`; does not affect Linux CI.
-- Two functional bugs were caught and fixed during task review before merge-readiness: (1) Task 4's brief had a self-contradictory test assertion (arithmetic bug in the plan itself, corrected and verified), (2) Task 7's `column_table` was missing `setSelectionBehavior(SelectRows)`, which meant a real mouse click on a data cell never actually selected a column — only the tests' programmatic `selectRow()` shortcut worked. Both were resolved in the task's own fix-review loop before the task was marked complete.
+- Several functional bugs were caught and fixed during review before merge-readiness. Per-task review loop: (1) Task 4's brief had a self-contradictory test assertion (arithmetic bug in the plan itself, corrected and verified), (2) Task 7's `column_table` was missing `setSelectionBehavior(SelectRows)`, which meant a real mouse click on a data cell never actually selected a column — only the tests' programmatic `selectRow()` shortcut worked. Final whole-branch review (after all 8 tasks individually passed): (3) **Critical** — Excel sheets with non-string (e.g. integer) column headers broke column selection entirely, because `MainWindow` round-tripped column identity through display text (`str(column)` → `.text()`) instead of tracking real column objects; fixed by tracking `self._columns` separately and widening `SessionController`'s column-identity typing to `Hashable`. Also fixed in the same pass: `inf`/`-inf` crashing the analysis engine, a stale chart persisting across file loads, inconsistent exception handling across Qt slots, missing Excel integration test coverage (the gap where the Critical bug hid), untested/unvalidated CI (missing Linux Qt system libs, no lockfile validation), and an undocumented/unguarded divergence threshold. See `docs/superpowers/plans/2026-08-04-m1-mvp.md`'s SDD ledger history (now removed per the skill's cleanup step — see git log on `feature/m1-mvp` for the full commit trail, particularly `a31cd96`..`28fc8d2`) for details.
+- **TD-002** (`memory/known-issues.md`): the final-review fix wave's small-sample guard left one existing tone test's "close to Benford" branch uncovered — parked, not a functional bug.
 
 ## Next Session: To-Do
 
-1. Dispatch the final whole-branch code review (subagent-driven-development's last step) — not yet done as of this write.
-2. Once clean, request human approval before merging `feature/m1-mvp` to `main` (`ORCHESTRATOR.md` requires this; self-merge is not allowed per `standards.md`).
-3. After merge: begin M2 (`roadmap.md`) — TASK-007 (preprocessing options), TASK-008 (suitability check), TASK-009 (drill-down), TASK-010 (HTML report), TASK-011 (expert stats, adds SciPy dependency — requires human approval per `dependencies.md`), TASK-013 (PyInstaller packaging), TASK-015 (i18n).
-4. Note for whoever picks up M2: the Excel multi-sheet picker path in `main_window.py` (`load_file`) has no automated test coverage yet (static-inspection only, flagged as a deferred minor in the M1 plan's ledger) — worth adding a test if that code path is touched again.
+1. Request human approval before merging `feature/m1-mvp` to `main` (`ORCHESTRATOR.md` requires this; self-merge is not allowed per `standards.md`). The branch is review-clean and ready.
+2. After merge: begin M2 (`roadmap.md`) — TASK-007 (preprocessing options), TASK-008 (suitability check), TASK-009 (drill-down), TASK-010 (HTML report), TASK-011 (expert stats, adds SciPy dependency — requires human approval per `dependencies.md`), TASK-013 (PyInstaller packaging), TASK-015 (i18n).
+3. TD-002 (`memory/known-issues.md`): bump `test_summarize_result_uses_neutral_non_accusatory_language`'s sample to ≥30 values, or add a dedicated ≥30-sample "close to Benford" test, to restore coverage of that branch.
+4. `select_column`'s type is now `Hashable`, not `str` — keep this in mind when building TASK-007/009, which will also touch column identity.
 
 ## Important Context
 
