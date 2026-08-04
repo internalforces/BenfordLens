@@ -45,6 +45,7 @@ BenfordLens/
 | Date | Change |
 |------|--------|
 | 2026-08-04 | AI Development Harness v1.1 initial setup (Standard tier), generated from the PRD |
+| 2026-08-04 | UI mockup reviewed (TASK-014); ADR-004 decided: expert stats stay hidden by default, default UI language is English with Korean/Chinese/Japanese selectable by M2 (TASK-015) |
 
 ## Constraints
 

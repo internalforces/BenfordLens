@@ -29,12 +29,13 @@ external server.
 - [ ] Data suitability check (🟢/🟡/🔴) with sample count, min/max, digit range, duplicate rate, zero rate, negative rate, missing rate, distinct-value count
 - [ ] Raw data drill-down (click a leading digit in the chart → filtered original rows)
 - [ ] HTML report generation
+- [ ] UI language selection — default English; selectable Korean/Chinese/Japanese (i18n scaffolding, see ADR-004)
 
 ### M3 — v1.0 (Phase 3)
 - [ ] Second-digit analysis
 - [ ] Combined first+second-digit analysis
 - [ ] Performance optimization for large datasets
-- [ ] Multi-language (i18n) support
+- [ ] Expand language support beyond the initial EN/KO/ZH/JA set added in M2 (ADR-004)
 
 ## Backlog Ideas
 

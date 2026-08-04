@@ -36,7 +36,11 @@ UI Layer (PySide6)
 
 Application / Controller Layer
 └── Orchestrates the flow above; holds in-memory session state (selected file, sheet, column,
-    preprocessing choices, analysis results)
+    preprocessing choices, analysis results, selected UI language)
+
+Internationalization (UI Layer only)
+└── Language selector (default English; Korean/Chinese/Japanese through M2 — see ADR-004) via
+    Qt's QTranslator; the Analysis Engine remains language-agnostic
 
 Analysis Engine (Pandas / NumPy / SciPy — no UI dependency)
 ├── File loaders (CSV, XLSX)
@@ -78,6 +82,7 @@ at any point.
 | Decision | Choice | Date |
 |----------|--------|------|
 | Harness adoption | AI Development Harness v1.1, Standard tier | 2026-08-04 |
+| UI language defaults & i18n scope | English default; KO/ZH/JA selectable by M2 (ADR-004) | 2026-08-04 |
 
 ## Architecture Constraints
 

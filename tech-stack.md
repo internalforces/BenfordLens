@@ -23,6 +23,12 @@ _Last updated: 2026-08-04_
 | Package Manager | uv | Latest | Fast, modern Python dependency/venv management |
 | CI/CD | GitHub Actions | — | Lint, type-check, and test on PRs; build PyInstaller artifacts on release tags |
 
+## Internationalization (i18n)
+
+- **Default language**: English. Selectable options through M2: Korean, Chinese, Japanese (see ADR-004 in `memory/decisions.md`).
+- **Approach**: PySide6/Qt's built-in translation system (`QTranslator` loading `.qm` files compiled from `.ts` source via `pyside6-lupdate` / `pyside6-lrelease`). No new external dependency — this tooling ships with the already-approved PySide6 dependency.
+- **Scope note**: Language selection is a UI-layer concern only; the Analysis Engine (Pandas/NumPy/SciPy) has no user-facing strings and stays language-agnostic.
+
 ## Architecture Patterns
 
 - **Structure**: Layered desktop architecture — UI layer (PySide6 widgets/windows) → Application/Controller layer (session state, workflow orchestration) → Analysis Engine (Pandas/NumPy/SciPy, framework-agnostic and independently testable) → Report/Export layer (HTML report generation)
