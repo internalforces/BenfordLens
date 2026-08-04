@@ -6,6 +6,8 @@ module never auto-picks or auto-analyzes a column, per AGENTS.md.
 
 from __future__ import annotations
 
+from typing import Any
+
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from PySide6.QtWidgets import (
     QFileDialog,
@@ -32,6 +34,13 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Benford Lens")
         self.controller = SessionController()
         self.canvas: FigureCanvasQTAgg | None = None
+        # Column identities for the current file, in the same order as the
+        # column table's rows. Row -> identity lookups must go through this
+        # list rather than through QTableWidgetItem.text(): pd.read_excel can
+        # yield non-string column labels (e.g. int headers like 2021), and
+        # str(column) is not guaranteed to round-trip back to the original
+        # value, which would break equality checks against df.columns.
+        self._columns: list[Any] = []
 
         self.column_table = QTableWidget(0, 2)
         self.column_table.setHorizontalHeaderLabels(["Column", "Type"])
@@ -99,10 +108,13 @@ class MainWindow(QMainWindow):
         self.column_table.clearSelection()
         self.column_table.setRowCount(0)
         self.analyze_button.setEnabled(False)
+        self._columns = []
+        self._clear_chart()
         if dataframe is None:
             return
         self.column_table.setRowCount(len(dataframe.columns))
         for row, column in enumerate(dataframe.columns):
+            self._columns.append(column)
             self.column_table.setItem(row, 0, QTableWidgetItem(str(column)))
             self.column_table.setItem(row, 1, QTableWidgetItem(str(dataframe[column].dtype)))
         self.summary_label.setText("Select a column, then click Analyze.")
@@ -112,25 +124,31 @@ class MainWindow(QMainWindow):
         if not selected_rows:
             self.analyze_button.setEnabled(False)
             return
-        item = self.column_table.item(selected_rows[0].row(), 0)
-        assert item is not None
-        column_name = item.text()
-        self.controller.select_column(column_name)
+        try:
+            column = self._columns[selected_rows[0].row()]
+            self.controller.select_column(column)
+        except Exception as exc:
+            QMessageBox.critical(self, "Cannot select column", str(exc))
+            return
         self.analyze_button.setEnabled(True)
 
     def _on_analyze_clicked(self) -> None:
         try:
             result = self.controller.analyze()
-        except ValueError as exc:
+        except Exception as exc:
             QMessageBox.warning(self, "Cannot analyze", str(exc))
             return
         self._render_chart(result)
         self.summary_label.setText(summarize_result(result))
 
-    def _render_chart(self, result: BenfordResult) -> None:
+    def _clear_chart(self) -> None:
         if self.canvas is not None:
             self.chart_container.removeWidget(self.canvas)
             self.canvas.deleteLater()
+            self.canvas = None
+
+    def _render_chart(self, result: BenfordResult) -> None:
+        self._clear_chart()
         figure = build_first_digit_figure(result)
         self.canvas = FigureCanvasQTAgg(figure)
         self.chart_container.addWidget(self.canvas)

@@ -6,6 +6,7 @@ this controller so the workflow logic stays independently testable.
 
 from __future__ import annotations
 
+from collections.abc import Hashable
 from dataclasses import dataclass
 
 import pandas as pd
@@ -18,7 +19,10 @@ from benford_lens.io.excel_loader import list_sheets, load_excel
 @dataclass
 class SessionState:
     dataframe: pd.DataFrame | None = None
-    selected_column: str | None = None
+    # pandas column labels are not guaranteed to be str — pd.read_excel can
+    # yield int (or other hashable) labels for numeric header cells, so this
+    # must accept anything that can appear as a DataFrame column label.
+    selected_column: Hashable | None = None
     last_result: BenfordResult | None = None
 
 
@@ -37,12 +41,12 @@ class SessionController:
         self.state = SessionState(dataframe=load_excel(path, sheet_name))
         return self.state.dataframe
 
-    def column_names(self) -> list[str]:
+    def column_names(self) -> list[Hashable]:
         if self.state.dataframe is None:
             return []
         return list(self.state.dataframe.columns)
 
-    def select_column(self, column: str) -> None:
+    def select_column(self, column: Hashable) -> None:
         if self.state.dataframe is None or column not in self.state.dataframe.columns:
             raise ValueError(f"Unknown column: {column}")
         self.state.selected_column = column

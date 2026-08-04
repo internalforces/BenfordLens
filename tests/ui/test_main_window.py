@@ -1,3 +1,4 @@
+import pandas as pd
 import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
@@ -22,6 +23,29 @@ def window(app):
 def _write_csv(tmp_path):
     path = tmp_path / "data.csv"
     path.write_text("name,amount\nalice,111\nbob,222\ncarol,111\n", encoding="utf-8")
+    return str(path)
+
+
+def _write_single_sheet_excel(tmp_path):
+    path = tmp_path / "single_sheet.xlsx"
+    with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        pd.DataFrame({"name": ["alice", "bob"], "amount": [120, 45]}).to_excel(
+            writer, sheet_name="Data", index=False
+        )
+    return str(path)
+
+
+def _write_multi_sheet_excel_with_numeric_headers(tmp_path):
+    # Regression fixture for Finding 1: the second sheet's header row is
+    # numeric (year columns), which pandas reads as int column labels, not
+    # str — the exact case that broke str(column)-round-trip column
+    # selection via the table's display text.
+    path = tmp_path / "multi_sheet.xlsx"
+    with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        pd.DataFrame({"name": ["alice", "bob"]}).to_excel(writer, sheet_name="Lookup", index=False)
+        pd.DataFrame({2021: [111, 111, 222], 2022: [4, 5, 6]}).to_excel(
+            writer, sheet_name="Yearly", index=False
+        )
     return str(path)
 
 
@@ -78,3 +102,73 @@ def test_load_file_shows_error_dialog_on_bad_path(window, tmp_path, monkeypatch)
 
     assert shown["title"] == "Could not open file"
     assert window.column_table.rowCount() == 0
+
+
+def test_load_file_single_sheet_excel_populates_columns_without_dialog(
+    window, tmp_path, monkeypatch
+):
+    def fail_if_called(*args, **kwargs):
+        raise AssertionError("QInputDialog.getItem should not be called for a single-sheet file")
+
+    monkeypatch.setattr("benford_lens.ui.main_window.QInputDialog.getItem", fail_if_called)
+
+    window.load_file(_write_single_sheet_excel(tmp_path))
+
+    assert window.column_table.rowCount() == 2
+    assert window.column_table.item(0, 0).text() == "name"
+    assert window.column_table.item(1, 0).text() == "amount"
+
+
+def test_load_file_multi_sheet_excel_prompts_and_loads_chosen_sheet(window, tmp_path, monkeypatch):
+    def fake_get_item(parent, title, label, items, current, editable):
+        assert items == ["Lookup", "Yearly"]
+        return "Yearly", True
+
+    monkeypatch.setattr("benford_lens.ui.main_window.QInputDialog.getItem", fake_get_item)
+
+    window.load_file(_write_multi_sheet_excel_with_numeric_headers(tmp_path))
+
+    assert window.column_table.rowCount() == 2
+    assert window.column_table.item(0, 0).text() == "2021"
+    assert window.column_table.item(1, 0).text() == "2022"
+    assert window._columns == [2021, 2022]
+
+
+def test_selecting_a_numeric_labeled_excel_column_enables_analyze_and_analyzes(
+    window, tmp_path, monkeypatch
+):
+    # Regression test for Finding 1: str(2021) round-tripped through
+    # QTableWidgetItem.text() is "2021", which is never equal to the int
+    # column label 2021 pandas assigned from the numeric header cell. Before
+    # the fix, selecting this row raised an unhandled ValueError inside the
+    # itemSelectionChanged slot and Analyze silently stayed disabled.
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QInputDialog.getItem",
+        lambda *a, **k: ("Yearly", True),
+    )
+
+    window.load_file(_write_multi_sheet_excel_with_numeric_headers(tmp_path))
+    window.column_table.selectRow(0)
+
+    assert window.analyze_button.isEnabled() is True
+    assert window.controller.state.selected_column == 2021
+
+    window._on_analyze_clicked()
+
+    assert window.canvas is not None
+    result = window.controller.state.last_result
+    assert result is not None
+    assert result.sample_size == 3
+    assert result.observed_counts[1] == 2
+    assert result.observed_counts[2] == 1
+
+
+def test_loading_a_new_file_clears_the_previous_chart(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    assert window.canvas is not None
+
+    window.load_file(_write_csv(tmp_path))
+
+    assert window.canvas is None
