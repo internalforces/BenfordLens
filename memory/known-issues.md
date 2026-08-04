@@ -19,7 +19,7 @@ _Last updated: 2026-08-04_
 
 | ID | Description | Impact | Target Resolution |
 |----|-------------|--------|-------------------|
-| — | (none yet) | — | — |
+| TD-001 | CSV encoding detection uses fixed try-in-order fallback (utf-8-sig → utf-8 → cp949 → euc-kr → latin-1), not real content-based detection | A CP949-encoded file with byte sequences that are also valid UTF-8 could silently mis-decode | Revisit if real user reports occur; consider adding chardet/charset-normalizer if this becomes a problem |
 
 ## Resolved
 
