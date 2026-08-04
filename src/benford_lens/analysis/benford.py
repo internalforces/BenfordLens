@@ -55,9 +55,7 @@ def analyze_first_digit(series: Iterable[float] | pd.Series) -> BenfordResult:
     for digit in digits:
         counts[digit] += 1
 
-    proportions = {
-        d: (counts[d] / sample_size if sample_size else 0.0) for d in _DIGITS
-    }
+    proportions = {d: (counts[d] / sample_size if sample_size else 0.0) for d in _DIGITS}
 
     return BenfordResult(
         observed_counts=counts,

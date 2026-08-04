@@ -59,9 +59,7 @@ def test_clicking_a_data_cell_selects_the_whole_row(window, tmp_path):
 
     index = window.column_table.model().index(1, 0)
     cell_center = window.column_table.visualRect(index).center()
-    QTest.mouseClick(
-        window.column_table.viewport(), Qt.MouseButton.LeftButton, pos=cell_center
-    )
+    QTest.mouseClick(window.column_table.viewport(), Qt.MouseButton.LeftButton, pos=cell_center)
 
     assert window.analyze_button.isEnabled() is True
     assert window.controller.state.selected_column == "amount"
@@ -74,9 +72,7 @@ def test_load_file_shows_error_dialog_on_bad_path(window, tmp_path, monkeypatch)
         shown["title"] = title
         shown["text"] = text
 
-    monkeypatch.setattr(
-        "benford_lens.ui.main_window.QMessageBox.critical", fake_critical
-    )
+    monkeypatch.setattr("benford_lens.ui.main_window.QMessageBox.critical", fake_critical)
 
     window.load_file(str(tmp_path / "missing.csv"))
 
