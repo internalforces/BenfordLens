@@ -1,4 +1,6 @@
 import pytest
+from PySide6.QtCore import Qt
+from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
 from benford_lens.ui.main_window import MainWindow
@@ -50,6 +52,19 @@ def test_analyze_renders_chart_and_summary(window, tmp_path):
 
     assert window.canvas is not None
     assert window.summary_label.text() != ""
+
+
+def test_clicking_a_data_cell_selects_the_whole_row(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+
+    index = window.column_table.model().index(1, 0)
+    cell_center = window.column_table.visualRect(index).center()
+    QTest.mouseClick(
+        window.column_table.viewport(), Qt.MouseButton.LeftButton, pos=cell_center
+    )
+
+    assert window.analyze_button.isEnabled() is True
+    assert window.controller.state.selected_column == "amount"
 
 
 def test_load_file_shows_error_dialog_on_bad_path(window, tmp_path, monkeypatch):

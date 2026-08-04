@@ -35,6 +35,8 @@ class MainWindow(QMainWindow):
 
         self.column_table = QTableWidget(0, 2)
         self.column_table.setHorizontalHeaderLabels(["Column", "Type"])
+        self.column_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.column_table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         self.column_table.itemSelectionChanged.connect(self._on_column_selected)
 
         self.open_button = QPushButton("Open File…")
