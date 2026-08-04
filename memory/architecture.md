@@ -22,8 +22,9 @@ be unit tested independently of the PySide6 UI.
 
 ```
 UI Layer (PySide6)
-├── File Open (drag & drop / file picker; CSV encoding + Excel sheet auto-detection)
-├── Sheet & Column Selector (user picks the column to analyze — never automatic)
+├── File Open (file picker; CSV encoding auto-detected via fixed fallback list — see TD-001 in
+│   memory/known-issues.md; Excel sheet is always an explicit user choice, never auto-picked)
+├── Sheet & Column Selector (user picks the sheet and the column to analyze — never automatic)
 ├── Preprocessing Options Panel (negative / zero / decimal / blank / duplicate / string-number
 │   handling, with a before → after preview)
 ├── Suitability Check Panel (🟢/🟡/🔴 result + underlying metrics)
@@ -42,12 +43,14 @@ Internationalization (UI Layer only)
 └── Language selector (default English; Korean/Chinese/Japanese through M2 — see ADR-004) via
     Qt's QTranslator; the Analysis Engine remains language-agnostic
 
-Analysis Engine (Pandas / NumPy / SciPy — no UI dependency)
-├── File loaders (CSV, XLSX)
-├── Preprocessing pipeline
-├── Suitability checker
-├── Benford digit-frequency calculator (first digit MVP; second digit / combined later)
-└── Statistical tests (MAD, Chi-square, KS Test)
+Analysis Engine (Pandas / NumPy — no UI dependency; SciPy added in M2 for TASK-011)
+├── File loaders (CSV, XLSX) — implemented M1: src/benford_lens/io/
+├── Preprocessing pipeline — M2 (TASK-007)
+├── Suitability checker — M2 (TASK-008)
+├── Benford digit-frequency calculator (first digit — implemented M1: src/benford_lens/analysis/;
+│   second digit / combined — M3)
+└── Statistical tests (MAD, Chi-square, KS Test) — M2 (TASK-011), requires SciPy (human approval
+    needed for the new dependency per dependencies.md)
 
 Report Generator
 └── Assembles the HTML report (analysis target, preprocessing options, suitability result,
@@ -82,7 +85,10 @@ at any point.
 | Decision | Choice | Date |
 |----------|--------|------|
 | Harness adoption | AI Development Harness v1.1, Standard tier | 2026-08-04 |
+| Package manager | `uv` (ADR-002) | 2026-08-04 |
+| CI/CD | GitHub Actions (ADR-003) | 2026-08-04 |
 | UI language defaults & i18n scope | English default; KO/ZH/JA selectable by M2 (ADR-004) | 2026-08-04 |
+| Dev environment Python version | Pinned to 3.11 via `.python-version`, matching `requires-python` and CI (ADR-005) | 2026-08-04 |
 
 ## Architecture Constraints
 
