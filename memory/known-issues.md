@@ -13,7 +13,7 @@ _Last updated: 2026-08-04_
 
 | ID | Severity | Description | Found | Owner |
 |----|----------|-------------|-------|-------|
-| — | — | (none — no code written yet) | — | — |
+| ENV-001 | Medium | macOS local env: Recent `.venv`-affecting edits can set macOS hidden flag on native extensions (numpy, pandas, PySide6), causing pytest crashes with faulthandler dump during dynamic library loading. Workaround: `chflags -R nohidden .venv` before running tests. Does not affect Linux CI (ubuntu-latest). | 2026-08-04 | DevEnv |
 
 ## Technical Debt
 
