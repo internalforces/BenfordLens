@@ -24,14 +24,18 @@ def expected_first_digit_distribution() -> dict[int, float]:
 def first_digit(value: float | int | None) -> int | None:
     """Return the leading significant digit of a number, or None if undefined.
 
-    None is returned for missing values, NaN, and zero — none of these
-    have a meaningful leading digit for Benford's Law.
+    None is returned for missing values, NaN, +/-infinity, and zero — none
+    of these have a meaningful leading digit for Benford's Law.
     """
     if value is None:
         return None
-    if isinstance(value, float) and math.isnan(value):
+    numeric_value = float(value)
+    # math.isfinite() is False for both NaN and +/-inf, so this one check
+    # covers the missing/undefined cases in a single branch. Without it,
+    # float("inf") formats as "inf" and int("i") raises ValueError.
+    if not math.isfinite(numeric_value):
         return None
-    magnitude = abs(float(value))
+    magnitude = abs(numeric_value)
     if magnitude == 0:
         return None
     mantissa = f"{magnitude:.15e}"

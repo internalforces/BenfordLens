@@ -29,6 +29,8 @@ def test_expected_distribution_matches_benfords_law():
         (0, None),
         (None, None),
         (float("nan"), None),
+        (float("inf"), None),
+        (float("-inf"), None),
     ],
 )
 def test_first_digit_extracts_leading_significant_digit(value, expected):
