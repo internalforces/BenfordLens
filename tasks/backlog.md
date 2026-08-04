@@ -11,18 +11,11 @@ _Last updated: 2026-08-04_
 
 | ID | Task | Priority | Milestone | Size | Notes |
 |----|------|----------|-----------|------|-------|
-| TASK-001 | Initial project environment setup (`uv init`, project layout, ruff/mypy/pytest config) | High | M1 | S | — |
-| TASK-002 | CSV file loader with automatic encoding detection | High | M1 | M | No auto column analysis |
-| TASK-003 | Excel file loader with sheet selection | High | M1 | M | — |
-| TASK-004 | Column selector UI (manual selection only) | High | M1 | S | Must not auto-pick or auto-analyze a column. See TASK-014 notes: mockup shows a per-column 타입/적합성 hint column. |
-| TASK-005 | First-digit Benford calculation (Analysis Engine, UI-independent) | High | M1 | M | Core statistics; needs strong unit test coverage |
-| TASK-006 | Expected vs. actual distribution chart (Matplotlib) | High | M1 | M | See TASK-014 notes for a tone-compliant result-summary copy example |
 | TASK-007 | Preprocessing options UI + pipeline (negative/zero/decimal/blank/duplicate/string-number) with before/after preview | High | M2 | L | See TASK-014 notes for concrete default values/UI copy from the mockup |
 | TASK-008 | Data suitability check (🟢/🟡/🔴) | Medium | M2 | M | Must never auto-confirm applicability — advisory only |
 | TASK-009 | Raw data drill-down from chart digit click | Medium | M2 | M | See TASK-014 notes: mockup adds CSV export + search/filter on the drill-down table |
 | TASK-010 | HTML report generation | Medium | M2 | M | — |
 | TASK-011 | Expert statistics panel (MAD, Chi-square, KS Test) — hidden by default | Low | M2 | S | Confirmed via ADR-004 — stays hidden by default, no change |
-| TASK-012 | GitHub Actions CI: lint, type-check, test on PR | Medium | M1 | S | — |
 | TASK-013 | PyInstaller packaging config for macOS/Windows/Linux | Medium | M2 | M | — |
 | TASK-014 | Review UI demo mockup (Benford Lens 0.1.0 screenshot, image-only, no code) and fold its design details into TASK-004/006/007/009/011 | Medium | M1/M2 | S | See "TASK-014 Detail" section below. Both open discrepancies resolved via ADR-004. |
 | TASK-015 | UI language selection & i18n scaffolding — default English, selectable Korean/Chinese/Japanese via QTranslator | Medium | M2 | M | See ADR-004 and `tech-stack.md` Internationalization section. No new dependency. |
