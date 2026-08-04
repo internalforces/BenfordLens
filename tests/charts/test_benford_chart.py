@@ -26,7 +26,7 @@ def test_summarize_result_uses_neutral_non_accusatory_language():
 
     summary = summarize_result(close_result)
 
-    for banned_word in ("fraud", "fraudulent"):
+    for banned_word in ("fraud", "fraudulent", "manipulated"):
         assert banned_word not in summary.lower()
 
 
@@ -36,3 +36,17 @@ def test_summarize_result_flags_divergence_for_a_skewed_sample():
     summary = summarize_result(skewed_result)
 
     assert "differs" in summary.lower()
+    # The pre-approved neutral phrasing from AGENTS.md's tone rules must
+    # actually appear somewhere in the product, not just be absent of
+    # banned words.
+    assert "This result alone cannot be used to judge data errors or manipulation" in summary
+
+
+def test_summarize_result_flags_small_sample_as_not_meaningful():
+    small_result = analyze_first_digit([12, 13, 14])
+
+    summary = summarize_result(small_result)
+
+    assert "too few" in summary.lower()
+    for banned_word in ("fraud", "fraudulent", "manipulated"):
+        assert banned_word not in summary.lower()
