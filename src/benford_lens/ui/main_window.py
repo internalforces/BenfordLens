@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
 
         self.preprocessing_panel = PreprocessingPanel(
             self._on_preprocessing_preview_requested,
-            self._invalidate_analyzed_state,
+            self._on_preprocessing_option_changed,
         )
         self.preprocessing_panel.setEnabled(False)
 
@@ -304,6 +304,18 @@ class MainWindow(QMainWindow):
         self.export_report_button.setEnabled(False)
         self._clear_chart()
         self.drill_down_panel.clear()
+
+    def _on_preprocessing_option_changed(self) -> None:
+        """Handle a combo edited directly, without going through Preview.
+
+        Distinct from `_on_preprocessing_preview_requested`, which also
+        invalidates analyzed state but must NOT blank the preview label it
+        just populated. This path fires only on a raw combo change, so the
+        stale preview text (describing the previous combo selection) is
+        cleared here instead.
+        """
+        self._invalidate_analyzed_state()
+        self.preprocessing_panel.clear_preview()
 
     def _update_suitability(self, assessment: SuitabilityAssessment | None = None) -> None:
         """Refresh the suitability panel.

@@ -114,6 +114,16 @@ class PreprocessingPanel(QWidget):
             combo.setCurrentIndex(max(combo.findData(default_value), 0))
             combo.blockSignals(was_blocked)
         # The preview line describes the previous file's column; drop it too.
+        self.clear_preview()
+
+    def clear_preview(self) -> None:
+        """Blank the preview result label without touching combo selections.
+
+        Called whenever a combo changes without Preview being clicked again:
+        the old "X -> Y values used..." text describes the previous
+        selection and would otherwise sit next to combo values it no longer
+        matches.
+        """
         self.result_label.setText("")
 
     def retranslate_ui(self) -> None:

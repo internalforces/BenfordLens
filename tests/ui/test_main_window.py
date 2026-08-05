@@ -433,6 +433,22 @@ def test_analyzing_after_a_combo_change_refreshes_the_suitability_panel(window, 
     assert window.suitability_panel.notes_label.text() != notes_after_a
 
 
+def test_changing_a_combo_after_preview_clears_the_stale_preview_label(window, tmp_path):
+    # Regression test for Finding 2: reset_to_defaults() blanked the preview
+    # label on a new file, but changing a combo after Preview (without
+    # clicking Preview again) left the old "X -> Y values used..." text on
+    # screen next to combo selections it no longer described.
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.preprocessing_panel.preview_button.click()
+    assert window.preprocessing_panel.result_label.text() != ""
+
+    combo = window.preprocessing_panel.negative_combo
+    combo.setCurrentIndex(combo.findData("exclude"))
+
+    assert window.preprocessing_panel.result_label.text() == ""
+
+
 def test_export_report_describes_the_analysis_that_was_actually_run(window, tmp_path, monkeypatch):
     # Regression test: export used to re-run configure_preprocessing() against
     # the live panel, so the report's preprocessing section could claim
