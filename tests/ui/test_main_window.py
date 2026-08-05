@@ -290,3 +290,32 @@ def test_export_report_button_disabled_after_previewing_preprocessing(window, tm
     window.preprocessing_panel.preview_button.click()
 
     assert window.export_report_button.isEnabled() is False
+
+
+def test_switching_language_translates_visible_strings(window):
+    index = window.language_combo.findData("ko")
+    window.language_combo.setCurrentIndex(index)
+
+    assert window.open_button.text() != "Open File…"
+
+    index_en = window.language_combo.findData("en")
+    window.language_combo.setCurrentIndex(index_en)
+
+    assert window.open_button.text() == "Open File…"
+
+
+def test_switching_language_translates_preprocessing_combo_labels(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    english_text = window.preprocessing_panel.negative_combo.itemText(
+        window.preprocessing_panel.negative_combo.findData("absolute")
+    )
+    assert english_text == "Convert to absolute value"
+
+    index = window.language_combo.findData("ko")
+    window.language_combo.setCurrentIndex(index)
+
+    translated_text = window.preprocessing_panel.negative_combo.itemText(
+        window.preprocessing_panel.negative_combo.findData("absolute")
+    )
+    assert translated_text != english_text

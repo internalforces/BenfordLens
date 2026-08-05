@@ -66,13 +66,31 @@ class PreprocessingPanel(QWidget):
         layout.addWidget(self.result_label)
         self.setLayout(layout)
 
-    @staticmethod
-    def _build_combo(options: list[tuple[str, str]], default_value: str) -> QComboBox:
+    def _build_combo(self, options: list[tuple[str, str]], default_value: str) -> QComboBox:
         combo = QComboBox()
         for value, label in options:
-            combo.addItem(label, value)
+            combo.addItem(self.tr(label), value)
         combo.setCurrentIndex(max(combo.findData(default_value), 0))
         return combo
+
+    def retranslate_ui(self) -> None:
+        self.negative_label.setText(self.tr("Negative values"))
+        self.zero_label.setText(self.tr("Zero values"))
+        self.decimal_label.setText(self.tr("Decimal values"))
+        self.blank_label.setText(self.tr("Blank values"))
+        self.duplicate_label.setText(self.tr("Duplicate values"))
+        self.string_to_number_label.setText(self.tr("Text-to-number"))
+        self.preview_button.setText(self.tr("Preview"))
+        self._retranslate_combo(self.negative_combo, _NEGATIVE_OPTIONS)
+        self._retranslate_combo(self.zero_combo, _ZERO_OPTIONS)
+        self._retranslate_combo(self.decimal_combo, _DECIMAL_OPTIONS)
+        self._retranslate_combo(self.blank_combo, _BLANK_OPTIONS)
+        self._retranslate_combo(self.duplicate_combo, _DUPLICATE_OPTIONS)
+        self._retranslate_combo(self.string_to_number_combo, _STRING_TO_NUMBER_OPTIONS)
+
+    def _retranslate_combo(self, combo: QComboBox, options: list[tuple[str, str]]) -> None:
+        for index, (_value, label) in enumerate(options):
+            combo.setItemText(index, self.tr(label))
 
     def current_options(self) -> PreprocessingOptions:
         return PreprocessingOptions(

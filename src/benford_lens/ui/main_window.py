@@ -6,11 +6,15 @@ module never auto-picks or auto-analyzes a column, per AGENTS.md.
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Any
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
+from PySide6.QtCore import QEvent, QTranslator
 from PySide6.QtWidgets import (
+    QApplication,
+    QComboBox,
     QFileDialog,
     QHBoxLayout,
     QInputDialog,
@@ -33,10 +37,19 @@ from benford_lens.ui.preprocessing_panel import PreprocessingPanel
 from benford_lens.ui.suitability_panel import SuitabilityPanel
 
 
+def _i18n_dir() -> Path:
+    if getattr(sys, "frozen", False):
+        return Path(sys._MEIPASS) / "resources" / "i18n"  # type: ignore[attr-defined]
+    return Path(__file__).resolve().parents[3] / "resources" / "i18n"
+
+
+_LANGUAGES = [("en", "English"), ("ko", "한국어"), ("zh", "中文"), ("ja", "日本語")]
+
+
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("Benford Lens")
+        self.setWindowTitle(self.tr("Benford Lens"))
         self.controller = SessionController()
         self.canvas: FigureCanvasQTAgg | None = None
         # Column identities for the current file, in the same order as the
@@ -48,23 +61,31 @@ class MainWindow(QMainWindow):
         self._columns: list[Any] = []
 
         self.column_table = QTableWidget(0, 2)
-        self.column_table.setHorizontalHeaderLabels(["Column", "Type"])
+        self.column_table.setHorizontalHeaderLabels([self.tr("Column"), self.tr("Type")])
         self.column_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.column_table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         self.column_table.itemSelectionChanged.connect(self._on_column_selected)
 
-        self.open_button = QPushButton("Open File…")
+        self.open_button = QPushButton(self.tr("Open File…"))
         self.open_button.clicked.connect(self._on_open_clicked)
 
         self._source_path: str | None = None
 
-        self.analyze_button = QPushButton("Analyze")
+        self.analyze_button = QPushButton(self.tr("Analyze"))
         self.analyze_button.setEnabled(False)
         self.analyze_button.clicked.connect(self._on_analyze_clicked)
 
-        self.export_report_button = QPushButton("Export Report…")
+        self.export_report_button = QPushButton(self.tr("Export Report…"))
         self.export_report_button.setEnabled(False)
         self.export_report_button.clicked.connect(self._on_export_report_clicked)
+
+        self._translator: QTranslator | None = None
+        self.language_combo = QComboBox()
+        for code, label in _LANGUAGES:
+            self.language_combo.addItem(label, code)
+        self.language_combo.currentIndexChanged.connect(
+            lambda _index: self._switch_language(self.language_combo.currentData())
+        )
 
         self.preprocessing_panel = PreprocessingPanel(self._on_preprocessing_preview_requested)
         self.preprocessing_panel.setEnabled(False)
@@ -72,7 +93,7 @@ class MainWindow(QMainWindow):
         self.suitability_panel = SuitabilityPanel()
         self.drill_down_panel = DrillDownPanel()
 
-        self.summary_label = QLabel("Open a CSV or Excel file to begin.")
+        self.summary_label = QLabel(self.tr("Open a CSV or Excel file to begin."))
         self.summary_label.setWordWrap(True)
 
         self.chart_container = QVBoxLayout()
@@ -81,6 +102,7 @@ class MainWindow(QMainWindow):
         top_bar.addWidget(self.open_button)
         top_bar.addWidget(self.analyze_button)
         top_bar.addWidget(self.export_report_button)
+        top_bar.addWidget(self.language_combo)
 
         layout = QVBoxLayout()
         layout.addLayout(top_bar)
@@ -98,7 +120,7 @@ class MainWindow(QMainWindow):
     def _on_open_clicked(self) -> None:
         path, _selected_filter = QFileDialog.getOpenFileName(
             self,
-            "Open data file",
+            self.tr("Open data file"),
             "",
             "Data files (*.csv *.xlsx);;CSV files (*.csv);;Excel files (*.xlsx)",
         )
@@ -113,7 +135,7 @@ class MainWindow(QMainWindow):
                 sheet_name = sheets[0]
                 if len(sheets) > 1:
                     sheet_name, ok = QInputDialog.getItem(
-                        self, "Select sheet", "Sheet:", sheets, 0, False
+                        self, self.tr("Select sheet"), self.tr("Sheet:"), sheets, 0, False
                     )
                     if not ok:
                         return
@@ -121,7 +143,7 @@ class MainWindow(QMainWindow):
             else:
                 self.controller.open_csv(path)
         except Exception as exc:
-            QMessageBox.critical(self, "Could not open file", str(exc))
+            QMessageBox.critical(self, self.tr("Could not open file"), str(exc))
             return
         self._populate_columns()
 
@@ -141,7 +163,7 @@ class MainWindow(QMainWindow):
             self._columns.append(column)
             self.column_table.setItem(row, 0, QTableWidgetItem(str(column)))
             self.column_table.setItem(row, 1, QTableWidgetItem(str(dataframe[column].dtype)))
-        self.summary_label.setText("Select a column, then click Analyze.")
+        self.summary_label.setText(self.tr("Select a column, then click Analyze."))
 
     def _on_column_selected(self) -> None:
         selected_rows = self.column_table.selectionModel().selectedRows()
@@ -152,7 +174,7 @@ class MainWindow(QMainWindow):
             column = self._columns[selected_rows[0].row()]
             self.controller.select_column(column)
         except Exception as exc:
-            QMessageBox.critical(self, "Cannot select column", str(exc))
+            QMessageBox.critical(self, self.tr("Cannot select column"), str(exc))
             return
         self.analyze_button.setEnabled(True)
         self.preprocessing_panel.setEnabled(True)
@@ -164,7 +186,7 @@ class MainWindow(QMainWindow):
         try:
             result = self.controller.analyze()
         except Exception as exc:
-            QMessageBox.warning(self, "Cannot analyze", str(exc))
+            QMessageBox.warning(self, self.tr("Cannot analyze"), str(exc))
             return
         self._render_chart(result)
         self.summary_label.setText(summarize_result(result))
@@ -190,14 +212,14 @@ class MainWindow(QMainWindow):
         html = render_html_report(context)
 
         path, _selected_filter = QFileDialog.getSaveFileName(
-            self, "Export report", "", "HTML files (*.html)"
+            self, self.tr("Export report"), "", "HTML files (*.html)"
         )
         if not path:
             return
         try:
             Path(path).write_text(html, encoding="utf-8")
         except Exception as exc:
-            QMessageBox.critical(self, "Could not export report", str(exc))
+            QMessageBox.critical(self, self.tr("Could not export report"), str(exc))
 
     def _on_preprocessing_preview_requested(self, options) -> None:
         preview = self.controller.configure_preprocessing(options)
@@ -234,6 +256,35 @@ class MainWindow(QMainWindow):
         try:
             rows = self.controller.drill_down(int(digit))
         except Exception as exc:
-            QMessageBox.warning(self, "Cannot show rows", str(exc))
+            QMessageBox.warning(self, self.tr("Cannot show rows"), str(exc))
             return
         self.drill_down_panel.show_rows(rows)
+
+    def _switch_language(self, language_code: str) -> None:
+        app = QApplication.instance()
+        assert app is not None
+        if self._translator is not None:
+            app.removeTranslator(self._translator)
+            self._translator = None
+        if language_code != "en":
+            translator = QTranslator()
+            translator.load(str(_i18n_dir() / f"benford_lens_{language_code}.qm"))
+            app.installTranslator(translator)
+            self._translator = translator
+        self._retranslate_ui()
+
+    def changeEvent(self, event) -> None:
+        if event.type() == QEvent.Type.LanguageChange:
+            self._retranslate_ui()
+        super().changeEvent(event)
+
+    def _retranslate_ui(self) -> None:
+        self.setWindowTitle(self.tr("Benford Lens"))
+        self.column_table.setHorizontalHeaderLabels([self.tr("Column"), self.tr("Type")])
+        self.open_button.setText(self.tr("Open File…"))
+        self.analyze_button.setText(self.tr("Analyze"))
+        self.export_report_button.setText(self.tr("Export Report…"))
+        if self.controller.state.last_result is None:
+            self.summary_label.setText(self.tr("Open a CSV or Excel file to begin."))
+        self.suitability_panel.retranslate_ui()
+        self.preprocessing_panel.retranslate_ui()
