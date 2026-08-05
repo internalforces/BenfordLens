@@ -20,6 +20,10 @@
     <message><source>Cannot show rows</source><translation>行を表示できません</translation></message>
     <message><source>Export report</source><translation>レポートを書き出す</translation></message>
     <message><source>Could not export report</source><translation>レポートを書き出せませんでした</translation></message>
+    <message><source>No valid numeric values were found in the selected column.</source><translation>選択した列に有効な数値が見つかりませんでした。</translation></message>
+    <message><source>Only {sample_size} valid numeric value(s) were found, which is too few for a meaningful comparison to the expected Benford distribution. Try a column with more data.</source><translation>有効な数値が {sample_size} 件しか見つからず、期待されるベンフォード分布と有意義に比較するには少なすぎます。データがより多い列をお試しください。</translation></message>
+    <message><source>The overall distribution is close to the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation.</source><translation>全体の分布は期待されるベンフォード分布に近い形です。この結果だけでデータの誤りや改変の有無を判断することはできません。</translation></message>
+    <message><source>The overall distribution differs somewhat from the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation; further review may be warranted.</source><translation>全体の分布は期待されるベンフォード分布とやや異なります。この結果だけでデータの誤りや改変の有無を判断することはできません。さらに確認が必要な場合があります。</translation></message>
 </context>
 <context>
     <name>PreprocessingPanel</name>
@@ -49,6 +53,15 @@
     <message><source>🔴 Difficult to determine</source><translation>🔴 判断が難しい</translation></message>
     <message><source>No caveats found.</source><translation>特に注意点はありません。</translation></message>
     <message><source>These are data characteristics, not a determination of whether Benford's Law applies — that judgment is yours to make.</source><translation>これらはデータの特性を示すものであり、ベンフォードの法則が当てはまるかどうかを判断するものではありません。その判断はご自身で行ってください。</translation></message>
+    <message><source>Only {sample_count} valid value(s) — below the {minimum}-value floor for a meaningful comparison.</source><translation>有効な値が {sample_count} 件しかなく、意味のある比較に必要な {minimum} 件の下限を下回っています。</translation></message>
+    <message><source>{sample_count} valid values is a workable but modest sample size.</source><translation>有効な値 {sample_count} 件は分析に使えますが、サンプルサイズはやや小さめです。</translation></message>
+    <message><source>Values span only a single order of magnitude.</source><translation>値が単一の桁数範囲にしか分布していません。</translation></message>
+    <message><source>Values span {digit_range} orders of magnitude.</source><translation>値は {digit_range} 桁分の範囲に分布しています。</translation></message>
+    <message><source>Very few distinct values relative to the sample size.</source><translation>サンプルサイズに対して、異なる値の数が非常に少なくなっています。</translation></message>
+    <message><source>Values repeat somewhat more than expected for this sample size.</source><translation>サンプルサイズに対して、値の重複がやや多くなっています。</translation></message>
+    <message><source>{zero_rate:.0%} of the source values were zero.</source><translation>元データの値のうち {zero_rate:.0%} がゼロでした。</translation></message>
+    <message><source>{negative_rate:.0%} of the source values were negative — check whether the negative-value preprocessing option fits this data.</source><translation>元データの値のうち {negative_rate:.0%} が負の数でした。負の値の前処理オプションがこのデータに適しているか確認してください。</translation></message>
+    <message><source>{missing_rate:.0%} of the source values were blank.</source><translation>元データの値のうち {missing_rate:.0%} が空欄でした。</translation></message>
 </context>
 <context>
     <name>DrillDownPanel</name>

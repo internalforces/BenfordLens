@@ -29,7 +29,15 @@ from PySide6.QtWidgets import (
 )
 
 from benford_lens.analysis.benford import BenfordResult
-from benford_lens.charts.benford_chart import build_first_digit_figure, summarize_result
+from benford_lens.charts.benford_chart import (
+    SUMMARY_CLOSE_TO_BENFORD,
+    SUMMARY_DIVERGES_FROM_BENFORD,
+    SUMMARY_NO_VALID_VALUES,
+    SUMMARY_SAMPLE_TOO_SMALL,
+    ResultSummary,
+    build_first_digit_figure,
+    summarize_result,
+)
 from benford_lens.report.html_report import ReportContext, render_html_report
 from benford_lens.ui.controller import SessionController
 from benford_lens.ui.drill_down_panel import DrillDownPanel
@@ -199,8 +207,41 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, self.tr("Cannot analyze"), str(exc))
             return
         self._render_chart(result)
-        self.summary_label.setText(summarize_result(result))
+        self.summary_label.setText(self._summary_text(summarize_result(result)))
         self.export_report_button.setEnabled(True)
+
+    def _summary_templates(self) -> dict[str, str]:
+        """Translatable template per result-summary code.
+
+        Wording is neutral and exploratory per AGENTS.md; the "cannot be used
+        to judge data errors or manipulation" phrasing is the pre-approved
+        negated construction.
+        """
+        return {
+            SUMMARY_NO_VALID_VALUES: self.tr(
+                "No valid numeric values were found in the selected column."
+            ),
+            SUMMARY_SAMPLE_TOO_SMALL: self.tr(
+                "Only {sample_size} valid numeric value(s) were found, which is too few for a "
+                "meaningful comparison to the expected Benford distribution. "
+                "Try a column with more data."
+            ),
+            SUMMARY_CLOSE_TO_BENFORD: self.tr(
+                "The overall distribution is close to the expected Benford distribution. "
+                "This result alone cannot be used to judge data errors or manipulation."
+            ),
+            SUMMARY_DIVERGES_FROM_BENFORD: self.tr(
+                "The overall distribution differs somewhat from the expected Benford "
+                "distribution. This result alone cannot be used to judge data errors or "
+                "manipulation; further review may be warranted."
+            ),
+        }
+
+    def _summary_text(self, summary: ResultSummary) -> str:
+        template = self._summary_templates().get(summary.code)
+        if template is None:  # pragma: no cover - defensive, every code is mapped
+            return summary.code
+        return template.format(**summary.params)
 
     def _on_export_report_clicked(self) -> None:
         # Everything in the report comes from the snapshot analyze() took, so
@@ -314,8 +355,22 @@ class MainWindow(QMainWindow):
         self.open_button.setText(self.tr("Open File…"))
         self.analyze_button.setText(self.tr("Analyze"))
         self.export_report_button.setText(self.tr("Export Report…"))
-        if self.controller.state.last_result is None:
-            self.summary_label.setText(self.tr("Open a CSV or Excel file to begin."))
+        self._retranslate_summary_label()
         self.suitability_panel.retranslate_ui()
         self.preprocessing_panel.retranslate_ui()
         self.drill_down_panel.retranslate_ui()
+
+    def _retranslate_summary_label(self) -> None:
+        """Restore summary_label in the current language, whatever stage we're at.
+
+        It used to be reset unconditionally to the "open a file" prompt, which
+        wrongly replaced the "select a column" prompt if the user switched
+        language after picking a column but before analyzing.
+        """
+        state = self.controller.state
+        if state.last_result is not None:
+            self.summary_label.setText(self._summary_text(summarize_result(state.last_result)))
+        elif state.selected_column is not None:
+            self.summary_label.setText(self.tr("Select a column, then click Analyze."))
+        else:
+            self.summary_label.setText(self.tr("Open a CSV or Excel file to begin."))

@@ -3,10 +3,13 @@ from matplotlib.figure import Figure
 from benford_lens.analysis.benford import BenfordResult
 from benford_lens.analysis.preprocessing import PreprocessingOptions, PreprocessingPreview
 from benford_lens.analysis.suitability import (
+    NOTE_NARROW_MAGNITUDE_RANGE,
     SuitabilityAssessment,
     SuitabilityLevel,
     SuitabilityMetrics,
+    SuitabilityNote,
 )
+from benford_lens.charts.benford_chart import SUMMARY_CLOSE_TO_BENFORD, ResultSummary
 from benford_lens.report.html_report import ReportContext, render_html_report
 
 
@@ -41,7 +44,7 @@ def _build_context() -> ReportContext:
     assessment = SuitabilityAssessment(
         level=SuitabilityLevel.CAUTION,
         metrics=metrics,
-        notes=["Values span 3 orders of magnitude."],
+        notes=[SuitabilityNote(NOTE_NARROW_MAGNITUDE_RANGE, {"digit_range": 3})],
     )
     figure = Figure()
     figure.add_subplot(111).bar([1, 2], [10, 20])
@@ -53,7 +56,7 @@ def _build_context() -> ReportContext:
         preprocessing_preview=preview,
         suitability=assessment,
         result=result,
-        result_summary="The overall distribution is close to the expected Benford distribution.",
+        result_summary=ResultSummary(SUMMARY_CLOSE_TO_BENFORD),
         chart_figure=figure,
     )
 
@@ -110,12 +113,14 @@ def test_render_html_report_escapes_user_derived_strings():
     assessment = SuitabilityAssessment(
         level=SuitabilityLevel.CAUTION,
         metrics=metrics,
-        notes=["<script>alert(1)</script>"],
+        notes=[SuitabilityNote(NOTE_NARROW_MAGNITUDE_RANGE, {"digit_range": 3})],
     )
     figure = Figure()
     figure.add_subplot(111).bar([1, 2], [10, 20])
 
-    # Create context with malicious HTML in multiple user-derived fields
+    # Create context with malicious HTML in every user-derived field. (The
+    # notes and the result summary are no longer user-derived: they are
+    # rendered from fixed templates keyed by a code, with numeric params.)
     context = ReportContext(
         source_name="</p><script>alert(1)</script><p>evil.csv",
         column_name="Price < Discount & <b>weird</b>",
@@ -123,7 +128,7 @@ def test_render_html_report_escapes_user_derived_strings():
         preprocessing_preview=preview,
         suitability=assessment,
         result=result,
-        result_summary="Close to Benford</p><img src=x onerror='alert(2)'>",
+        result_summary=ResultSummary(SUMMARY_CLOSE_TO_BENFORD),
         chart_figure=figure,
     )
 
@@ -132,10 +137,8 @@ def test_render_html_report_escapes_user_derived_strings():
     # Verify raw HTML tags are NOT present in the output (unescaped)
     assert "<script>" not in html
     assert "</p><script>" not in html
-    assert "<img src=x onerror=" not in html  # the dangerous img tag unescaped
 
-    # Verify escaped forms ARE present (source_name, column_name, result_summary)
+    # Verify escaped forms ARE present (source_name, column_name)
     assert "&lt;script&gt;" in html
     assert "&lt;b&gt;" in html
     assert "Price &lt; Discount" in html
-    assert "&lt;img src=x onerror=" in html  # the img tag should be escaped

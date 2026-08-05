@@ -8,7 +8,7 @@ judgment always belongs to the user, per AGENTS.md.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 
 import pandas as pd
@@ -24,6 +24,19 @@ _CAUTION_DISTINCT_RATIO = 0.1
 _ZERO_RATE_CAUTION = 0.3
 _NEGATIVE_RATE_CAUTION = 0.5
 _MISSING_RATE_CAUTION = 0.3
+
+# Stable identifiers for the advisory notes assess_suitability() can emit.
+# The presentation layer maps each to a translatable template; nothing in
+# this module knows what any of them say in any language.
+NOTE_SAMPLE_TOO_SMALL = "SAMPLE_TOO_SMALL"
+NOTE_SAMPLE_MODEST = "SAMPLE_MODEST"
+NOTE_SINGLE_MAGNITUDE = "SINGLE_MAGNITUDE"
+NOTE_NARROW_MAGNITUDE_RANGE = "NARROW_MAGNITUDE_RANGE"
+NOTE_LOW_DIVERSITY = "LOW_DIVERSITY"
+NOTE_REPEATED_VALUES = "REPEATED_VALUES"
+NOTE_HIGH_ZERO_RATE = "HIGH_ZERO_RATE"
+NOTE_HIGH_NEGATIVE_RATE = "HIGH_NEGATIVE_RATE"
+NOTE_HIGH_MISSING_RATE = "HIGH_MISSING_RATE"
 
 
 class SuitabilityLevel(Enum):
@@ -45,11 +58,24 @@ class SuitabilityMetrics:
     distinct_value_count: int
 
 
+@dataclass(frozen=True)
+class SuitabilityNote:
+    """One advisory observation, as a stable code plus the numbers behind it.
+
+    Deliberately carries no prose. The Analysis Engine has no user-facing
+    strings (AGENTS.md), and the presentation layer needs to be able to
+    render these in the user's chosen language.
+    """
+
+    code: str
+    params: dict[str, object] = field(default_factory=dict)
+
+
 @dataclass
 class SuitabilityAssessment:
     level: SuitabilityLevel
     metrics: SuitabilityMetrics
-    notes: list[str]
+    notes: list[SuitabilityNote]
 
 
 def _digit_range(values: pd.Series) -> int:
@@ -97,44 +123,49 @@ def assess_suitability(metrics: SuitabilityMetrics) -> SuitabilityAssessment:
     )
 
     levels = [SuitabilityLevel.GOOD]
-    notes: list[str] = []
+    notes: list[SuitabilityNote] = []
 
     if metrics.sample_count < MIN_MEANINGFUL_SAMPLE:
         levels.append(SuitabilityLevel.DIFFICULT)
         notes.append(
-            f"Only {metrics.sample_count} valid value(s) — below the "
-            f"{MIN_MEANINGFUL_SAMPLE}-value floor for a meaningful comparison."
+            SuitabilityNote(
+                NOTE_SAMPLE_TOO_SMALL,
+                {"sample_count": metrics.sample_count, "minimum": MIN_MEANINGFUL_SAMPLE},
+            )
         )
     elif metrics.sample_count < _GOOD_SAMPLE_COUNT:
         levels.append(SuitabilityLevel.CAUTION)
-        notes.append(f"{metrics.sample_count} valid values is a workable but modest sample size.")
+        notes.append(SuitabilityNote(NOTE_SAMPLE_MODEST, {"sample_count": metrics.sample_count}))
 
     if metrics.digit_range <= 1:
         levels.append(SuitabilityLevel.DIFFICULT)
-        notes.append("Values span only a single order of magnitude.")
+        notes.append(SuitabilityNote(NOTE_SINGLE_MAGNITUDE))
     elif metrics.digit_range < _GOOD_DIGIT_RANGE:
         levels.append(SuitabilityLevel.CAUTION)
-        notes.append(f"Values span {metrics.digit_range} orders of magnitude.")
+        notes.append(
+            SuitabilityNote(NOTE_NARROW_MAGNITUDE_RANGE, {"digit_range": metrics.digit_range})
+        )
 
     if distinct_ratio < _CAUTION_DISTINCT_RATIO:
         levels.append(SuitabilityLevel.DIFFICULT)
-        notes.append("Very few distinct values relative to the sample size.")
+        notes.append(SuitabilityNote(NOTE_LOW_DIVERSITY))
     elif distinct_ratio < _GOOD_DISTINCT_RATIO:
         levels.append(SuitabilityLevel.CAUTION)
-        notes.append("Values repeat somewhat more than expected for this sample size.")
+        notes.append(SuitabilityNote(NOTE_REPEATED_VALUES))
 
     if metrics.zero_rate > _ZERO_RATE_CAUTION:
         levels.append(SuitabilityLevel.CAUTION)
-        notes.append(f"{metrics.zero_rate:.0%} of the source values were zero.")
+        notes.append(SuitabilityNote(NOTE_HIGH_ZERO_RATE, {"zero_rate": metrics.zero_rate}))
     if metrics.negative_rate > _NEGATIVE_RATE_CAUTION:
         levels.append(SuitabilityLevel.CAUTION)
         notes.append(
-            f"{metrics.negative_rate:.0%} of the source values were negative — check "
-            "whether the negative-value preprocessing option fits this data."
+            SuitabilityNote(NOTE_HIGH_NEGATIVE_RATE, {"negative_rate": metrics.negative_rate})
         )
     if metrics.missing_rate > _MISSING_RATE_CAUTION:
         levels.append(SuitabilityLevel.CAUTION)
-        notes.append(f"{metrics.missing_rate:.0%} of the source values were blank.")
+        notes.append(
+            SuitabilityNote(NOTE_HIGH_MISSING_RATE, {"missing_rate": metrics.missing_rate})
+        )
 
     if SuitabilityLevel.DIFFICULT in levels:
         overall = SuitabilityLevel.DIFFICULT

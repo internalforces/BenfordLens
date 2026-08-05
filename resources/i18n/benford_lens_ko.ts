@@ -20,6 +20,10 @@
     <message><source>Cannot show rows</source><translation>행을 표시할 수 없습니다</translation></message>
     <message><source>Export report</source><translation>보고서 내보내기</translation></message>
     <message><source>Could not export report</source><translation>보고서를 내보낼 수 없습니다</translation></message>
+    <message><source>No valid numeric values were found in the selected column.</source><translation>선택한 열에서 유효한 숫자 값을 찾지 못했습니다.</translation></message>
+    <message><source>Only {sample_size} valid numeric value(s) were found, which is too few for a meaningful comparison to the expected Benford distribution. Try a column with more data.</source><translation>유효한 숫자 값이 {sample_size}개뿐이어서 기대되는 벤포드 분포와 의미 있게 비교하기에는 너무 적습니다. 데이터가 더 많은 열을 사용해 보세요.</translation></message>
+    <message><source>The overall distribution is close to the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation.</source><translation>전체 분포가 기대되는 벤포드 분포에 가깝습니다. 이 결과만으로는 데이터 오류나 조작 여부를 판단할 수 없습니다.</translation></message>
+    <message><source>The overall distribution differs somewhat from the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation; further review may be warranted.</source><translation>전체 분포가 기대되는 벤포드 분포와 다소 차이가 있습니다. 이 결과만으로는 데이터 오류나 조작 여부를 판단할 수 없으며, 추가 검토가 필요할 수 있습니다.</translation></message>
 </context>
 <context>
     <name>PreprocessingPanel</name>
@@ -49,6 +53,15 @@
     <message><source>🔴 Difficult to determine</source><translation>🔴 판단 어려움</translation></message>
     <message><source>No caveats found.</source><translation>특이사항 없음.</translation></message>
     <message><source>These are data characteristics, not a determination of whether Benford's Law applies — that judgment is yours to make.</source><translation>이는 데이터의 특성일 뿐이며 벤포드 법칙의 적용 여부를 판단한 것이 아닙니다. 그 판단은 사용자의 몫입니다.</translation></message>
+    <message><source>Only {sample_count} valid value(s) — below the {minimum}-value floor for a meaningful comparison.</source><translation>유효한 값이 {sample_count}개뿐이며, 의미 있는 비교를 위한 최소 기준 {minimum}개에 미치지 못합니다.</translation></message>
+    <message><source>{sample_count} valid values is a workable but modest sample size.</source><translation>유효한 값 {sample_count}개는 분석에 사용할 수 있지만 다소 적은 표본 크기입니다.</translation></message>
+    <message><source>Values span only a single order of magnitude.</source><translation>값이 하나의 자릿수 범위에만 분포합니다.</translation></message>
+    <message><source>Values span {digit_range} orders of magnitude.</source><translation>값이 {digit_range}개의 자릿수 범위에 분포합니다.</translation></message>
+    <message><source>Very few distinct values relative to the sample size.</source><translation>표본 크기에 비해 서로 다른 값의 수가 매우 적습니다.</translation></message>
+    <message><source>Values repeat somewhat more than expected for this sample size.</source><translation>표본 크기에 비해 값의 반복이 다소 많습니다.</translation></message>
+    <message><source>{zero_rate:.0%} of the source values were zero.</source><translation>원본 값의 {zero_rate:.0%}가 0이었습니다.</translation></message>
+    <message><source>{negative_rate:.0%} of the source values were negative — check whether the negative-value preprocessing option fits this data.</source><translation>원본 값의 {negative_rate:.0%}가 음수였습니다. 음수 값 전처리 옵션이 이 데이터에 적합한지 확인하세요.</translation></message>
+    <message><source>{missing_rate:.0%} of the source values were blank.</source><translation>원본 값의 {missing_rate:.0%}가 비어 있었습니다.</translation></message>
 </context>
 <context>
     <name>DrillDownPanel</name>

@@ -17,13 +17,91 @@ from matplotlib.figure import Figure
 
 from benford_lens.analysis.benford import BenfordResult
 from benford_lens.analysis.preprocessing import PreprocessingOptions, PreprocessingPreview
-from benford_lens.analysis.suitability import SuitabilityAssessment, SuitabilityLevel
+from benford_lens.analysis.suitability import (
+    NOTE_HIGH_MISSING_RATE,
+    NOTE_HIGH_NEGATIVE_RATE,
+    NOTE_HIGH_ZERO_RATE,
+    NOTE_LOW_DIVERSITY,
+    NOTE_NARROW_MAGNITUDE_RANGE,
+    NOTE_REPEATED_VALUES,
+    NOTE_SAMPLE_MODEST,
+    NOTE_SAMPLE_TOO_SMALL,
+    NOTE_SINGLE_MAGNITUDE,
+    SuitabilityAssessment,
+    SuitabilityLevel,
+    SuitabilityNote,
+)
+from benford_lens.charts.benford_chart import (
+    SUMMARY_CLOSE_TO_BENFORD,
+    SUMMARY_DIVERGES_FROM_BENFORD,
+    SUMMARY_NO_VALID_VALUES,
+    SUMMARY_SAMPLE_TOO_SMALL,
+    ResultSummary,
+)
 
 _LEVEL_BADGE = {
     SuitabilityLevel.GOOD: "\U0001f7e2 Good",
     SuitabilityLevel.CAUTION: "\U0001f7e1 Caution",
     SuitabilityLevel.DIFFICULT: "\U0001f534 Difficult to determine",
 }
+
+# The exported report is always English: there is no report-language selector
+# in this milestone, and a saved file has no live UI language to follow. These
+# are the same templates SuitabilityPanel/MainWindow feed through tr(), minus
+# the translation lookup — tests/report/test_report_text_matches_ui.py keeps
+# the two sets from drifting apart.
+SUITABILITY_NOTE_TEMPLATES = {
+    NOTE_SAMPLE_TOO_SMALL: (
+        "Only {sample_count} valid value(s) — below the {minimum}-value floor "
+        "for a meaningful comparison."
+    ),
+    NOTE_SAMPLE_MODEST: "{sample_count} valid values is a workable but modest sample size.",
+    NOTE_SINGLE_MAGNITUDE: "Values span only a single order of magnitude.",
+    NOTE_NARROW_MAGNITUDE_RANGE: "Values span {digit_range} orders of magnitude.",
+    NOTE_LOW_DIVERSITY: "Very few distinct values relative to the sample size.",
+    NOTE_REPEATED_VALUES: "Values repeat somewhat more than expected for this sample size.",
+    NOTE_HIGH_ZERO_RATE: "{zero_rate:.0%} of the source values were zero.",
+    NOTE_HIGH_NEGATIVE_RATE: (
+        "{negative_rate:.0%} of the source values were negative — check whether the "
+        "negative-value preprocessing option fits this data."
+    ),
+    NOTE_HIGH_MISSING_RATE: "{missing_rate:.0%} of the source values were blank.",
+}
+
+RESULT_SUMMARY_TEMPLATES = {
+    SUMMARY_NO_VALID_VALUES: "No valid numeric values were found in the selected column.",
+    SUMMARY_SAMPLE_TOO_SMALL: (
+        "Only {sample_size} valid numeric value(s) were found, which is too few for a "
+        "meaningful comparison to the expected Benford distribution. "
+        "Try a column with more data."
+    ),
+    SUMMARY_CLOSE_TO_BENFORD: (
+        "The overall distribution is close to the expected Benford distribution. "
+        "This result alone cannot be used to judge data errors or manipulation."
+    ),
+    SUMMARY_DIVERGES_FROM_BENFORD: (
+        "The overall distribution differs somewhat from the expected Benford distribution. "
+        "This result alone cannot be used to judge data errors or manipulation; "
+        "further review may be warranted."
+    ),
+}
+
+
+def format_suitability_note(note: SuitabilityNote) -> str:
+    """Render an advisory note in English, for the exported report."""
+    template = SUITABILITY_NOTE_TEMPLATES.get(note.code)
+    if template is None:  # pragma: no cover - defensive, every code is mapped
+        return note.code
+    return template.format(**note.params)
+
+
+def format_result_summary(summary: ResultSummary) -> str:
+    """Render the result summary in English, for the exported report."""
+    template = RESULT_SUMMARY_TEMPLATES.get(summary.code)
+    if template is None:  # pragma: no cover - defensive, every code is mapped
+        return summary.code
+    return template.format(**summary.params)
+
 
 _TEMPLATE = string.Template(
     """<!doctype html>
@@ -79,7 +157,7 @@ class ReportContext:
     preprocessing_preview: PreprocessingPreview
     suitability: SuitabilityAssessment
     result: BenfordResult
-    result_summary: str
+    result_summary: ResultSummary
     chart_figure: Figure
 
 
@@ -111,7 +189,10 @@ def _digit_table_rows(result: BenfordResult) -> str:
 
 
 def render_html_report(context: ReportContext) -> str:
-    notes_html = "".join(f"<li>{html.escape(note)}</li>" for note in context.suitability.notes)
+    notes_html = "".join(
+        f"<li>{html.escape(format_suitability_note(note))}</li>"
+        for note in context.suitability.notes
+    )
     return _TEMPLATE.substitute(
         source_name=html.escape(context.source_name),
         column_name=html.escape(str(context.column_name)),
@@ -122,6 +203,6 @@ def render_html_report(context: ReportContext) -> str:
         suitability_badge=_LEVEL_BADGE[context.suitability.level],
         suitability_notes=notes_html,
         chart_base64=_figure_to_base64(context.chart_figure),
-        result_summary=html.escape(context.result_summary),
+        result_summary=html.escape(format_result_summary(context.result_summary)),
         digit_table_rows=_digit_table_rows(context.result),
     )

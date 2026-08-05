@@ -20,6 +20,10 @@ def app():
 def window(app):
     win = MainWindow()
     yield win
+    # QTranslator instances are installed on the shared QApplication, so a
+    # test that switches language would otherwise leak it into every test
+    # that runs after it.
+    win._switch_language("en")
     win.close()
 
 
@@ -472,3 +476,72 @@ def test_switching_language_translates_preprocessing_combo_labels(window, tmp_pa
         window.preprocessing_panel.negative_combo.findData("absolute")
     )
     assert translated_text != english_text
+
+
+def test_switching_language_translates_the_suitability_notes(window, tmp_path):
+    # The notes are the most useful part of the suitability panel; before the
+    # structured-note change they were built inside the Analysis Engine as
+    # English prose, so they never passed through tr() and stayed English
+    # while the surrounding chrome translated.
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+
+    english_notes = window.suitability_panel.notes_label.text()
+    assert "valid value" in english_notes
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
+
+    translated_notes = window.suitability_panel.notes_label.text()
+    assert translated_notes != english_notes
+    assert "valid value" not in translated_notes
+    assert "유효한 값" in translated_notes
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("en"))
+
+    assert window.suitability_panel.notes_label.text() == english_notes
+
+
+def test_switching_language_translates_the_result_summary(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    english_summary = window.summary_label.text()
+    assert "too few" in english_summary.lower()
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ja"))
+
+    translated_summary = window.summary_label.text()
+    assert translated_summary != english_summary
+    assert "ベンフォード" in translated_summary
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("en"))
+
+    assert window.summary_label.text() == english_summary
+
+
+def test_switching_language_after_selecting_a_column_keeps_the_select_column_prompt(
+    window, tmp_path
+):
+    # Regression test: _retranslate_ui unconditionally reset summary_label to
+    # the "open a file" prompt whenever last_result was None, so switching
+    # language after picking a column wrongly walked the user back a step.
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    assert window.summary_label.text() == "Select a column, then click Analyze."
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
+
+    assert window.summary_label.text() == "열을 선택한 다음 분석을 클릭하세요."
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("en"))
+
+    assert window.summary_label.text() == "Select a column, then click Analyze."
+
+
+def test_switching_language_before_opening_a_file_keeps_the_open_file_prompt(window):
+    assert window.summary_label.text() == "Open a CSV or Excel file to begin."
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
+
+    assert window.summary_label.text() == "시작하려면 CSV 또는 Excel 파일을 여세요."
