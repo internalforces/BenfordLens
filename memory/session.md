@@ -34,6 +34,7 @@ expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
 - [x] 2026-08-05 implementation-status audit — 150 tests, Ruff format/lint, and mypy pass locally after applying the documented ENV-001 workaround; confirmed no product-code network calls or banned accusatory terms
 - [x] Separate final review completed — Approved; report saved to `reports/review-2026-08-05-m2-merge-gate.md`
 - [x] M2 PR #2 was already merged to `main`; prepare and merge a follow-up PR containing the final gate fixes documented below
+- [x] Follow-up PR #3 passed CI and merged under the user's explicit instruction to complete the M2 merge
 
 ## Completed This Session
 
@@ -62,8 +63,7 @@ expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
 
 ## Next Session: To-Do
 
-1. Commit and push the reviewed merge-gate follow-up, open a PR against `main`, wait for CI, and merge it under the user's explicit 2026-08-05 instruction to complete the M2 merge.
-2. After merge: TASK-011 (expert statistics: MAD, Chi-square, KS Test) is the next candidate work item — it remains out of scope until SciPy, a new external dependency, clears its own Human Approval Gate per `dependencies.md`.
+1. TASK-011 (expert statistics: MAD, Chi-square, KS Test) is the next candidate work item — it remains out of scope until SciPy, a new external dependency, clears its own Human Approval Gate per `dependencies.md`.
 
 ## Important Context
 
