@@ -120,7 +120,7 @@ footer { margin-top: 2rem; font-size: 0.85rem; color: #666; }
 </head>
 <body>
 <h1>Benford Lens Report</h1>
-<p>Source: $source_name — Column: $column_name</p>
+<p>Source: $source_name$sheet_fragment — Column: $column_name</p>
 <p>Generated: $generated_at</p>
 
 <h2>Preprocessing</h2>
@@ -159,6 +159,9 @@ class ReportContext:
     result: BenfordResult
     result_summary: ResultSummary
     chart_figure: Figure
+    # Worksheet the column came from; None for CSV sources, where the report
+    # omits the sheet fragment entirely rather than showing an empty one.
+    sheet_name: str | None = None
 
 
 def _figure_to_base64(figure: Figure) -> str:
@@ -193,8 +196,12 @@ def render_html_report(context: ReportContext) -> str:
         f"<li>{html.escape(format_suitability_note(note))}</li>"
         for note in context.suitability.notes
     )
+    # Sheet names come from the user's own workbook, so escape like the other
+    # user-derived strings.
+    sheet_fragment = f" — Sheet: {html.escape(context.sheet_name)}" if context.sheet_name else ""
     return _TEMPLATE.substitute(
         source_name=html.escape(context.source_name),
+        sheet_fragment=sheet_fragment,
         column_name=html.escape(str(context.column_name)),
         generated_at=datetime.now().isoformat(timespec="seconds"),
         preprocessing_summary=_preprocessing_summary(

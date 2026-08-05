@@ -258,6 +258,7 @@ class MainWindow(QMainWindow):
         context = ReportContext(
             source_name=Path(self._source_path).name if self._source_path else "",
             column_name=state.selected_column,
+            sheet_name=state.sheet_name,
             preprocessing_options=options,
             preprocessing_preview=preview,
             suitability=suitability,

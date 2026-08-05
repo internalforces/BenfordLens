@@ -560,3 +560,39 @@ def test_switching_language_translates_the_suitability_metric_labels(window, tmp
     assert panel.metric_name_labels["sample_count"].text() == "표본 개수"
     # The numbers themselves are unaffected by the language switch.
     assert panel.metric_value_labels["sample_count"].text() == "3"
+
+
+def test_export_report_records_the_excel_sheet_that_was_analyzed(window, tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QInputDialog.getItem",
+        lambda *a, **k: ("Yearly", True),
+    )
+    window.load_file(_write_multi_sheet_excel_with_numeric_headers(tmp_path))
+    window.column_table.selectRow(0)
+    window._on_analyze_clicked()
+
+    out_path = tmp_path / "report.html"
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QFileDialog.getSaveFileName",
+        lambda *a, **k: (str(out_path), "HTML files (*.html)"),
+    )
+    window._on_export_report_clicked()
+
+    assert "Sheet: Yearly" in out_path.read_text(encoding="utf-8")
+
+
+def test_export_report_for_a_csv_has_no_sheet_fragment(window, tmp_path, monkeypatch):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    out_path = tmp_path / "report.html"
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QFileDialog.getSaveFileName",
+        lambda *a, **k: (str(out_path), "HTML files (*.html)"),
+    )
+    window._on_export_report_clicked()
+
+    html_text = out_path.read_text(encoding="utf-8")
+    assert "Sheet:" not in html_text
+    assert "Source: data.csv — Column: amount" in html_text

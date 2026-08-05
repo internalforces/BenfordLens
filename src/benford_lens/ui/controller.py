@@ -32,6 +32,9 @@ class SessionState:
     # pandas column labels are not guaranteed to be str — pd.read_excel can
     # yield int (or other hashable) labels for numeric header cells, so this
     # must accept anything that can appear as a DataFrame column label.
+    # Which worksheet the dataframe came from; None for CSV sources. The
+    # exported report records it so a multi-sheet workbook stays traceable.
+    sheet_name: str | None = None
     selected_column: Hashable | None = None
     preprocessing_options: PreprocessingOptions = field(default_factory=PreprocessingOptions)
     last_result: BenfordResult | None = None
@@ -56,7 +59,7 @@ class SessionController:
         return list_sheets(path)
 
     def open_excel(self, path: str, sheet_name: str) -> pd.DataFrame:
-        self.state = SessionState(dataframe=load_excel(path, sheet_name))
+        self.state = SessionState(dataframe=load_excel(path, sheet_name), sheet_name=sheet_name)
         return self.state.dataframe
 
     def column_names(self) -> list[Hashable]:

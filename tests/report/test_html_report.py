@@ -142,3 +142,21 @@ def test_render_html_report_escapes_user_derived_strings():
     assert "&lt;script&gt;" in html
     assert "&lt;b&gt;" in html
     assert "Price &lt; Discount" in html
+
+
+def test_render_html_report_shows_the_sheet_name_for_excel_sources():
+    context = _build_context()
+    context.source_name = "workbook.xlsx"
+    context.sheet_name = "Q3 & Q4 <ledger>"
+
+    html = render_html_report(context)
+
+    assert "Sheet: Q3 &amp; Q4 &lt;ledger&gt;" in html
+    assert "<ledger>" not in html
+
+
+def test_render_html_report_omits_the_sheet_fragment_for_csv_sources():
+    html = render_html_report(_build_context())
+
+    assert "Sheet:" not in html
+    assert "Source: sample.csv — Column: amount" in html

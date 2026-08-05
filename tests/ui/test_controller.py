@@ -174,3 +174,14 @@ def test_drill_down_returns_original_rows_matching_the_leading_digit(tmp_path):
 
     assert list(rows["name"]) == ["alice", "carol"]
     assert list(rows["amount"]) == [111, -155]  # original raw values, not preprocessed
+
+
+def test_open_excel_records_the_sheet_name_and_csv_leaves_it_none(tmp_path):
+    # The exported report has to be able to say which sheet was analyzed.
+    controller = SessionController()
+
+    controller.open_excel(_write_excel_with_numeric_headers(tmp_path), sheet_name="Sheet1")
+    assert controller.state.sheet_name == "Sheet1"
+
+    controller.open_csv(_write_csv(tmp_path))
+    assert controller.state.sheet_name is None
