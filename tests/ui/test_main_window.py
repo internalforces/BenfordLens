@@ -596,3 +596,16 @@ def test_export_report_for_a_csv_has_no_sheet_fragment(window, tmp_path, monkeyp
     html_text = out_path.read_text(encoding="utf-8")
     assert "Sheet:" not in html_text
     assert "Source: data.csv — Column: amount" in html_text
+
+
+def test_switching_language_after_opening_a_file_keeps_the_select_column_prompt(window, tmp_path):
+    # _populate_columns shows the "select a column" prompt as soon as a file
+    # is open, before any column is picked — retranslating must not walk that
+    # back to the "open a file" prompt either.
+    window.load_file(_write_csv(tmp_path))
+    assert window.controller.state.selected_column is None
+    assert window.summary_label.text() == "Select a column, then click Analyze."
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
+
+    assert window.summary_label.text() == "열을 선택한 다음 분석을 클릭하세요."

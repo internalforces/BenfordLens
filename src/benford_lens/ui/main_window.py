@@ -371,7 +371,9 @@ class MainWindow(QMainWindow):
         state = self.controller.state
         if state.last_result is not None:
             self.summary_label.setText(self._summary_text(summarize_result(state.last_result)))
-        elif state.selected_column is not None:
+        elif state.dataframe is not None:
+            # _populate_columns shows this prompt as soon as a file is open,
+            # whether or not a column has been picked yet.
             self.summary_label.setText(self.tr("Select a column, then click Analyze."))
         else:
             self.summary_label.setText(self.tr("Open a CSV or Excel file to begin."))
