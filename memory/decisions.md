@@ -102,3 +102,21 @@ M3, adding scope to that milestone (translation maintenance for 3 non-default la
   + `.ts`/`.qm` files via `pyside6-lupdate`/`pyside6-lrelease`) — no new external dependency,
   since PySide6 is already an approved dependency. See `tech-stack.md`.
 - New backlog item TASK-015 tracks the i18n scaffolding + language selector work.
+
+---
+
+### ADR-005: Pin Dev Environment to Python 3.11
+
+- **Date**: 2026-08-04
+- **Status**: Accepted
+- **Decided by**: Implementer (subagent-driven-development, M1), controller-diagnosed
+
+**Context**: While implementing TASK-005/006 (analysis engine, chart), `uv run mypy src/` started failing with `Type statement is only supported in Python 3.12 and greater` inside numpy's bundled `__init__.pyi` type stub. Root cause: the dev `.venv` had no pinned interpreter, so `uv sync` picked up the newest available Python (3.13) and resolved a numpy build whose stub unconditionally uses PEP 695 `type X = ...` syntax — which `mypy` refuses to parse when its `python_version` target is `"3.11"` (the project's documented floor, unchanged from `tech-stack.md`/`requires-python = ">=3.11"`). Downgrading numpy was tried and ruled out: no numpy version with a working `cp313` wheel avoided the issue, and older numpy has no `cp313` wheel at all (fails building from source in this environment).
+
+**Decision**: Pin the project's dev interpreter to Python 3.11 via a committed `.python-version` file (`uv python pin 3.11`), matching `requires-python` and matching what CI (TASK-012, `.github/workflows/ci.yml`) already runs (`uv python install 3.11`).
+
+**Rationale**: Under a real Python 3.11 venv, `uv` resolves a numpy build whose stub parses cleanly at mypy's `python_version = "3.11"` target — verified directly, zero errors. This required no change to `pyproject.toml`, no numpy version pin, and no relaxation of the project's stated Python floor. It also closes a latent local/CI drift risk (a contributor's unpinned local venv silently running a newer Python than CI checks against).
+
+**Trade-offs**: None identified — this only makes local dev match the project's own stated minimum version and CI's actual runtime; it doesn't narrow or widen supported Python versions.
+
+**Consequences**: `.python-version` (containing `3.11`) is now a tracked repo file. Contributors running `uv sync` from a fresh checkout get a Python 3.11 venv automatically. No other config changed.

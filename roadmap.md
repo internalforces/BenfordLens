@@ -17,12 +17,12 @@ external server.
 
 ## Milestones
 
-### M1 — MVP (PRD Phase 1)
-- [ ] CSV file reading (with automatic encoding detection)
-- [ ] Excel file reading (with sheet selection)
-- [ ] Manual column selection (no auto-analysis of "numeric-looking" columns)
-- [ ] First-digit Benford analysis
-- [ ] Expected vs. actual distribution chart output
+### M1 — MVP (PRD Phase 1) — implemented on `feature/m1-mvp`, pending merge
+- [x] CSV file reading (with automatic encoding detection)
+- [x] Excel file reading (with sheet selection)
+- [x] Manual column selection (no auto-analysis of "numeric-looking" columns)
+- [x] First-digit Benford analysis
+- [x] Expected vs. actual distribution chart output
 
 ### M2 — Phase 2
 - [ ] Preprocessing options (negative handling, zero handling, decimal handling, blank handling, duplicate handling, string-to-number parsing) with before/after preview
