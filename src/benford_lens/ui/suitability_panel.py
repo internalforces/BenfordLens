@@ -44,5 +44,14 @@ class SuitabilityPanel(QWidget):
         notes_text = "\n".join(f"• {note}" for note in assessment.notes)
         self.notes_label.setText(notes_text or self.tr("No caveats found."))
 
+    def clear(self) -> None:
+        """Blank the badge and notes.
+
+        Called when a new file is loaded: the previous file's badge would
+        otherwise stay on screen describing data that is no longer open.
+        """
+        self.badge_label.setText("")
+        self.notes_label.setText("")
+
     def retranslate_ui(self) -> None:
         self.caption_label.setText(self._caption_text())

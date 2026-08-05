@@ -6,6 +6,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
+from benford_lens.analysis.preprocessing import PreprocessingOptions
 from benford_lens.ui.main_window import MainWindow
 
 
@@ -321,6 +322,63 @@ def test_export_report_button_disabled_after_previewing_preprocessing(window, tm
     window.preprocessing_panel.preview_button.click()
 
     assert window.export_report_button.isEnabled() is False
+
+
+def test_loading_a_new_file_clears_suitability_and_drill_down_panels(window, tmp_path):
+    # Regression test: _populate_columns cleared the column table, the
+    # buttons and the chart, but left the previous file's suitability badge
+    # and drill-down rows on screen — and DrillDownPanel's Export CSV… would
+    # have written the first file's rows while the second file was open.
+    first = _write_csv(tmp_path)
+    window.load_file(first)
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    window._on_chart_clicked(SimpleNamespace(xdata=1.2))
+
+    assert window.suitability_panel.badge_label.text() != ""
+    assert window.drill_down_panel.table.rowCount() > 0
+
+    second = tmp_path / "other.csv"
+    second.write_text("label,value\nx,9\ny,8\n", encoding="utf-8")
+    window.load_file(str(second))
+
+    assert window.suitability_panel.badge_label.text() == ""
+    assert window.suitability_panel.notes_label.text() == ""
+    assert window.drill_down_panel.table.rowCount() == 0
+    assert window.drill_down_panel._rows is None
+
+
+def test_reselecting_a_column_clears_the_drill_down_panel(window, tmp_path):
+    # Regression test: the rows table was populated by a chart click against
+    # the previously selected column, so it had to go with the chart.
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    window._on_chart_clicked(SimpleNamespace(xdata=1.2))
+
+    assert window.drill_down_panel.table.rowCount() > 0
+
+    window.column_table.selectRow(0)
+
+    assert window.drill_down_panel.table.rowCount() == 0
+    assert window.drill_down_panel._rows is None
+
+
+def test_loading_a_new_file_resets_the_preprocessing_combos_to_defaults(window, tmp_path):
+    # Regression test: SessionController resets state.preprocessing_options
+    # for every new file, so a leftover combo selection made the suitability
+    # badge describe options that were not the ones visibly selected.
+    window.load_file(_write_csv(tmp_path))
+    combo = window.preprocessing_panel.negative_combo
+    combo.setCurrentIndex(combo.findData("exclude"))
+    assert combo.currentData() == "exclude"
+
+    second = tmp_path / "other.csv"
+    second.write_text("label,value\nx,9\ny,8\n", encoding="utf-8")
+    window.load_file(str(second))
+
+    assert combo.currentData() == "absolute"
+    assert window.preprocessing_panel.current_options() == PreprocessingOptions()
 
 
 def test_changing_a_preprocessing_combo_without_preview_invalidates_the_analysis(window, tmp_path):

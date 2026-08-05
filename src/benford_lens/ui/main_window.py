@@ -155,10 +155,14 @@ class MainWindow(QMainWindow):
         self.column_table.clearSelection()
         self.column_table.setRowCount(0)
         self.analyze_button.setEnabled(False)
-        self.export_report_button.setEnabled(False)
         self.preprocessing_panel.setEnabled(False)
+        # SessionController resets state.preprocessing_options for every new
+        # file, so the panel has to follow — otherwise it would show the
+        # previous file's selections while the controller used the defaults.
+        self.preprocessing_panel.reset_to_defaults()
+        self.suitability_panel.clear()
         self._columns = []
-        self._clear_chart()
+        self._invalidate_analyzed_state()
         if dataframe is None:
             return
         self.column_table.setRowCount(len(dataframe.columns))
@@ -245,10 +249,13 @@ class MainWindow(QMainWindow):
         column active at analyze() time, but drill_down() always recomputes
         from the *current* options, so a stale chart click would silently
         return mismatched rows. The export button is disabled for the same
-        reason: there is no longer an analysis on screen to export.
+        reason: there is no longer an analysis on screen to export, and the
+        drill-down table (with it, the Export CSV… source) is dropped because
+        its rows were picked by a click on the chart being cleared here.
         """
         self.export_report_button.setEnabled(False)
         self._clear_chart()
+        self.drill_down_panel.clear()
 
     def _update_suitability(self) -> None:
         try:
