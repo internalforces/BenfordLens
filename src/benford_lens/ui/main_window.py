@@ -27,6 +27,7 @@ from benford_lens.analysis.benford import BenfordResult
 from benford_lens.charts.benford_chart import build_first_digit_figure, summarize_result
 from benford_lens.ui.controller import SessionController
 from benford_lens.ui.preprocessing_panel import PreprocessingPanel
+from benford_lens.ui.suitability_panel import SuitabilityPanel
 
 
 class MainWindow(QMainWindow):
@@ -59,6 +60,8 @@ class MainWindow(QMainWindow):
         self.preprocessing_panel = PreprocessingPanel(self._on_preprocessing_preview_requested)
         self.preprocessing_panel.setEnabled(False)
 
+        self.suitability_panel = SuitabilityPanel()
+
         self.summary_label = QLabel("Open a CSV or Excel file to begin.")
         self.summary_label.setWordWrap(True)
 
@@ -72,6 +75,7 @@ class MainWindow(QMainWindow):
         layout.addLayout(top_bar)
         layout.addWidget(self.column_table)
         layout.addWidget(self.preprocessing_panel)
+        layout.addWidget(self.suitability_panel)
         layout.addWidget(self.summary_label)
         layout.addLayout(self.chart_container)
 
@@ -138,6 +142,7 @@ class MainWindow(QMainWindow):
             return
         self.analyze_button.setEnabled(True)
         self.preprocessing_panel.setEnabled(True)
+        self._update_suitability()
 
     def _on_analyze_clicked(self) -> None:
         self.controller.configure_preprocessing(self.preprocessing_panel.current_options())
@@ -152,6 +157,14 @@ class MainWindow(QMainWindow):
     def _on_preprocessing_preview_requested(self, options) -> None:
         preview = self.controller.configure_preprocessing(options)
         self.preprocessing_panel.show_preview(preview)
+        self._update_suitability()
+
+    def _update_suitability(self) -> None:
+        try:
+            assessment = self.controller.check_suitability()
+        except Exception:
+            return
+        self.suitability_panel.show_assessment(assessment)
 
     def _clear_chart(self) -> None:
         if self.canvas is not None:

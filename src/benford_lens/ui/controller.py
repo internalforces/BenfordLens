@@ -17,6 +17,11 @@ from benford_lens.analysis.preprocessing import (
     PreprocessingPreview,
     apply_preprocessing,
 )
+from benford_lens.analysis.suitability import (
+    SuitabilityAssessment,
+    assess_suitability,
+    compute_suitability_metrics,
+)
 from benford_lens.io.csv_loader import load_csv
 from benford_lens.io.excel_loader import list_sheets, load_excel
 
@@ -78,3 +83,9 @@ class SessionController:
             self._raw_selected_series(), self.state.preprocessing_options
         )
         return series
+
+    def check_suitability(self) -> SuitabilityAssessment:
+        metrics = compute_suitability_metrics(
+            self._preprocessed_series(), self._raw_selected_series()
+        )
+        return assess_suitability(metrics)

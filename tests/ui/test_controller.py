@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 
 from benford_lens.analysis.preprocessing import PreprocessingOptions
+from benford_lens.analysis.suitability import SuitabilityLevel
 from benford_lens.ui.controller import SessionController
 
 
@@ -117,3 +118,16 @@ def test_open_excel_select_column_and_analyze_end_to_end(tmp_path):
     assert result.sample_size == 3
     assert result.observed_counts[1] == 2
     assert result.observed_counts[2] == 1
+
+
+def test_check_suitability_returns_an_assessment(tmp_path):
+    path = tmp_path / "small.csv"
+    path.write_text("amount\n" + "\n".join(str(v) for v in range(1, 11)) + "\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+
+    assessment = controller.check_suitability()
+
+    assert assessment.metrics.sample_count == 10
+    assert assessment.level is SuitabilityLevel.DIFFICULT

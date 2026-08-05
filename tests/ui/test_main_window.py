@@ -207,3 +207,11 @@ def test_analyze_uses_the_current_preprocessing_selection(window, tmp_path):
     result = window.controller.state.last_result
     assert result is not None
     assert result.sample_size == 1
+
+
+def test_selecting_a_column_shows_a_suitability_badge(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+
+    window.column_table.selectRow(1)
+
+    assert window.suitability_panel.badge_label.text() != ""
