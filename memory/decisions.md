@@ -120,3 +120,38 @@ M3, adding scope to that milestone (translation maintenance for 3 non-default la
 **Trade-offs**: None identified — this only makes local dev match the project's own stated minimum version and CI's actual runtime; it doesn't narrow or widen supported Python versions.
 
 **Consequences**: `.python-version` (containing `3.11`) is now a tracked repo file. Contributors running `uv sync` from a fresh checkout get a Python 3.11 venv automatically. No other config changed.
+
+---
+
+### ADR-006: Data Suitability Check Thresholds
+
+- **Date**: 2026-08-05
+- **Status**: Accepted
+- **Decided by**: User (via M2 design spec approval)
+
+**Context**: TASK-008 requires a 🟢/🟡/🔴 data suitability signal, but `roadmap.md` does not
+specify concrete thresholds for sample count, digit-magnitude range, duplicate rate, zero
+rate, negative rate, missing rate, or distinct-value count.
+
+**Decision**: Adopt the following heuristic advisory thresholds (`src/benford_lens/analysis/suitability.py`):
+- Sample count: < 30 → 🔴, 30–299 → 🟡, ≥ 300 → 🟢 (the 30-value floor reuses
+  `MIN_MEANINGFUL_SAMPLE`, already established in `charts/benford_chart.py` for M1).
+- Orders of magnitude spanned (`digit_range`): ≤ 1 → 🔴, 2–3 → 🟡, ≥ 4 → 🟢.
+- Distinct-value ratio (`distinct_value_count / sample_count`): < 0.1 → 🔴, 0.1–0.29 → 🟡,
+  ≥ 0.3 → 🟢.
+- Zero rate > 0.3, negative rate > 0.5, or missing rate > 0.3 each add a 🟡-only advisory
+  note (none of these alone escalate to 🔴).
+- Overall level is the most severe of the above.
+
+**Rationale**: Sample-count and magnitude-range floors reflect widely cited Benford-analysis
+practice (a useful comparison needs both enough observations and enough orders of magnitude
+for the leading-digit distribution to approach its asymptotic shape); the distinct-ratio
+floor flags data that looks more like repeated codes/IDs than natural transactional
+magnitudes. These are deliberately heuristic, not derived from a formal test.
+
+**Trade-offs**: Arbitrary heuristic cutoffs, not statistically derived; may need retuning
+once real user datasets are seen.
+
+**Consequences**: `analysis/suitability.py` implements these values as named constants.
+The suitability check remains advisory only — it never states or implies whether Benford's
+Law applies to the dataset, per AGENTS.md's Product Philosophy & Tone Rules.

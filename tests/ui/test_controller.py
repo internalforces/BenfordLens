@@ -1,6 +1,8 @@
 import pandas as pd
 import pytest
 
+from benford_lens.analysis.preprocessing import PreprocessingOptions
+from benford_lens.analysis.suitability import SuitabilityLevel
 from benford_lens.ui.controller import SessionController
 
 
@@ -69,6 +71,33 @@ def test_column_names_is_empty_before_any_file_is_opened():
     assert controller.column_names() == []
 
 
+def test_configure_preprocessing_returns_a_preview(tmp_path):
+    controller = SessionController()
+    controller.open_csv(_write_csv(tmp_path))
+    controller.select_column("amount")
+
+    preview = controller.configure_preprocessing(PreprocessingOptions(negative_handling="exclude"))
+
+    assert preview.total_before == 3
+    assert controller.state.preprocessing_options.negative_handling == "exclude"
+
+
+def test_analyze_applies_configured_preprocessing(tmp_path):
+    path = tmp_path / "with_negative.csv"
+    path.write_text("amount\n-111\n222\n0\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+    controller.configure_preprocessing(PreprocessingOptions(negative_handling="exclude"))
+
+    result = controller.analyze()
+
+    # -111 excluded (negative_handling="exclude"), 0 excluded (default zero
+    # handling), leaving only 222 -> sample_size 1, leading digit 2.
+    assert result.sample_size == 1
+    assert result.observed_counts[2] == 1
+
+
 def test_open_excel_select_column_and_analyze_end_to_end(tmp_path):
     controller = SessionController()
     xlsx_path = _write_excel_with_numeric_headers(tmp_path)
@@ -89,3 +118,70 @@ def test_open_excel_select_column_and_analyze_end_to_end(tmp_path):
     assert result.sample_size == 3
     assert result.observed_counts[1] == 2
     assert result.observed_counts[2] == 1
+
+
+def test_analyze_snapshots_the_options_preview_and_suitability_it_used(tmp_path):
+    # Regression test: report export needs the preprocessing options, the
+    # preview counts and the suitability assessment that produced
+    # last_result — not whatever the user selected afterwards.
+    path = tmp_path / "with_negative.csv"
+    path.write_text("amount\n-111\n222\n0\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+    controller.configure_preprocessing(PreprocessingOptions(negative_handling="absolute"))
+
+    result = controller.analyze()
+
+    state = controller.state
+    assert state.last_preprocessing_options is not None
+    assert state.last_preprocessing_options.negative_handling == "absolute"
+    assert state.last_preprocessing_preview is not None
+    assert state.last_preprocessing_preview.total_after == result.sample_size == 2
+    assert state.last_suitability is not None
+    assert state.last_suitability.metrics.sample_count == 2
+
+    # Changing the live options afterwards must not rewrite the snapshot.
+    controller.configure_preprocessing(PreprocessingOptions(negative_handling="exclude"))
+
+    assert state.last_preprocessing_options.negative_handling == "absolute"
+    assert state.last_preprocessing_preview.total_after == 2
+    assert state.last_suitability.metrics.sample_count == 2
+
+
+def test_check_suitability_returns_an_assessment(tmp_path):
+    path = tmp_path / "small.csv"
+    path.write_text("amount\n" + "\n".join(str(v) for v in range(1, 11)) + "\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+
+    assessment = controller.check_suitability()
+
+    assert assessment.metrics.sample_count == 10
+    assert assessment.level is SuitabilityLevel.DIFFICULT
+
+
+def test_drill_down_returns_original_rows_matching_the_leading_digit(tmp_path):
+    path = tmp_path / "drill.csv"
+    path.write_text("name,amount\nalice,111\nbob,222\ncarol,-155\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+    controller.analyze()  # default preprocessing: negative -> absolute, so -155 -> 155
+
+    rows = controller.drill_down(1)
+
+    assert list(rows["name"]) == ["alice", "carol"]
+    assert list(rows["amount"]) == [111, -155]  # original raw values, not preprocessed
+
+
+def test_open_excel_records_the_sheet_name_and_csv_leaves_it_none(tmp_path):
+    # The exported report has to be able to say which sheet was analyzed.
+    controller = SessionController()
+
+    controller.open_excel(_write_excel_with_numeric_headers(tmp_path), sheet_name="Sheet1")
+    assert controller.state.sheet_name == "Sheet1"
+
+    controller.open_csv(_write_csv(tmp_path))
+    assert controller.state.sheet_name is None
