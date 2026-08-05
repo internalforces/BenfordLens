@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 
-from benford_lens.analysis.benford import BenfordResult, analyze_first_digit
+from benford_lens.analysis.benford import BenfordResult, analyze_first_digit, first_digit
 from benford_lens.analysis.preprocessing import (
     PreprocessingOptions,
     PreprocessingPreview,
@@ -89,3 +89,10 @@ class SessionController:
             self._preprocessed_series(), self._raw_selected_series()
         )
         return assess_suitability(metrics)
+
+    def drill_down(self, digit: int) -> pd.DataFrame:
+        assert self.state.dataframe is not None  # narrowed by _preprocessed_series below
+        preprocessed_series = self._preprocessed_series()
+        digits = preprocessed_series.map(first_digit)
+        matching_index = digits[digits == digit].index
+        return self.state.dataframe.loc[matching_index]

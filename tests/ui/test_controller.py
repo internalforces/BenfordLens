@@ -131,3 +131,17 @@ def test_check_suitability_returns_an_assessment(tmp_path):
 
     assert assessment.metrics.sample_count == 10
     assert assessment.level is SuitabilityLevel.DIFFICULT
+
+
+def test_drill_down_returns_original_rows_matching_the_leading_digit(tmp_path):
+    path = tmp_path / "drill.csv"
+    path.write_text("name,amount\nalice,111\nbob,222\ncarol,-155\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+    controller.analyze()  # default preprocessing: negative -> absolute, so -155 -> 155
+
+    rows = controller.drill_down(1)
+
+    assert list(rows["name"]) == ["alice", "carol"]
+    assert list(rows["amount"]) == [111, -155]  # original raw values, not preprocessed
