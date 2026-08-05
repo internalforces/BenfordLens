@@ -82,16 +82,16 @@ def apply_preprocessing(
         excluded_negative = int(negative_mask.sum())
         numeric = numeric[~negative_mask]
 
+    if options.decimal_handling == "round":
+        numeric = numeric.round(0)
+    elif options.decimal_handling == "truncate":
+        numeric = numeric.apply(math.trunc).astype(float)
+
     excluded_zero = 0
     if options.zero_handling == "exclude":
         zero_mask = numeric == 0
         excluded_zero = int(zero_mask.sum())
         numeric = numeric[~zero_mask]
-
-    if options.decimal_handling == "round":
-        numeric = numeric.round(0)
-    elif options.decimal_handling == "truncate":
-        numeric = numeric.apply(math.trunc).astype(float)
 
     if options.duplicate_handling == "exclude":
         numeric = numeric.drop_duplicates()

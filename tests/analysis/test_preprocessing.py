@@ -56,6 +56,18 @@ def test_decimal_handling_round_and_truncate():
     assert list(truncated) == [3.0, 10.0]
 
 
+def test_decimal_rounding_before_zero_exclusion_prevents_silent_reintroduction():
+    """Regression: values that round to zero should be excluded by zero_handling."""
+    series = pd.Series([0.4, 10])
+    options = PreprocessingOptions(zero_handling="exclude", decimal_handling="round")
+
+    result, preview = apply_preprocessing(series, options)
+
+    # 0.4 rounds to 0.0, which is then excluded by zero_handling="exclude"
+    assert list(result) == [10.0]
+    assert preview.excluded_zero == 1
+
+
 def test_blank_values_are_excluded_and_counted():
     series = pd.Series([10, None, 20])
 
