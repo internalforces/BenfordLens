@@ -45,9 +45,26 @@ class DrillDownPanel(QWidget):
         self.export_button.setText(self.tr("Export CSV…"))
 
     def show_rows(self, rows: pd.DataFrame) -> None:
-        self._rows = rows
+        # Drop _rows before clearing the search box: the clear() fires
+        # textChanged, and _apply_filter's early return on a None _rows makes
+        # that a no-op, leaving the explicit _render below as the only render.
+        self._rows = None
         self.search_box.clear()
+        self._rows = rows
         self._render(rows)
+
+    def clear(self) -> None:
+        """Forget the currently shown rows.
+
+        Called when the underlying data changes (new file, different column):
+        without this the table would keep showing rows from data that is no
+        longer open, and Export CSV… would write them to disk.
+        """
+        self._rows = None
+        self.search_box.clear()
+        self.table.clearContents()
+        self.table.setRowCount(0)
+        self.table.setColumnCount(0)
 
     def _render(self, rows: pd.DataFrame) -> None:
         self.table.setColumnCount(len(rows.columns))
@@ -63,8 +80,12 @@ class DrillDownPanel(QWidget):
         if not text:
             self._render(self._rows)
             return
+        # regex=False: the search box is a plain substring filter, and pandas
+        # would otherwise compile the text as a regex — so "(", "[", "*", "+"
+        # and "?" raised re.error inside this Qt slot.
         mask = self._rows.apply(
-            lambda row: row.astype(str).str.contains(text, case=False, na=False).any(), axis=1
+            lambda row: row.astype(str).str.contains(text, case=False, na=False, regex=False).any(),
+            axis=1,
         )
         self._render(self._rows[mask])
 
