@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 
+from benford_lens.analysis.preprocessing import PreprocessingOptions
 from benford_lens.ui.controller import SessionController
 
 
@@ -67,6 +68,33 @@ def test_column_names_is_empty_before_any_file_is_opened():
     controller = SessionController()
 
     assert controller.column_names() == []
+
+
+def test_configure_preprocessing_returns_a_preview(tmp_path):
+    controller = SessionController()
+    controller.open_csv(_write_csv(tmp_path))
+    controller.select_column("amount")
+
+    preview = controller.configure_preprocessing(PreprocessingOptions(negative_handling="exclude"))
+
+    assert preview.total_before == 3
+    assert controller.state.preprocessing_options.negative_handling == "exclude"
+
+
+def test_analyze_applies_configured_preprocessing(tmp_path):
+    path = tmp_path / "with_negative.csv"
+    path.write_text("amount\n-111\n222\n0\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+    controller.configure_preprocessing(PreprocessingOptions(negative_handling="exclude"))
+
+    result = controller.analyze()
+
+    # -111 excluded (negative_handling="exclude"), 0 excluded (default zero
+    # handling), leaving only 222 -> sample_size 1, leading digit 2.
+    assert result.sample_size == 1
+    assert result.observed_counts[2] == 1
 
 
 def test_open_excel_select_column_and_analyze_end_to_end(tmp_path):

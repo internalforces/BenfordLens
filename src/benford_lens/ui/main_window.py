@@ -26,6 +26,7 @@ from PySide6.QtWidgets import (
 from benford_lens.analysis.benford import BenfordResult
 from benford_lens.charts.benford_chart import build_first_digit_figure, summarize_result
 from benford_lens.ui.controller import SessionController
+from benford_lens.ui.preprocessing_panel import PreprocessingPanel
 
 
 class MainWindow(QMainWindow):
@@ -55,6 +56,9 @@ class MainWindow(QMainWindow):
         self.analyze_button.setEnabled(False)
         self.analyze_button.clicked.connect(self._on_analyze_clicked)
 
+        self.preprocessing_panel = PreprocessingPanel(self._on_preprocessing_preview_requested)
+        self.preprocessing_panel.setEnabled(False)
+
         self.summary_label = QLabel("Open a CSV or Excel file to begin.")
         self.summary_label.setWordWrap(True)
 
@@ -67,6 +71,7 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         layout.addLayout(top_bar)
         layout.addWidget(self.column_table)
+        layout.addWidget(self.preprocessing_panel)
         layout.addWidget(self.summary_label)
         layout.addLayout(self.chart_container)
 
@@ -108,6 +113,7 @@ class MainWindow(QMainWindow):
         self.column_table.clearSelection()
         self.column_table.setRowCount(0)
         self.analyze_button.setEnabled(False)
+        self.preprocessing_panel.setEnabled(False)
         self._columns = []
         self._clear_chart()
         if dataframe is None:
@@ -131,8 +137,10 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Cannot select column", str(exc))
             return
         self.analyze_button.setEnabled(True)
+        self.preprocessing_panel.setEnabled(True)
 
     def _on_analyze_clicked(self) -> None:
+        self.controller.configure_preprocessing(self.preprocessing_panel.current_options())
         try:
             result = self.controller.analyze()
         except Exception as exc:
@@ -140,6 +148,10 @@ class MainWindow(QMainWindow):
             return
         self._render_chart(result)
         self.summary_label.setText(summarize_result(result))
+
+    def _on_preprocessing_preview_requested(self, options) -> None:
+        preview = self.controller.configure_preprocessing(options)
+        self.preprocessing_panel.show_preview(preview)
 
     def _clear_chart(self) -> None:
         if self.canvas is not None:

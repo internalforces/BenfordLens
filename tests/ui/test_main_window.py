@@ -172,3 +172,38 @@ def test_loading_a_new_file_clears_the_previous_chart(window, tmp_path):
     window.load_file(_write_csv(tmp_path))
 
     assert window.canvas is None
+
+
+def test_selecting_a_column_enables_the_preprocessing_panel(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+
+    assert window.preprocessing_panel.isEnabled() is False
+
+    window.column_table.selectRow(1)
+
+    assert window.preprocessing_panel.isEnabled() is True
+
+
+def test_preprocessing_preview_button_shows_before_after_counts(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+
+    window.preprocessing_panel.preview_button.click()
+
+    assert "3" in window.preprocessing_panel.result_label.text()
+
+
+def test_analyze_uses_the_current_preprocessing_selection(window, tmp_path):
+    path = tmp_path / "with_negative.csv"
+    path.write_text("amount\n-111\n222\n0\n", encoding="utf-8")
+    window.load_file(str(path))
+    window.column_table.selectRow(0)
+    window.preprocessing_panel.negative_combo.setCurrentIndex(
+        window.preprocessing_panel.negative_combo.findData("exclude")
+    )
+
+    window._on_analyze_clicked()
+
+    result = window.controller.state.last_result
+    assert result is not None
+    assert result.sample_size == 1
