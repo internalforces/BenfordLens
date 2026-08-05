@@ -53,6 +53,15 @@
     <message><source>🔴 Difficult to determine</source><translation>🔴 判断が難しい</translation></message>
     <message><source>No caveats found.</source><translation>特に注意点はありません。</translation></message>
     <message><source>These are data characteristics, not a determination of whether Benford's Law applies — that judgment is yours to make.</source><translation>これらはデータの特性を示すものであり、ベンフォードの法則が当てはまるかどうかを判断するものではありません。その判断はご自身で行ってください。</translation></message>
+    <message><source>Sample count</source><translation>サンプル数</translation></message>
+    <message><source>Minimum value</source><translation>最小値</translation></message>
+    <message><source>Maximum value</source><translation>最大値</translation></message>
+    <message><source>Magnitude range</source><translation>桁数の範囲</translation></message>
+    <message><source>Distinct values</source><translation>異なる値の数</translation></message>
+    <message><source>Duplicate rate</source><translation>重複率</translation></message>
+    <message><source>Zero rate</source><translation>ゼロの割合</translation></message>
+    <message><source>Negative rate</source><translation>負の数の割合</translation></message>
+    <message><source>Missing rate</source><translation>欠損の割合</translation></message>
     <message><source>Only {sample_count} valid value(s) — below the {minimum}-value floor for a meaningful comparison.</source><translation>有効な値が {sample_count} 件しかなく、意味のある比較に必要な {minimum} 件の下限を下回っています。</translation></message>
     <message><source>{sample_count} valid values is a workable but modest sample size.</source><translation>有効な値 {sample_count} 件は分析に使えますが、サンプルサイズはやや小さめです。</translation></message>
     <message><source>Values span only a single order of magnitude.</source><translation>値が単一の桁数範囲にしか分布していません。</translation></message>

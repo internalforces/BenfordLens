@@ -6,7 +6,7 @@ AGENTS.md's Product Philosophy & Tone Rules.
 
 from __future__ import annotations
 
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFormLayout, QLabel, QVBoxLayout, QWidget
 
 from benford_lens.analysis.suitability import (
     NOTE_HIGH_MISSING_RATE,
@@ -20,8 +20,34 @@ from benford_lens.analysis.suitability import (
     NOTE_SINGLE_MAGNITUDE,
     SuitabilityAssessment,
     SuitabilityLevel,
+    SuitabilityMetrics,
     SuitabilityNote,
 )
+
+# SuitabilityMetrics fields, in the order they are shown to the user.
+_METRIC_KEYS = (
+    "sample_count",
+    "min_value",
+    "max_value",
+    "digit_range",
+    "distinct_value_count",
+    "duplicate_rate",
+    "zero_rate",
+    "negative_rate",
+    "missing_rate",
+)
+_RATE_KEYS = frozenset({"duplicate_rate", "zero_rate", "negative_rate", "missing_rate"})
+_EMPTY_VALUE = "—"
+
+
+def _format_metric(key: str, value: float | None) -> str:
+    if value is None:
+        return _EMPTY_VALUE
+    if key in _RATE_KEYS:
+        return f"{value:.1%}"
+    if key in ("min_value", "max_value"):
+        return f"{value:,.1f}"
+    return f"{int(value):,}"
 
 
 class SuitabilityPanel(QWidget):
@@ -36,11 +62,49 @@ class SuitabilityPanel(QWidget):
         self.caption_label = QLabel(self._caption_text())
         self.caption_label.setWordWrap(True)
 
+        self.metric_name_labels: dict[str, QLabel] = {}
+        self.metric_value_labels: dict[str, QLabel] = {}
+        metrics_form = QFormLayout()
+        for key in _METRIC_KEYS:
+            name_label = QLabel("")
+            value_label = QLabel("")
+            self.metric_name_labels[key] = name_label
+            self.metric_value_labels[key] = value_label
+            metrics_form.addRow(name_label, value_label)
+        self._retranslate_metric_names()
+
         layout = QVBoxLayout()
         layout.addWidget(self.badge_label)
         layout.addWidget(self.notes_label)
+        layout.addLayout(metrics_form)
         layout.addWidget(self.caption_label)
         self.setLayout(layout)
+
+    def _metric_name_texts(self) -> dict[str, str]:
+        """Row label per SuitabilityMetrics field.
+
+        Plain descriptive names: these report what the data looks like, they
+        do not characterise it.
+        """
+        return {
+            "sample_count": self.tr("Sample count"),
+            "min_value": self.tr("Minimum value"),
+            "max_value": self.tr("Maximum value"),
+            "digit_range": self.tr("Magnitude range"),
+            "distinct_value_count": self.tr("Distinct values"),
+            "duplicate_rate": self.tr("Duplicate rate"),
+            "zero_rate": self.tr("Zero rate"),
+            "negative_rate": self.tr("Negative rate"),
+            "missing_rate": self.tr("Missing rate"),
+        }
+
+    def _retranslate_metric_names(self) -> None:
+        for key, text in self._metric_name_texts().items():
+            self.metric_name_labels[key].setText(text)
+
+    def _show_metrics(self, metrics: SuitabilityMetrics) -> None:
+        for key in _METRIC_KEYS:
+            self.metric_value_labels[key].setText(_format_metric(key, getattr(metrics, key)))
 
     def _caption_text(self) -> str:
         return self.tr(
@@ -94,9 +158,10 @@ class SuitabilityPanel(QWidget):
         self.badge_label.setText(self._badge_text(assessment.level))
         notes_text = "\n".join(f"• {self.note_text(note)}" for note in assessment.notes)
         self.notes_label.setText(notes_text or self.tr("No caveats found."))
+        self._show_metrics(assessment.metrics)
 
     def clear(self) -> None:
-        """Blank the badge and notes.
+        """Blank the badge, notes and metrics.
 
         Called when a new file is loaded: the previous file's badge would
         otherwise stay on screen describing data that is no longer open.
@@ -104,8 +169,11 @@ class SuitabilityPanel(QWidget):
         self._assessment = None
         self.badge_label.setText("")
         self.notes_label.setText("")
+        for value_label in self.metric_value_labels.values():
+            value_label.setText("")
 
     def retranslate_ui(self) -> None:
         self.caption_label.setText(self._caption_text())
+        self._retranslate_metric_names()
         if self._assessment is not None:
             self.show_assessment(self._assessment)

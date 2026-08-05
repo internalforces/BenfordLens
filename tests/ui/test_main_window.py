@@ -545,3 +545,18 @@ def test_switching_language_before_opening_a_file_keeps_the_open_file_prompt(win
     window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
 
     assert window.summary_label.text() == "시작하려면 CSV 또는 Excel 파일을 여세요."
+
+
+def test_switching_language_translates_the_suitability_metric_labels(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    panel = window.suitability_panel
+
+    assert panel.metric_name_labels["sample_count"].text() == "Sample count"
+    assert panel.metric_value_labels["sample_count"].text() == "3"
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
+
+    assert panel.metric_name_labels["sample_count"].text() == "표본 개수"
+    # The numbers themselves are unaffected by the language switch.
+    assert panel.metric_value_labels["sample_count"].text() == "3"

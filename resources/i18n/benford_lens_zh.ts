@@ -53,6 +53,15 @@
     <message><source>🔴 Difficult to determine</source><translation>🔴 难以判断</translation></message>
     <message><source>No caveats found.</source><translation>未发现需要注意的问题。</translation></message>
     <message><source>These are data characteristics, not a determination of whether Benford's Law applies — that judgment is yours to make.</source><translation>这些只是数据特征,并非对本福特定律是否适用的判定——该判断由您自行做出。</translation></message>
+    <message><source>Sample count</source><translation>样本数量</translation></message>
+    <message><source>Minimum value</source><translation>最小值</translation></message>
+    <message><source>Maximum value</source><translation>最大值</translation></message>
+    <message><source>Magnitude range</source><translation>数量级范围</translation></message>
+    <message><source>Distinct values</source><translation>不同值数量</translation></message>
+    <message><source>Duplicate rate</source><translation>重复率</translation></message>
+    <message><source>Zero rate</source><translation>零值比例</translation></message>
+    <message><source>Negative rate</source><translation>负值比例</translation></message>
+    <message><source>Missing rate</source><translation>缺失比例</translation></message>
     <message><source>Only {sample_count} valid value(s) — below the {minimum}-value floor for a meaningful comparison.</source><translation>仅有 {sample_count} 个有效值，低于进行有意义比较所需的 {minimum} 个下限。</translation></message>
     <message><source>{sample_count} valid values is a workable but modest sample size.</source><translation>{sample_count} 个有效值可以使用，但样本量偏小。</translation></message>
     <message><source>Values span only a single order of magnitude.</source><translation>数值仅分布在单一数量级内。</translation></message>

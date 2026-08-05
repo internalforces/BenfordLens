@@ -53,6 +53,15 @@
     <message><source>🔴 Difficult to determine</source><translation>🔴 판단 어려움</translation></message>
     <message><source>No caveats found.</source><translation>특이사항 없음.</translation></message>
     <message><source>These are data characteristics, not a determination of whether Benford's Law applies — that judgment is yours to make.</source><translation>이는 데이터의 특성일 뿐이며 벤포드 법칙의 적용 여부를 판단한 것이 아닙니다. 그 판단은 사용자의 몫입니다.</translation></message>
+    <message><source>Sample count</source><translation>표본 개수</translation></message>
+    <message><source>Minimum value</source><translation>최솟값</translation></message>
+    <message><source>Maximum value</source><translation>최댓값</translation></message>
+    <message><source>Magnitude range</source><translation>자릿수 범위</translation></message>
+    <message><source>Distinct values</source><translation>고유 값 수</translation></message>
+    <message><source>Duplicate rate</source><translation>중복 비율</translation></message>
+    <message><source>Zero rate</source><translation>0 비율</translation></message>
+    <message><source>Negative rate</source><translation>음수 비율</translation></message>
+    <message><source>Missing rate</source><translation>결측 비율</translation></message>
     <message><source>Only {sample_count} valid value(s) — below the {minimum}-value floor for a meaningful comparison.</source><translation>유효한 값이 {sample_count}개뿐이며, 의미 있는 비교를 위한 최소 기준 {minimum}개에 미치지 못합니다.</translation></message>
     <message><source>{sample_count} valid values is a workable but modest sample size.</source><translation>유효한 값 {sample_count}개는 분석에 사용할 수 있지만 다소 적은 표본 크기입니다.</translation></message>
     <message><source>Values span only a single order of magnitude.</source><translation>값이 하나의 자릿수 범위에만 분포합니다.</translation></message>
