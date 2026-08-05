@@ -266,3 +266,27 @@ def test_export_report_writes_an_html_file(window, tmp_path, monkeypatch):
 
     assert out_path.exists()
     assert "amount" in out_path.read_text(encoding="utf-8")
+
+
+def test_export_report_button_disabled_after_reselecting_a_column(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    assert window.export_report_button.isEnabled() is True
+
+    window.column_table.selectRow(0)
+
+    assert window.export_report_button.isEnabled() is False
+
+
+def test_export_report_button_disabled_after_previewing_preprocessing(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    assert window.export_report_button.isEnabled() is True
+
+    window.preprocessing_panel.preview_button.click()
+
+    assert window.export_report_button.isEnabled() is False

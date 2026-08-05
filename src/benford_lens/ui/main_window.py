@@ -156,6 +156,7 @@ class MainWindow(QMainWindow):
             return
         self.analyze_button.setEnabled(True)
         self.preprocessing_panel.setEnabled(True)
+        self.export_report_button.setEnabled(False)
         self._update_suitability()
 
     def _on_analyze_clicked(self) -> None:
@@ -202,6 +203,7 @@ class MainWindow(QMainWindow):
         preview = self.controller.configure_preprocessing(options)
         self.preprocessing_panel.show_preview(preview)
         self._update_suitability()
+        self.export_report_button.setEnabled(False)
 
     def _update_suitability(self) -> None:
         try:
