@@ -87,7 +87,10 @@ class MainWindow(QMainWindow):
             lambda _index: self._switch_language(self.language_combo.currentData())
         )
 
-        self.preprocessing_panel = PreprocessingPanel(self._on_preprocessing_preview_requested)
+        self.preprocessing_panel = PreprocessingPanel(
+            self._on_preprocessing_preview_requested,
+            self._invalidate_analyzed_state,
+        )
         self.preprocessing_panel.setEnabled(False)
 
         self.suitability_panel = SuitabilityPanel()
@@ -178,12 +181,10 @@ class MainWindow(QMainWindow):
             return
         self.analyze_button.setEnabled(True)
         self.preprocessing_panel.setEnabled(True)
-        self.export_report_button.setEnabled(False)
         # A previously rendered chart (and its clickable digit bars) belongs to
-        # whichever column/options were active at analyze() time. Clear it now
-        # so a stale chart can't be clicked into drill_down() rows computed
-        # against the newly selected column — see Task 11 final review.
-        self._clear_chart()
+        # whichever column/options were active at analyze() time — see Task 11
+        # final review.
+        self._invalidate_analyzed_state()
         self._update_suitability()
 
     def _on_analyze_clicked(self) -> None:
@@ -198,18 +199,23 @@ class MainWindow(QMainWindow):
         self.export_report_button.setEnabled(True)
 
     def _on_export_report_clicked(self) -> None:
-        result = self.controller.state.last_result
-        if result is None:
+        # Everything in the report comes from the snapshot analyze() took, so
+        # the preprocessing summary, the suitability badge and the digit table
+        # always describe the same single analysis — never a mix of the live
+        # panel selection and an older result.
+        state = self.controller.state
+        result = state.last_result
+        options = state.last_preprocessing_options
+        preview = state.last_preprocessing_preview
+        suitability = state.last_suitability
+        if result is None or options is None or preview is None or suitability is None:
             return
-        preview = self.controller.configure_preprocessing(
-            self.preprocessing_panel.current_options()
-        )
         context = ReportContext(
             source_name=Path(self._source_path).name if self._source_path else "",
-            column_name=self.controller.state.selected_column,
-            preprocessing_options=self.controller.state.preprocessing_options,
+            column_name=state.selected_column,
+            preprocessing_options=options,
             preprocessing_preview=preview,
-            suitability=self.controller.check_suitability(),
+            suitability=suitability,
             result=result,
             result_summary=summarize_result(result),
             chart_figure=build_first_digit_figure(result),
@@ -230,11 +236,18 @@ class MainWindow(QMainWindow):
         preview = self.controller.configure_preprocessing(options)
         self.preprocessing_panel.show_preview(preview)
         self._update_suitability()
+        self._invalidate_analyzed_state()
+
+    def _invalidate_analyzed_state(self) -> None:
+        """Drop on-screen analysis output that no longer matches the settings.
+
+        The displayed chart was rendered under the preprocessing options and
+        column active at analyze() time, but drill_down() always recomputes
+        from the *current* options, so a stale chart click would silently
+        return mismatched rows. The export button is disabled for the same
+        reason: there is no longer an analysis on screen to export.
+        """
         self.export_report_button.setEnabled(False)
-        # Same staleness concern as column reselection: the displayed chart
-        # was rendered under the previous preprocessing options, but
-        # drill_down() always recomputes from the current options, so a
-        # stale chart click would silently return mismatched rows.
         self._clear_chart()
 
     def _update_suitability(self) -> None:

@@ -120,6 +120,35 @@ def test_open_excel_select_column_and_analyze_end_to_end(tmp_path):
     assert result.observed_counts[2] == 1
 
 
+def test_analyze_snapshots_the_options_preview_and_suitability_it_used(tmp_path):
+    # Regression test: report export needs the preprocessing options, the
+    # preview counts and the suitability assessment that produced
+    # last_result — not whatever the user selected afterwards.
+    path = tmp_path / "with_negative.csv"
+    path.write_text("amount\n-111\n222\n0\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+    controller.configure_preprocessing(PreprocessingOptions(negative_handling="absolute"))
+
+    result = controller.analyze()
+
+    state = controller.state
+    assert state.last_preprocessing_options is not None
+    assert state.last_preprocessing_options.negative_handling == "absolute"
+    assert state.last_preprocessing_preview is not None
+    assert state.last_preprocessing_preview.total_after == result.sample_size == 2
+    assert state.last_suitability is not None
+    assert state.last_suitability.metrics.sample_count == 2
+
+    # Changing the live options afterwards must not rewrite the snapshot.
+    controller.configure_preprocessing(PreprocessingOptions(negative_handling="exclude"))
+
+    assert state.last_preprocessing_options.negative_handling == "absolute"
+    assert state.last_preprocessing_preview.total_after == 2
+    assert state.last_suitability.metrics.sample_count == 2
+
+
 def test_check_suitability_returns_an_assessment(tmp_path):
     path = tmp_path / "small.csv"
     path.write_text("amount\n" + "\n".join(str(v) for v in range(1, 11)) + "\n", encoding="utf-8")

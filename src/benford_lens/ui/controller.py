@@ -7,7 +7,7 @@ this controller so the workflow logic stays independently testable.
 from __future__ import annotations
 
 from collections.abc import Hashable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 import pandas as pd
 
@@ -35,6 +35,13 @@ class SessionState:
     selected_column: Hashable | None = None
     preprocessing_options: PreprocessingOptions = field(default_factory=PreprocessingOptions)
     last_result: BenfordResult | None = None
+    # Snapshots of everything that went into `last_result`, captured by
+    # analyze() from one single preprocessing pass. Report export must read
+    # these rather than re-deriving from live panel/controller state, which
+    # the user may have changed since the analysis ran.
+    last_preprocessing_options: PreprocessingOptions | None = None
+    last_preprocessing_preview: PreprocessingPreview | None = None
+    last_suitability: SuitabilityAssessment | None = None
 
 
 class SessionController:
@@ -63,9 +70,19 @@ class SessionController:
         self.state.selected_column = column
 
     def analyze(self) -> BenfordResult:
-        numeric_series = self._preprocessed_series()
+        # One preprocessing pass feeds the result, the preview and the
+        # suitability metrics, so the three can never disagree with each
+        # other or with the chart the user is looking at.
+        raw_series = self._raw_selected_series()
+        options = self.state.preprocessing_options
+        numeric_series, preview = apply_preprocessing(raw_series, options)
         result = analyze_first_digit(numeric_series)
+        assessment = assess_suitability(compute_suitability_metrics(numeric_series, raw_series))
+
         self.state.last_result = result
+        self.state.last_preprocessing_options = replace(options)
+        self.state.last_preprocessing_preview = preview
+        self.state.last_suitability = assessment
         return result
 
     def configure_preprocessing(self, options: PreprocessingOptions) -> PreprocessingPreview:

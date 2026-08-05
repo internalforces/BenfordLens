@@ -323,6 +323,56 @@ def test_export_report_button_disabled_after_previewing_preprocessing(window, tm
     assert window.export_report_button.isEnabled() is False
 
 
+def test_changing_a_preprocessing_combo_without_preview_invalidates_the_analysis(window, tmp_path):
+    # Regression test: only the Preview button and column reselection used to
+    # invalidate analyzed state. Editing a combo directly left the old chart
+    # on screen and the Export button enabled, so an exported report could
+    # describe options the user never applied to the displayed result.
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    assert window.export_report_button.isEnabled() is True
+    assert window.canvas is not None
+
+    combo = window.preprocessing_panel.negative_combo
+    combo.setCurrentIndex(combo.findData("exclude"))
+
+    assert window.export_report_button.isEnabled() is False
+    assert window.canvas is None
+
+
+def test_export_report_describes_the_analysis_that_was_actually_run(window, tmp_path, monkeypatch):
+    # Regression test: export used to re-run configure_preprocessing() against
+    # the live panel, so the report's preprocessing section could claim
+    # "3 → 0 values used" while its digit table showed 3 analyzed values.
+    path = tmp_path / "negatives.csv"
+    path.write_text("amount\n-111\n-222\n-333\n", encoding="utf-8")
+    window.load_file(str(path))
+    window.column_table.selectRow(0)
+    window._on_analyze_clicked()  # default negative handling: absolute -> 3 values
+
+    # Switch to options that would preprocess every value away, without
+    # clicking Preview and without re-analyzing.
+    combo = window.preprocessing_panel.negative_combo
+    combo.setCurrentIndex(combo.findData("exclude"))
+
+    out_path = tmp_path / "report.html"
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QFileDialog.getSaveFileName",
+        lambda *a, **k: (str(out_path), "HTML files (*.html)"),
+    )
+    window._on_export_report_clicked()
+
+    html_text = out_path.read_text(encoding="utf-8")
+    # Preprocessing section and digit table must agree: 3 values in, 3 used.
+    assert "3 → 3 values used" in html_text
+    assert "Negative values: absolute" in html_text
+    assert "0 values used" not in html_text
+    for digit in (1, 2, 3):
+        assert f"<tr><td>{digit}</td><td>33.3%</td>" in html_text
+
+
 def test_switching_language_translates_visible_strings(window):
     index = window.language_combo.findData("ko")
     window.language_combo.setCurrentIndex(index)

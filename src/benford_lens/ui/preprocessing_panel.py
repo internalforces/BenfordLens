@@ -28,9 +28,14 @@ _STRING_TO_NUMBER_OPTIONS = [("true", "Auto-convert"), ("false", "Do not convert
 
 
 class PreprocessingPanel(QWidget):
-    def __init__(self, on_preview_requested: Callable[[PreprocessingOptions], None]) -> None:
+    def __init__(
+        self,
+        on_preview_requested: Callable[[PreprocessingOptions], None],
+        on_options_changed: Callable[[], None] | None = None,
+    ) -> None:
         super().__init__()
         self._on_preview_requested = on_preview_requested
+        self._on_options_changed = on_options_changed
 
         self.negative_combo = self._build_combo(_NEGATIVE_OPTIONS, "absolute")
         self.zero_combo = self._build_combo(_ZERO_OPTIONS, "exclude")
@@ -38,6 +43,12 @@ class PreprocessingPanel(QWidget):
         self.blank_combo = self._build_combo(_BLANK_OPTIONS, "exclude")
         self.duplicate_combo = self._build_combo(_DUPLICATE_OPTIONS, "keep")
         self.string_to_number_combo = self._build_combo(_STRING_TO_NUMBER_OPTIONS, "true")
+
+        # Any option change makes an already-rendered analysis stale, exactly
+        # like clicking Preview does — MainWindow uses this to invalidate the
+        # chart and the export button.
+        for combo, _default_value in self._combos():
+            combo.currentIndexChanged.connect(self._emit_options_changed)
 
         self.negative_label = QLabel(self.tr("Negative values"))
         self.zero_label = QLabel(self.tr("Zero values"))
@@ -72,6 +83,38 @@ class PreprocessingPanel(QWidget):
             combo.addItem(self.tr(label), value)
         combo.setCurrentIndex(max(combo.findData(default_value), 0))
         return combo
+
+    def _combos(self) -> list[tuple[QComboBox, str]]:
+        """Every option combo paired with its documented default value."""
+        return [
+            (self.negative_combo, "absolute"),
+            (self.zero_combo, "exclude"),
+            (self.decimal_combo, "as_is"),
+            (self.blank_combo, "exclude"),
+            (self.duplicate_combo, "keep"),
+            (self.string_to_number_combo, "true"),
+        ]
+
+    def _emit_options_changed(self) -> None:
+        if self._on_options_changed is not None:
+            self._on_options_changed()
+
+    def reset_to_defaults(self) -> None:
+        """Restore every combo to the PreprocessingOptions dataclass defaults.
+
+        Called when a new file is loaded, where SessionController resets
+        `state.preprocessing_options` — without this the panel would keep
+        showing the previous file's selections while the controller computed
+        against the defaults.
+        """
+        for combo, default_value in self._combos():
+            # Blocked so this bookkeeping reset does not fire the
+            # options-changed callback; the caller is already invalidating.
+            was_blocked = combo.blockSignals(True)
+            combo.setCurrentIndex(max(combo.findData(default_value), 0))
+            combo.blockSignals(was_blocked)
+        # The preview line describes the previous file's column; drop it too.
+        self.result_label.setText("")
 
     def retranslate_ui(self) -> None:
         self.negative_label.setText(self.tr("Negative values"))
