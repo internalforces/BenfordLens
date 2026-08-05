@@ -36,6 +36,7 @@ remained the next candidate only until the user approved SciPy in this session.
 - [x] Add the hidden-by-default expert panel and analysis-invalidation behavior
 - [x] Add and compile Korean/Chinese/Japanese translations
 - [x] Verify 162 tests, Ruff, mypy, and 95.19% traced line coverage
+- [x] Commit and push `cb266e4`; open draft PR #4 against `main`
 
 ### Retained M2 implementation history
 
@@ -98,8 +99,8 @@ remained the next candidate only until the user approved SciPy in this session.
 
 ## Next Session: To-Do
 
-1. Review and publish `codex/task-011-expert-statistics` when requested. Do not self-merge;
-   reviewer sign-off and explicit human direction remain required.
+1. Review draft PR #4. Do not self-merge; reviewer sign-off and explicit human direction
+   remain required.
 
 ## Important Context
 
