@@ -83,6 +83,19 @@ def test_analyze_renders_chart_and_summary(window, tmp_path):
 
     assert window.canvas is not None
     assert window.summary_label.text() != ""
+    assert window.expert_statistics_panel.toggle_button.isEnabled() is True
+    assert window.expert_statistics_panel.details_widget.isHidden() is True
+
+
+def test_expert_statistics_details_can_be_revealed_after_analysis(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    window.expert_statistics_panel.toggle_button.setChecked(True)
+
+    assert window.expert_statistics_panel.details_widget.isHidden() is False
+    assert window.expert_statistics_panel.value_labels["sample_size"].text() == "3"
 
 
 def test_clicking_a_data_cell_selects_the_whole_row(window, tmp_path):
@@ -227,6 +240,8 @@ def test_reselecting_a_column_clears_the_previous_chart(window, tmp_path):
     window.column_table.selectRow(0)
 
     assert window.canvas is None
+    assert window.expert_statistics_panel.toggle_button.isEnabled() is False
+    assert window.expert_statistics_panel.details_widget.isHidden() is True
 
 
 def test_previewing_different_preprocessing_clears_the_previous_chart(window, tmp_path):
@@ -638,6 +653,22 @@ def test_switching_language_translates_the_suitability_metric_labels(window, tmp
     assert panel.metric_name_labels["sample_count"].text() == "표본 개수"
     # The numbers themselves are unaffected by the language switch.
     assert panel.metric_value_labels["sample_count"].text() == "3"
+
+
+def test_switching_language_translates_the_expert_statistics_panel(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    panel = window.expert_statistics_panel
+
+    assert panel.toggle_button.text() == "Show Details"
+    assert panel.name_labels["mean_absolute_deviation"].text() == "Mean absolute deviation (MAD)"
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
+
+    assert panel.toggle_button.text() == "상세 통계 보기"
+    assert panel.name_labels["mean_absolute_deviation"].text() == "평균 절대 편차 (MAD)"
+    assert panel.value_labels["sample_size"].text() == "3"
 
 
 def test_export_report_records_the_excel_sheet_that_was_analyzed(window, tmp_path, monkeypatch):

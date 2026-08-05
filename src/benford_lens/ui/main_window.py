@@ -42,6 +42,7 @@ from benford_lens.charts.benford_chart import (
 from benford_lens.report.html_report import ReportContext, render_html_report
 from benford_lens.ui.controller import SessionController
 from benford_lens.ui.drill_down_panel import DrillDownPanel
+from benford_lens.ui.expert_statistics_panel import ExpertStatisticsPanel
 from benford_lens.ui.preprocessing_panel import PreprocessingPanel
 from benford_lens.ui.suitability_panel import SuitabilityPanel
 
@@ -103,6 +104,7 @@ class MainWindow(QMainWindow):
         self.preprocessing_panel.setEnabled(False)
 
         self.suitability_panel = SuitabilityPanel()
+        self.expert_statistics_panel = ExpertStatisticsPanel()
         self.drill_down_panel = DrillDownPanel()
 
         self.summary_label = QLabel(self.tr("Open a CSV or Excel file to begin."))
@@ -122,6 +124,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.preprocessing_panel)
         layout.addWidget(self.suitability_panel)
         layout.addWidget(self.summary_label)
+        layout.addWidget(self.expert_statistics_panel)
         layout.addLayout(self.chart_container)
         layout.addWidget(self.drill_down_panel)
 
@@ -217,6 +220,9 @@ class MainWindow(QMainWindow):
         # on-screen panel must always match what a report export would embed
         # for this analysis, with no room for the two to diverge.
         self._update_suitability(self.controller.state.last_suitability)
+        expert_statistics = self.controller.state.last_expert_statistics
+        if expert_statistics is not None:
+            self.expert_statistics_panel.show_statistics(expert_statistics)
         self.export_report_button.setEnabled(True)
 
     def _summary_templates(self) -> dict[str, str]:
@@ -305,6 +311,7 @@ class MainWindow(QMainWindow):
         its rows were picked by a click on the chart being cleared here.
         """
         self.export_report_button.setEnabled(False)
+        self.expert_statistics_panel.clear()
         self._clear_chart()
         self.drill_down_panel.clear()
 
@@ -390,6 +397,7 @@ class MainWindow(QMainWindow):
         self.export_report_button.setText(self.tr("Export Report…"))
         self._retranslate_summary_label()
         self.suitability_panel.retranslate_ui()
+        self.expert_statistics_panel.retranslate_ui()
         self.preprocessing_panel.retranslate_ui()
         self.drill_down_panel.retranslate_ui()
 
