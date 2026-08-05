@@ -18,26 +18,32 @@ external server.
 ## Current State
 
 - **Version**: v0.1.0-dev
-- **Phase**: Initial setup — no code written yet, Harness just established
-- **Next milestone**: M1 — MVP (CSV/Excel reading, column selection, first-digit analysis, chart output)
+- **Phase**: M1 (MVP) implemented on `feature/m1-mvp`, pending final whole-branch review and human approval before merge to `main`
+- **Next milestone**: M1 sign-off and merge, then M2 (preprocessing, suitability check, drill-down, HTML report, i18n)
 - **Overall health**: 🟢 Good
 
 ## Tech Summary
 
 | Field | Value |
 |-------|-------|
-| Language | Python |
-| Framework | PySide6 (UI); Pandas/NumPy/SciPy (analysis); Matplotlib (charts) |
-| Infrastructure | None — local desktop app, packaged via PyInstaller |
+| Language | Python 3.11 (pinned via `.python-version`) |
+| Framework | PySide6 (UI); Pandas/NumPy (analysis); Matplotlib (charts) — SciPy not yet added, deferred to M2's expert statistics panel (TASK-011) |
+| Infrastructure | None — local desktop app, packaged via PyInstaller (packaging itself is M2, TASK-013) |
 | Repo Structure | Single Repo |
 
 ## Key Paths
 
 ```
 BenfordLens/
-├── src/                      (not yet created — planned application source)
-├── tests/                    (not yet created — planned test suite)
-└── benford-lens-harness/     ← this AI Development Harness
+├── src/benford_lens/
+│   ├── io/                   (csv_loader.py, excel_loader.py)
+│   ├── analysis/              (benford.py — first-digit calculation, zero UI dependency)
+│   ├── charts/                (benford_chart.py — chart + result summary)
+│   └── ui/                    (controller.py — framework-agnostic session state;
+│                                main_window.py — PySide6 MainWindow; __main__.py entry point)
+├── tests/                    (mirrors src/ layout; tests/conftest.py sets QT_QPA_PLATFORM=offscreen)
+├── .github/workflows/ci.yml  (lint, format-check, type-check, test on push/PR to main)
+└── docs/superpowers/plans/2026-08-04-m1-mvp.md   ← M1 implementation plan (subagent-driven-development)
 ```
 
 ## Recent Changes
@@ -46,6 +52,7 @@ BenfordLens/
 |------|--------|
 | 2026-08-04 | AI Development Harness v1.1 initial setup (Standard tier), generated from the PRD |
 | 2026-08-04 | UI mockup reviewed (TASK-014); ADR-004 decided: expert stats stay hidden by default, default UI language is English with Korean/Chinese/Japanese selectable by M2 (TASK-015) |
+| 2026-08-04 | M1 (MVP) implemented on `feature/m1-mvp` via subagent-driven-development: TASK-001–006, TASK-012 done. Dev environment pinned to Python 3.11 (`.python-version`) after a numpy/mypy stub incompatibility surfaced mid-implementation — see `memory/decisions.md` ADR-005 and `memory/known-issues.md` |
 
 ## Constraints
 

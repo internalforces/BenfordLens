@@ -7,57 +7,58 @@ Harness Version: 1.1
 
 # Current Session — Benford Lens
 
-> After this session, copy this file to `memory/sessions/2026-08-04-UI-Mockup-Review.md`.
+> After this session, copy this file to `memory/sessions/2026-08-04-M1-MVP-Implementation.md`.
 
 ---
 
 ## Session Info
 
 - **Date**: 2026-08-04
-- **Agent Role**: Planner (UI mockup review)
-- **Session Goal**: Analyze a user-provided UI demo mockup (screenshot, image-only, no code) against the existing Harness design and log it as a backlog task, without starting implementation yet (explicit user instruction: no code this session).
+- **Agent Role**: Planner → Implementer (subagent-driven-development, 8 dispatched implementer/reviewer subagent rounds)
+- **Session Goal**: Implement the M1 (MVP) milestone on a new branch (`feature/m1-mvp`): CSV/Excel reading, manual column selection, first-digit Benford analysis, expected-vs-actual chart, and CI.
 
 ## Previous Session Summary
 
-Harness setup session (2026-08-04) generated the full AI Development Harness v1.1 (Standard
-tier) from the PRD. No source code was written; `src/`/`tests/` still do not exist. See
-`memory/sessions/2026-08-04-Harness-Setup.md`.
+Prior session (2026-08-04, UI Mockup Review) added TASK-014/015 to the backlog and recorded
+ADR-004, but explicitly did not start implementation — `src/`/`tests/` did not exist yet. See
+`memory/sessions/2026-08-04-UI-Mockup-Review.md`.
 
 ## Current Work
 
-- [x] Review the mockup against `memory/architecture.md`, `roadmap.md`, and `tasks/backlog.md`
-- [x] Log findings as TASK-014 in `tasks/backlog.md`
-- [x] Resolve the 2 open discrepancies with the user and record ADR-004
+- [x] Create `feature/m1-mvp` branch (off `main`, in an isolated git worktree at `.worktrees/feature-m1-mvp`)
+- [x] Write full implementation plan: `docs/superpowers/plans/2026-08-04-m1-mvp.md`
+- [x] Execute all 8 plan tasks via subagent-driven-development (fresh implementer + reviewer subagent per task)
+- [x] Harness bookkeeping (this update)
+- [x] Final whole-branch code review (opus) — found 1 Critical + 6 Important + 1 Minor, all fixed in one wave and scoped-re-reviewed clean (1 Minor test-coverage gap parked as TD-002)
+- [ ] Human approval before merge to `main` (per `ORCHESTRATOR.md` Feature Workflow — not yet requested)
 
 ## Completed This Session
 
-- [x] Added TASK-014 to `tasks/backlog.md` with mockup-derived UI details for TASK-004/006/007/009/011
-- [x] Decided and recorded ADR-004 (`memory/decisions.md`): expert stats panel stays hidden by
-      default; MVP default UI language is English, with Korean/Chinese/Japanese selectable
-      through M2
-- [x] Added TASK-015 (i18n scaffolding + language selector, M2) to `tasks/backlog.md`
-- [x] Updated `roadmap.md` (M2 gains language selection; M3's i18n item narrowed to "beyond
-      the initial 4 languages"), `tech-stack.md` (new Internationalization section —
-      QTranslator, no new dependency), and `memory/architecture.md` (i18n noted in Component
-      Structure + Design Decision Summary)
+- [x] TASK-001: Project scaffolding — `pyproject.toml`, `uv` toolchain, package skeleton, `tests/conftest.py` (offscreen Qt)
+- [x] TASK-002: CSV loader (`src/benford_lens/io/csv_loader.py`) — fixed encoding fallback list, no new dependency
+- [x] TASK-003: Excel loader (`src/benford_lens/io/excel_loader.py`) — explicit sheet selection only
+- [x] TASK-005: Benford first-digit analysis engine (`src/benford_lens/analysis/benford.py`) — zero PySide6 dependency
+- [x] TASK-006: Chart + result summary (`src/benford_lens/charts/benford_chart.py`) — tone-compliant per AGENTS.md
+- [x] TASK-004: Session controller (`src/benford_lens/ui/controller.py`) + Main window UI (`src/benford_lens/ui/main_window.py`, `src/benford_lens/__main__.py`) — manual column selection only
+- [x] TASK-012: GitHub Actions CI (`.github/workflows/ci.yml`) — lint, format-check, type-check, test on `ubuntu-latest`
+- [x] ADR-005 recorded (`memory/decisions.md`): pinned dev environment to Python 3.11 via `.python-version`
+- [x] Moved TASK-001–006, TASK-012 from `tasks/backlog.md` to `tasks/completed.md`
 
 ## Issues Found / Decisions Made
 
-- ADR-004 (`memory/decisions.md`): UI Language Defaults & i18n Scope — see above. Both
-  TASK-014 discrepancies are now resolved, not open questions.
+- **ADR-005** (`memory/decisions.md`): pinned dev environment to Python 3.11 (`.python-version`) after a numpy/mypy type-stub incompatibility surfaced mid-implementation (see ADR-005 for full root cause). Matches the project's existing `requires-python` floor and CI's runtime — no scope change.
+- **TD-001** (`memory/known-issues.md`): CSV encoding detection is a fixed try-in-order fallback, not real content-based detection — accepted limitation for M1, avoids adding a new dependency.
+- **ENV-001** (`memory/known-issues.md`): local macOS-only `.venv` hidden-flag quirk can crash `pytest` after certain file edits; workaround `chflags -R nohidden .venv`; does not affect Linux CI.
+- Several functional bugs were caught and fixed during review before merge-readiness. Per-task review loop: (1) Task 4's brief had a self-contradictory test assertion (arithmetic bug in the plan itself, corrected and verified), (2) Task 7's `column_table` was missing `setSelectionBehavior(SelectRows)`, which meant a real mouse click on a data cell never actually selected a column — only the tests' programmatic `selectRow()` shortcut worked. Final whole-branch review (after all 8 tasks individually passed): (3) **Critical** — Excel sheets with non-string (e.g. integer) column headers broke column selection entirely, because `MainWindow` round-tripped column identity through display text (`str(column)` → `.text()`) instead of tracking real column objects; fixed by tracking `self._columns` separately and widening `SessionController`'s column-identity typing to `Hashable`. Also fixed in the same pass: `inf`/`-inf` crashing the analysis engine, a stale chart persisting across file loads, inconsistent exception handling across Qt slots, missing Excel integration test coverage (the gap where the Critical bug hid), untested/unvalidated CI (missing Linux Qt system libs, no lockfile validation), and an undocumented/unguarded divergence threshold. See `docs/superpowers/plans/2026-08-04-m1-mvp.md`'s SDD ledger history (now removed per the skill's cleanup step — see git log on `feature/m1-mvp` for the full commit trail, particularly `a31cd96`..`28fc8d2`) for details.
+- **TD-002** (`memory/known-issues.md`): the final-review fix wave's small-sample guard left one existing tone test's "close to Benford" branch uncovered — parked, not a functional bug.
 
 ## Next Session: To-Do
 
-1. Scaffold the actual project source (`src/`, `tests/`) — still not yet created
-2. Start M1 (MVP) tasks from `roadmap.md`: CSV/Excel reading, column selection, first-digit analysis, chart output
-3. Move the first tasks from `tasks/backlog.md` into `tasks/active.md` when work begins
-4. When TASK-004/006/007/009 are implemented, apply the resolved TASK-014 mockup notes (column-level suitability hint, preprocessing defaults, result-summary tone example, drill-down export/search)
-5. TASK-015 (i18n) should land within M2, not deferred to M3
+1. Request human approval before merging `feature/m1-mvp` to `main` (`ORCHESTRATOR.md` requires this; self-merge is not allowed per `standards.md`). The branch is review-clean and ready.
+2. After merge: begin M2 (`roadmap.md`) — TASK-007 (preprocessing options), TASK-008 (suitability check), TASK-009 (drill-down), TASK-010 (HTML report), TASK-011 (expert stats, adds SciPy dependency — requires human approval per `dependencies.md`), TASK-013 (PyInstaller packaging), TASK-015 (i18n).
+3. TD-002 (`memory/known-issues.md`): bump `test_summarize_result_uses_neutral_non_accusatory_language`'s sample to ≥30 values, or add a dedicated ≥30-sample "close to Benford" test, to restore coverage of that branch.
+4. `select_column`'s type is now `Hashable`, not `str` — keep this in mind when building TASK-007/009, which will also touch column identity.
 
 ## Important Context
 
-No source code exists yet — this session, like the previous one, only touched Harness
-documentation. The next agent should still read AGENTS.md in full before writing any code, in
-particular the Product Philosophy & Tone Rules and the Absolute Restrictions (local-only
-processing, no auto-column selection, no auto-confirmation of Benford applicability). ADR-004
-is now binding: expert stats hidden by default, English default UI with KO/ZH/JA selectable by M2.
+`src/` and `tests/` now exist and are fully populated for M1 — this is no longer a docs-only repo. Any agent picking up work should read `docs/superpowers/plans/2026-08-04-m1-mvp.md` for the exact module layout and interfaces already established (`SessionController`, `BenfordResult`, etc.) before adding new code, to keep M2 consistent with M1's architecture. The dev environment requires `.python-version` (3.11) — do not "fix" a mypy numpy-stub error by bumping this or `pyproject.toml`'s `[tool.mypy] python_version`; see ADR-005 if this resurfaces. AGENTS.md's Absolute Restrictions (no auto-column-selection, no auto-applicability-judgment, neutral tone) remain fully binding and are now enforced in actual code (`SessionController.select_column`, `MainWindow` selection wiring, `summarize_result`), not just documentation — M2 work must preserve these invariants.
