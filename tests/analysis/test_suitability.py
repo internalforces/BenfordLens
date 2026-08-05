@@ -84,3 +84,33 @@ def test_distinct_value_count_and_duplicate_rate():
 
     assert metrics.distinct_value_count == 3
     assert metrics.duplicate_rate == 0.4  # 1 - 3/5
+
+
+def test_high_negative_rate_adds_a_caution_note_about_negative_handling():
+    # Regression test: the negative_rate > _NEGATIVE_RATE_CAUTION branch in
+    # assess_suitability() had no test exercising it before this change.
+    values = [float(v) for v in range(1, 301)] + [3000.0, 30000.0, 300000.0]
+    raw = pd.Series([-v for v in values[:200]] + values[200:])  # >50% negative
+    preprocessed = pd.Series(values)  # negatives already handled upstream
+
+    metrics = compute_suitability_metrics(preprocessed, raw)
+    assessment = assess_suitability(metrics)
+
+    assert metrics.negative_rate > 0.5
+    assert any("negative" in note.lower() for note in assessment.notes)
+
+
+def test_high_missing_rate_adds_a_caution_note():
+    # Regression test: the missing_rate > _MISSING_RATE_CAUTION branch in
+    # assess_suitability() had no test exercising it before this change
+    # (the existing missing-rate test only checked compute_suitability_metrics,
+    # never assess_suitability's notes).
+    values = [float(v) for v in range(1, 301)] + [3000.0, 30000.0, 300000.0]
+    raw = pd.Series(values + [None] * 150)  # >30% blank
+    preprocessed = pd.Series(values)
+
+    metrics = compute_suitability_metrics(preprocessed, raw)
+    assessment = assess_suitability(metrics)
+
+    assert metrics.missing_rate > 0.3
+    assert any("blank" in note.lower() for note in assessment.notes)

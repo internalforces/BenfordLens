@@ -179,6 +179,11 @@ class MainWindow(QMainWindow):
         self.analyze_button.setEnabled(True)
         self.preprocessing_panel.setEnabled(True)
         self.export_report_button.setEnabled(False)
+        # A previously rendered chart (and its clickable digit bars) belongs to
+        # whichever column/options were active at analyze() time. Clear it now
+        # so a stale chart can't be clicked into drill_down() rows computed
+        # against the newly selected column — see Task 11 final review.
+        self._clear_chart()
         self._update_suitability()
 
     def _on_analyze_clicked(self) -> None:
@@ -226,6 +231,11 @@ class MainWindow(QMainWindow):
         self.preprocessing_panel.show_preview(preview)
         self._update_suitability()
         self.export_report_button.setEnabled(False)
+        # Same staleness concern as column reselection: the displayed chart
+        # was rendered under the previous preprocessing options, but
+        # drill_down() always recomputes from the current options, so a
+        # stale chart click would silently return mismatched rows.
+        self._clear_chart()
 
     def _update_suitability(self) -> None:
         try:

@@ -176,6 +176,37 @@ def test_loading_a_new_file_clears_the_previous_chart(window, tmp_path):
     assert window.canvas is None
 
 
+def test_reselecting_a_column_clears_the_previous_chart(window, tmp_path):
+    # Regression test: the previous chart's clickable digit bars belong to
+    # the previously selected column. If the chart stayed live after
+    # reselecting a different column, clicking it would call drill_down()
+    # against the new column and silently return mismatched rows.
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    assert window.canvas is not None
+
+    window.column_table.selectRow(0)
+
+    assert window.canvas is None
+
+
+def test_previewing_different_preprocessing_clears_the_previous_chart(window, tmp_path):
+    # Regression test: the displayed chart was rendered under the
+    # preprocessing options active at analyze() time. Previewing different
+    # options updates the controller's current options, so a stale chart
+    # click would call drill_down() against data that no longer matches
+    # what's on screen unless the chart is cleared.
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    assert window.canvas is not None
+
+    window.preprocessing_panel.preview_button.click()
+
+    assert window.canvas is None
+
+
 def test_selecting_a_column_enables_the_preprocessing_panel(window, tmp_path):
     window.load_file(_write_csv(tmp_path))
 
