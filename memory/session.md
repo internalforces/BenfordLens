@@ -31,8 +31,9 @@ expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
 - [x] Execute all 11 plan tasks via subagent-driven-development (fresh implementer + reviewer subagent per task)
 - [x] Harness bookkeeping (this update)
 - [x] Final whole-branch sanity pass (Task 11, own-effort review ahead of the dedicated deeper review) — found and fixed 1 real stale-state bug plus 3 test-coverage gaps (details below)
-- [ ] Separate, more thorough final whole-branch code review (most capable available model) — runs next, per subagent-driven-development's last step
-- [ ] Human approval before merge to `main` (per `ORCHESTRATOR.md` Feature Workflow — not yet requested)
+- [x] 2026-08-05 implementation-status audit — 150 tests, Ruff format/lint, and mypy pass locally after applying the documented ENV-001 workaround; confirmed no product-code network calls or banned accusatory terms
+- [x] Separate final review completed — Approved; report saved to `reports/review-2026-08-05-m2-merge-gate.md`
+- [x] M2 PR #2 was already merged to `main`; prepare and merge a follow-up PR containing the final gate fixes documented below
 
 ## Completed This Session
 
@@ -54,10 +55,14 @@ expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
 - **Suitability threshold branch coverage gap (found and fixed during Task 11's sanity pass)**: `assess_suitability()`'s negative-rate and missing-rate caution-note branches had no test exercising them. Added `test_high_negative_rate_adds_a_caution_note_about_negative_handling` and `test_high_missing_rate_adds_a_caution_note` to `tests/analysis/test_suitability.py`.
 - Wording review (report template, suitability notes, all three new-language translations) found no accusatory or conclusive language; the "This result alone cannot be used to judge data errors or manipulation" disclaimer is present in the HTML report footer, matching AGENTS.md's tone rules.
 - Interface consistency check (`PreprocessingOptions`/`PreprocessingPreview`, `SuitabilityAssessment`/`SuitabilityMetrics`, `ReportContext`) found no drift between definition sites (`analysis/preprocessing.py`, `analysis/suitability.py`) and consumers (`ui/controller.py`, `report/html_report.py`).
+- **ISS-001** (`memory/known-issues.md`): `MainWindow.load_file()` assigns `_source_path` before a new file is successfully opened. Cancelling Excel sheet selection or hitting a load error can therefore leave the previous analysis on screen while a later HTML report names the attempted file as its source.
+- **TD-004/TD-005** (`memory/known-issues.md`): the README is still a one-line placeholder and `pyproject.toml` still reports `0.1.0` despite the M2 snapshot being `v0.2.0-dev`; CI runs tests but does not measure the documented 80% coverage threshold.
+- Worktree hygiene: an untracked older copy, `src/benford_lens/ui/suitability_panel 2.py`, is present. It is preserved as local user-owned state and explicitly excluded from staging and the follow-up PR.
+- **Merge-gate follow-up completed locally**: ISS-001 fixed with failure/cancellation regression tests; README and version metadata synchronized to `0.2.0.dev0`; TASK-014 closed through ADR-007 without automated per-column verdicts; final verification passed with 152 tests and 91% line coverage. The untracked older copy remains preserved and is excluded from the follow-up PR.
 
 ## Next Session: To-Do
 
-1. Request human approval before merging `feature/m2-phase2` to `main` (`ORCHESTRATOR.md` requires this; self-merge is not allowed per `standards.md`). The dedicated final whole-branch code review (most capable available model) should run first, per subagent-driven-development's last step, before that approval request.
+1. Commit and push the reviewed merge-gate follow-up, open a PR against `main`, wait for CI, and merge it under the user's explicit 2026-08-05 instruction to complete the M2 merge.
 2. After merge: TASK-011 (expert statistics: MAD, Chi-square, KS Test) is the next candidate work item — it remains out of scope until SciPy, a new external dependency, clears its own Human Approval Gate per `dependencies.md`.
 
 ## Important Context

@@ -24,4 +24,5 @@ _Last updated: 2026-08-05_
 | TASK-009 | Raw data drill-down from chart digit click | 2026-08-05 | Implementer | `ui/drill_down_panel.py`; chart click wired via `mpl_connect` |
 | TASK-010 | HTML report generation | 2026-08-05 | Implementer | `report/html_report.py`, stdlib `string.Template`, no new dependency |
 | TASK-013 | PyInstaller packaging config for macOS/Windows/Linux | 2026-08-05 | Implementer | `packaging/*.spec`; macOS built + headless-smoke-tested locally; Windows/Linux config-only (TD-003) |
+| TASK-014 | Review UI demo mockup and reconcile its design details | 2026-08-05 | Planner / Reviewer | Adopted preprocessing defaults, neutral result tone, drill-down search/export, hidden expert details, and EN/KO/ZH/JA language direction. A pre-selection per-column verdict was not adopted because column choice and applicability judgment remain user-owned; decorative/filter-shell ideas are deferred to later UI polish. See ADR-007. |
 | TASK-015 | UI language selection & i18n scaffolding | 2026-08-05 | Implementer | `resources/i18n/*.ts/.qm`, `QTranslator`-based switching in `ui/main_window.py`; real KO/ZH/JA translations, not placeholders |

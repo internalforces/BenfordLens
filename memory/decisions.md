@@ -155,3 +155,35 @@ once real user datasets are seen.
 **Consequences**: `analysis/suitability.py` implements these values as named constants.
 The suitability check remains advisory only — it never states or implies whether Benford's
 Law applies to the dataset, per AGENTS.md's Product Philosophy & Tone Rules.
+
+---
+
+### ADR-007: Close the UI Mockup Review Without Automated Per-Column Verdicts
+
+- **Date**: 2026-08-05
+- **Status**: Accepted
+- **Decided by**: Implementer / Reviewer, applying AGENTS.md constraints
+
+**Context**: TASK-014 reviewed a visual mockup and proposed several details. Most were folded
+into M1/M2, but its pre-selection column table included an automated per-column
+"good/caution/unsuitable" hint, while the project constitution requires column choice and
+the judgment about Benford applicability to remain with the user.
+
+**Decision**: Close TASK-014 as a completed review. Keep the adopted preprocessing defaults,
+neutral summary style, drill-down search/export, hidden expert details, and four-language
+direction. Do not add a pre-selection per-column verdict. The existing suitability panel
+continues to describe data characteristics only after the user explicitly selects a column.
+A standalone filter icon and persistent shell trust badge are deferred to later UI polish;
+search already performs the drill-down filtering, while the report and README state that
+processing is local.
+
+**Rationale**: This preserves the useful interaction details from the mockup without adding
+an automated judgment that could influence column choice or be mistaken for an applicability
+decision.
+
+**Trade-offs**: The M2 window does not visually reproduce every decorative element in the
+mockup.
+
+**Consequences**: TASK-014 moves to `tasks/completed.md`. Future UI polish may add a neutral
+local-processing badge, but must not introduce automated column selection or applicability
+claims.
