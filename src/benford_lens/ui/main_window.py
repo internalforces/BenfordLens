@@ -29,6 +29,7 @@ from PySide6.QtWidgets import (
 )
 
 from benford_lens.analysis.benford import BenfordResult
+from benford_lens.analysis.suitability import SuitabilityAssessment
 from benford_lens.charts.benford_chart import (
     SUMMARY_CLOSE_TO_BENFORD,
     SUMMARY_DIVERGES_FROM_BENFORD,
@@ -208,6 +209,11 @@ class MainWindow(QMainWindow):
             return
         self._render_chart(result)
         self.summary_label.setText(self._summary_text(summarize_result(result)))
+        # Show the exact assessment analyze() snapshotted into
+        # last_suitability, not a fresh check_suitability() recompute — the
+        # on-screen panel must always match what a report export would embed
+        # for this analysis, with no room for the two to diverge.
+        self._update_suitability(self.controller.state.last_suitability)
         self.export_report_button.setEnabled(True)
 
     def _summary_templates(self) -> dict[str, str]:
@@ -299,11 +305,22 @@ class MainWindow(QMainWindow):
         self._clear_chart()
         self.drill_down_panel.clear()
 
-    def _update_suitability(self) -> None:
-        try:
-            assessment = self.controller.check_suitability()
-        except Exception:
-            return
+    def _update_suitability(self, assessment: SuitabilityAssessment | None = None) -> None:
+        """Refresh the suitability panel.
+
+        With no argument, recomputes live from the current column/options —
+        used before any analysis has run (e.g. right after column selection)
+        or during a Preview, where there is no analyze() snapshot yet to
+        display instead. When called with an assessment (from
+        `state.last_suitability` right after analyze()), that exact object is
+        shown instead of recomputing, so the panel can never diverge from
+        what a report export would embed for the same analysis.
+        """
+        if assessment is None:
+            try:
+                assessment = self.controller.check_suitability()
+            except Exception:
+                return
         self.suitability_panel.show_assessment(assessment)
 
     def _clear_chart(self) -> None:

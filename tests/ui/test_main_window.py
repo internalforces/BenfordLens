@@ -404,6 +404,35 @@ def test_changing_a_preprocessing_combo_without_preview_invalidates_the_analysis
     assert window.canvas is None
 
 
+def test_analyzing_after_a_combo_change_refreshes_the_suitability_panel(window, tmp_path):
+    # Regression test for Finding 1: analyzing under options A left the
+    # suitability panel showing the assessment for A even after the combo
+    # was changed to B and Analyze was clicked again — the panel visibly
+    # contradicted the just-exported report, which snapshots options B.
+    path = tmp_path / "with_negative.csv"
+    path.write_text("amount\n-111\n-222\n-333\n", encoding="utf-8")
+    window.load_file(str(path))
+    window.column_table.selectRow(0)
+    window._on_analyze_clicked()  # options A: default negative handling (absolute)
+
+    notes_after_a = window.suitability_panel.notes_label.text()
+    assert "3" in window.suitability_panel.metric_value_labels["sample_count"].text()
+
+    # Switch to options B without clicking Preview, then analyze directly.
+    combo = window.preprocessing_panel.negative_combo
+    combo.setCurrentIndex(combo.findData("exclude"))
+    window._on_analyze_clicked()  # options B: excludes all three negative values
+
+    assert window.controller.state.last_result is not None
+    assert window.controller.state.last_result.sample_size == 0
+    # The panel must show exactly the assessment snapshotted for the export
+    # path, not a freshly recomputed (and here, since options changed, a
+    # differently-worded) assessment.
+    assert window.suitability_panel._assessment is window.controller.state.last_suitability
+    assert window.suitability_panel.metric_value_labels["sample_count"].text() == "0"
+    assert window.suitability_panel.notes_label.text() != notes_after_a
+
+
 def test_export_report_describes_the_analysis_that_was_actually_run(window, tmp_path, monkeypatch):
     # Regression test: export used to re-run configure_preprocessing() against
     # the live panel, so the report's preprocessing section could claim
