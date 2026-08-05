@@ -8,20 +8,12 @@ from __future__ import annotations
 
 from matplotlib.figure import Figure
 
-from benford_lens.analysis.benford import BenfordResult
+from benford_lens.analysis.benford import MIN_MEANINGFUL_SAMPLE, BenfordResult
 
 # MVP heuristic: flags a >2 percentage-point gap on any single digit; M2's
 # suitability check (TASK-008) will replace this with proper statistical
 # tests (MAD/Chi-square/KS).
 _DIVERGENCE_THRESHOLD = 0.02
-
-# Below this sample size, the observed/expected gap is dominated by sampling
-# noise rather than any real distributional difference, so a divergence
-# verdict would over-claim. 30 is a common statistics rule-of-thumb floor
-# for a sample to start behaving like its asymptotic distribution; it is not
-# a rigorous minimum for Benford's Law specifically (M2's suitability check
-# will apply a more principled test).
-_MIN_MEANINGFUL_SAMPLE = 30
 
 
 def build_first_digit_figure(result: BenfordResult) -> Figure:
@@ -47,7 +39,7 @@ def summarize_result(result: BenfordResult) -> str:
     if result.sample_size == 0:
         return "No valid numeric values were found in the selected column."
 
-    if result.sample_size < _MIN_MEANINGFUL_SAMPLE:
+    if result.sample_size < MIN_MEANINGFUL_SAMPLE:
         return (
             f"Only {result.sample_size} valid numeric value(s) were found, which is too few "
             "for a meaningful comparison to the expected Benford distribution. "

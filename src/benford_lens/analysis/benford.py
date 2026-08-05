@@ -15,6 +15,8 @@ import pandas as pd
 
 _DIGITS: tuple[int, ...] = tuple(range(1, 10))
 
+MIN_MEANINGFUL_SAMPLE = 30
+
 
 def expected_first_digit_distribution() -> dict[int, float]:
     """Return Benford's Law's expected proportion for each leading digit 1-9."""
