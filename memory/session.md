@@ -7,58 +7,59 @@ Harness Version: 1.1
 
 # Current Session — Benford Lens
 
-> After this session, copy this file to `memory/sessions/2026-08-04-M1-MVP-Implementation.md`.
+> After this session, copy this file to `memory/sessions/2026-08-05-M2-Phase2-Implementation.md`.
 
 ---
 
 ## Session Info
 
-- **Date**: 2026-08-04
-- **Agent Role**: Planner → Implementer (subagent-driven-development, 8 dispatched implementer/reviewer subagent rounds)
-- **Session Goal**: Implement the M1 (MVP) milestone on a new branch (`feature/m1-mvp`): CSV/Excel reading, manual column selection, first-digit Benford analysis, expected-vs-actual chart, and CI.
+- **Date**: 2026-08-05
+- **Agent Role**: Planner → Implementer (subagent-driven-development, 10 dispatched implementer/reviewer subagent rounds) → Implementer (Task 11: harness bookkeeping + final whole-branch review)
+- **Session Goal**: Implement the M2 (Phase 2) milestone on `feature/m2-phase2`: preprocessing options, data suitability check, raw data drill-down, HTML report generation, PyInstaller packaging, and UI language selection (i18n).
 
 ## Previous Session Summary
 
-Prior session (2026-08-04, UI Mockup Review) added TASK-014/015 to the backlog and recorded
-ADR-004, but explicitly did not start implementation — `src/`/`tests/` did not exist yet. See
-`memory/sessions/2026-08-04-UI-Mockup-Review.md`.
+Prior session (2026-08-04, M1 MVP Implementation) implemented and merge-readied M1 on
+`feature/m1-mvp`: CSV/Excel reading, manual column selection, first-digit Benford analysis,
+expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
+`memory/sessions/2026-08-04-M1-MVP-Implementation.md`.
 
 ## Current Work
 
-- [x] Create `feature/m1-mvp` branch (off `main`, in an isolated git worktree at `.worktrees/feature-m1-mvp`)
-- [x] Write full implementation plan: `docs/superpowers/plans/2026-08-04-m1-mvp.md`
-- [x] Execute all 8 plan tasks via subagent-driven-development (fresh implementer + reviewer subagent per task)
+- [x] Create `feature/m2-phase2` branch (off `main`, in an isolated git worktree at `.worktrees/feature-m2-phase2`)
+- [x] Write full implementation plan: `docs/superpowers/plans/2026-08-05-m2-phase2.md`
+- [x] Execute all 11 plan tasks via subagent-driven-development (fresh implementer + reviewer subagent per task)
 - [x] Harness bookkeeping (this update)
-- [x] Final whole-branch code review (opus) — found 1 Critical + 6 Important + 1 Minor, all fixed in one wave and scoped-re-reviewed clean (1 Minor test-coverage gap parked as TD-002)
+- [x] Final whole-branch sanity pass (Task 11, own-effort review ahead of the dedicated deeper review) — found and fixed 1 real stale-state bug plus 3 test-coverage gaps (details below)
+- [ ] Separate, more thorough final whole-branch code review (most capable available model) — runs next, per subagent-driven-development's last step
 - [ ] Human approval before merge to `main` (per `ORCHESTRATOR.md` Feature Workflow — not yet requested)
 
 ## Completed This Session
 
-- [x] TASK-001: Project scaffolding — `pyproject.toml`, `uv` toolchain, package skeleton, `tests/conftest.py` (offscreen Qt)
-- [x] TASK-002: CSV loader (`src/benford_lens/io/csv_loader.py`) — fixed encoding fallback list, no new dependency
-- [x] TASK-003: Excel loader (`src/benford_lens/io/excel_loader.py`) — explicit sheet selection only
-- [x] TASK-005: Benford first-digit analysis engine (`src/benford_lens/analysis/benford.py`) — zero PySide6 dependency
-- [x] TASK-006: Chart + result summary (`src/benford_lens/charts/benford_chart.py`) — tone-compliant per AGENTS.md
-- [x] TASK-004: Session controller (`src/benford_lens/ui/controller.py`) + Main window UI (`src/benford_lens/ui/main_window.py`, `src/benford_lens/__main__.py`) — manual column selection only
-- [x] TASK-012: GitHub Actions CI (`.github/workflows/ci.yml`) — lint, format-check, type-check, test on `ubuntu-latest`
-- [x] ADR-005 recorded (`memory/decisions.md`): pinned dev environment to Python 3.11 via `.python-version`
-- [x] Moved TASK-001–006, TASK-012 from `tasks/backlog.md` to `tasks/completed.md`
+- [x] TASK-007: Preprocessing options + before/after preview — `src/benford_lens/analysis/preprocessing.py`, `src/benford_lens/ui/preprocessing_panel.py`
+- [x] TASK-008: Data suitability check (🟢/🟡/🔴) — `src/benford_lens/analysis/suitability.py`, `src/benford_lens/ui/suitability_panel.py`; thresholds recorded as ADR-006
+- [x] TASK-009: Raw data drill-down from chart digit click — `src/benford_lens/ui/drill_down_panel.py`, wired via `mpl_connect`
+- [x] TASK-010: HTML report generation — `src/benford_lens/report/html_report.py`, stdlib `string.Template`, no new dependency
+- [x] TASK-013: PyInstaller packaging config for macOS/Windows/Linux — `packaging/*.spec`; macOS built + headless-smoke-tested locally; Windows/Linux config-only (TD-003)
+- [x] TASK-015: UI language selection & i18n scaffolding — `resources/i18n/*.ts/.qm`, `QTranslator`-based switching in `src/benford_lens/ui/main_window.py`; real KO/ZH/JA translations, not placeholders
+- [x] Moved TASK-007/008/009/010/013/015 from `tasks/backlog.md` to `tasks/completed.md`
+- [x] `roadmap.md` M2 checklist fully checked off
 
 ## Issues Found / Decisions Made
 
-- **ADR-005** (`memory/decisions.md`): pinned dev environment to Python 3.11 (`.python-version`) after a numpy/mypy type-stub incompatibility surfaced mid-implementation (see ADR-005 for full root cause). Matches the project's existing `requires-python` floor and CI's runtime — no scope change.
-- **TD-001** (`memory/known-issues.md`): CSV encoding detection is a fixed try-in-order fallback, not real content-based detection — accepted limitation for M1, avoids adding a new dependency.
-- **ENV-001** (`memory/known-issues.md`): local macOS-only `.venv` hidden-flag quirk can crash `pytest` after certain file edits; workaround `chflags -R nohidden .venv`; does not affect Linux CI.
-- Several functional bugs were caught and fixed during review before merge-readiness. Per-task review loop: (1) Task 4's brief had a self-contradictory test assertion (arithmetic bug in the plan itself, corrected and verified), (2) Task 7's `column_table` was missing `setSelectionBehavior(SelectRows)`, which meant a real mouse click on a data cell never actually selected a column — only the tests' programmatic `selectRow()` shortcut worked. Final whole-branch review (after all 8 tasks individually passed): (3) **Critical** — Excel sheets with non-string (e.g. integer) column headers broke column selection entirely, because `MainWindow` round-tripped column identity through display text (`str(column)` → `.text()`) instead of tracking real column objects; fixed by tracking `self._columns` separately and widening `SessionController`'s column-identity typing to `Hashable`. Also fixed in the same pass: `inf`/`-inf` crashing the analysis engine, a stale chart persisting across file loads, inconsistent exception handling across Qt slots, missing Excel integration test coverage (the gap where the Critical bug hid), untested/unvalidated CI (missing Linux Qt system libs, no lockfile validation), and an undocumented/unguarded divergence threshold. See `docs/superpowers/plans/2026-08-04-m1-mvp.md`'s SDD ledger history (now removed per the skill's cleanup step — see git log on `feature/m1-mvp` for the full commit trail, particularly `a31cd96`..`28fc8d2`) for details.
-- **TD-002** (`memory/known-issues.md`): the final-review fix wave's small-sample guard left one existing tone test's "close to Benford" branch uncovered — parked, not a functional bug.
+- **ADR-006** (`memory/decisions.md`, recorded during Task 3): data suitability heuristic thresholds — sample count, digit-magnitude range, distinct-value ratio, zero/negative/missing rate. Advisory only, never a determination of Benford applicability.
+- **TD-003** (`memory/known-issues.md`, recorded during Task 10): Windows/Linux PyInstaller specs are written but unbuilt/untested — this dev environment is macOS-only. macOS build itself only headless-smoke-tested, not verified interactively.
+- **Stale chart / drill-down mismatch (found and fixed during Task 11's sanity pass)**: `SessionController.drill_down()` always recomputes from whatever column/preprocessing options are *currently* set, but `MainWindow` left the previously rendered chart on screen (and clickable) after reselecting a column or previewing different preprocessing options. Clicking a digit on that now-stale chart would silently call `drill_down()` against the new column/options and return rows that don't match what's displayed. Fixed by clearing the chart in both `_on_column_selected` and `_on_preprocessing_preview_requested`, matching the existing "load a new file" behavior; added two regression tests in `tests/ui/test_main_window.py`.
+- **TD-002 resolved** (`memory/known-issues.md`): M1's known test-coverage gap (no test exercised `summarize_result`'s "close to the expected Benford distribution" branch) was still open going into Task 11 despite its stated M2 target. Closed with a dedicated ≥30-value test using powers of 2 (`tests/charts/test_benford_chart.py`).
+- **Suitability threshold branch coverage gap (found and fixed during Task 11's sanity pass)**: `assess_suitability()`'s negative-rate and missing-rate caution-note branches had no test exercising them. Added `test_high_negative_rate_adds_a_caution_note_about_negative_handling` and `test_high_missing_rate_adds_a_caution_note` to `tests/analysis/test_suitability.py`.
+- Wording review (report template, suitability notes, all three new-language translations) found no accusatory or conclusive language; the "This result alone cannot be used to judge data errors or manipulation" disclaimer is present in the HTML report footer, matching AGENTS.md's tone rules.
+- Interface consistency check (`PreprocessingOptions`/`PreprocessingPreview`, `SuitabilityAssessment`/`SuitabilityMetrics`, `ReportContext`) found no drift between definition sites (`analysis/preprocessing.py`, `analysis/suitability.py`) and consumers (`ui/controller.py`, `report/html_report.py`).
 
 ## Next Session: To-Do
 
-1. Request human approval before merging `feature/m1-mvp` to `main` (`ORCHESTRATOR.md` requires this; self-merge is not allowed per `standards.md`). The branch is review-clean and ready.
-2. After merge: begin M2 (`roadmap.md`) — TASK-007 (preprocessing options), TASK-008 (suitability check), TASK-009 (drill-down), TASK-010 (HTML report), TASK-011 (expert stats, adds SciPy dependency — requires human approval per `dependencies.md`), TASK-013 (PyInstaller packaging), TASK-015 (i18n).
-3. TD-002 (`memory/known-issues.md`): bump `test_summarize_result_uses_neutral_non_accusatory_language`'s sample to ≥30 values, or add a dedicated ≥30-sample "close to Benford" test, to restore coverage of that branch.
-4. `select_column`'s type is now `Hashable`, not `str` — keep this in mind when building TASK-007/009, which will also touch column identity.
+1. Request human approval before merging `feature/m2-phase2` to `main` (`ORCHESTRATOR.md` requires this; self-merge is not allowed per `standards.md`). The dedicated final whole-branch code review (most capable available model) should run first, per subagent-driven-development's last step, before that approval request.
+2. After merge: TASK-011 (expert statistics: MAD, Chi-square, KS Test) is the next candidate work item — it remains out of scope until SciPy, a new external dependency, clears its own Human Approval Gate per `dependencies.md`.
 
 ## Important Context
 
-`src/` and `tests/` now exist and are fully populated for M1 — this is no longer a docs-only repo. Any agent picking up work should read `docs/superpowers/plans/2026-08-04-m1-mvp.md` for the exact module layout and interfaces already established (`SessionController`, `BenfordResult`, etc.) before adding new code, to keep M2 consistent with M1's architecture. The dev environment requires `.python-version` (3.11) — do not "fix" a mypy numpy-stub error by bumping this or `pyproject.toml`'s `[tool.mypy] python_version`; see ADR-005 if this resurfaces. AGENTS.md's Absolute Restrictions (no auto-column-selection, no auto-applicability-judgment, neutral tone) remain fully binding and are now enforced in actual code (`SessionController.select_column`, `MainWindow` selection wiring, `summarize_result`), not just documentation — M2 work must preserve these invariants.
+`src/`, `tests/`, `resources/i18n/`, and `packaging/` are now fully populated for M2 — preprocessing, suitability, drill-down, HTML report, i18n, and packaging all exist as real, tested code, not just plan documents. Any agent picking up work should read `docs/superpowers/plans/2026-08-05-m2-phase2.md` for the exact module layout and interfaces established this milestone (`PreprocessingOptions`, `SuitabilityAssessment`, `ReportContext`, etc.) before adding new code. The dev environment still requires `.python-version` (3.11) — see ADR-005 if a numpy/mypy stub error resurfaces. AGENTS.md's Absolute Restrictions (no auto-column-selection, no auto-applicability-judgment, neutral tone) remain fully binding and are enforced in code across the M2 surface too (`suitability.py` notes, `html_report.py` footer, all four language translations) — TASK-011 work must preserve these invariants, and must not begin until the SciPy dependency is separately approved.

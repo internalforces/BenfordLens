@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Completed Tasks — Benford Lens
 
-_Last updated: 2026-08-04_
+_Last updated: 2026-08-05_
 
 | ID | Task | Completed | Owner | Notes |
 |----|------|-----------|-------|-------|
@@ -19,3 +19,9 @@ _Last updated: 2026-08-04_
 | TASK-005 | First-digit Benford calculation (Analysis Engine, UI-independent) | 2026-08-04 | Implementer | `src/benford_lens/analysis/benford.py`, zero PySide6 dependency. Mid-task, resolving a real `mypy`/numpy stub incompatibility required pinning the dev environment to Python 3.11 (`.python-version`) — logged as the resolution path, not a scope change |
 | TASK-006 | Expected vs. actual distribution chart (Matplotlib) | 2026-08-04 | Implementer | `src/benford_lens/charts/benford_chart.py` (`build_first_digit_figure`, `summarize_result`). Result-summary text uses the TASK-014-approved tone-compliant phrasing verbatim |
 | TASK-012 | GitHub Actions CI: lint, type-check, test on PR | 2026-08-04 | Implementer | `.github/workflows/ci.yml`, `ubuntu-latest`, Python 3.11, ruff/mypy/pytest. Format-check scoped to `src/ tests/` (excludes the plan doc under `docs/`) |
+| TASK-007 | Preprocessing options + before/after preview | 2026-08-05 | Implementer | `analysis/preprocessing.py`, `ui/preprocessing_panel.py` |
+| TASK-008 | Data suitability check (🟢/🟡/🔴) | 2026-08-05 | Implementer | `analysis/suitability.py`, `ui/suitability_panel.py`; thresholds recorded as ADR-006 |
+| TASK-009 | Raw data drill-down from chart digit click | 2026-08-05 | Implementer | `ui/drill_down_panel.py`; chart click wired via `mpl_connect` |
+| TASK-010 | HTML report generation | 2026-08-05 | Implementer | `report/html_report.py`, stdlib `string.Template`, no new dependency |
+| TASK-013 | PyInstaller packaging config for macOS/Windows/Linux | 2026-08-05 | Implementer | `packaging/*.spec`; macOS built + headless-smoke-tested locally; Windows/Linux config-only (TD-003) |
+| TASK-015 | UI language selection & i18n scaffolding | 2026-08-05 | Implementer | `resources/i18n/*.ts/.qm`, `QTranslator`-based switching in `ui/main_window.py`; real KO/ZH/JA translations, not placeholders |
