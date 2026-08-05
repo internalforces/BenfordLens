@@ -238,3 +238,31 @@ def test_clicking_outside_the_digit_range_does_nothing(window, tmp_path):
     window._on_chart_clicked(SimpleNamespace(xdata=15))
 
     assert window.drill_down_panel.table.rowCount() == 0
+
+
+def test_export_report_button_disabled_until_analyzed(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+
+    assert window.export_report_button.isEnabled() is False
+
+    window._on_analyze_clicked()
+
+    assert window.export_report_button.isEnabled() is True
+
+
+def test_export_report_writes_an_html_file(window, tmp_path, monkeypatch):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    out_path = tmp_path / "report.html"
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QFileDialog.getSaveFileName",
+        lambda *a, **k: (str(out_path), "HTML files (*.html)"),
+    )
+
+    window._on_export_report_clicked()
+
+    assert out_path.exists()
+    assert "amount" in out_path.read_text(encoding="utf-8")

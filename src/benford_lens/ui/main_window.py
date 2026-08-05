@@ -6,6 +6,7 @@ module never auto-picks or auto-analyzes a column, per AGENTS.md.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
@@ -25,6 +26,7 @@ from PySide6.QtWidgets import (
 
 from benford_lens.analysis.benford import BenfordResult
 from benford_lens.charts.benford_chart import build_first_digit_figure, summarize_result
+from benford_lens.report.html_report import ReportContext, render_html_report
 from benford_lens.ui.controller import SessionController
 from benford_lens.ui.drill_down_panel import DrillDownPanel
 from benford_lens.ui.preprocessing_panel import PreprocessingPanel
@@ -54,9 +56,15 @@ class MainWindow(QMainWindow):
         self.open_button = QPushButton("Open File…")
         self.open_button.clicked.connect(self._on_open_clicked)
 
+        self._source_path: str | None = None
+
         self.analyze_button = QPushButton("Analyze")
         self.analyze_button.setEnabled(False)
         self.analyze_button.clicked.connect(self._on_analyze_clicked)
+
+        self.export_report_button = QPushButton("Export Report…")
+        self.export_report_button.setEnabled(False)
+        self.export_report_button.clicked.connect(self._on_export_report_clicked)
 
         self.preprocessing_panel = PreprocessingPanel(self._on_preprocessing_preview_requested)
         self.preprocessing_panel.setEnabled(False)
@@ -72,6 +80,7 @@ class MainWindow(QMainWindow):
         top_bar = QHBoxLayout()
         top_bar.addWidget(self.open_button)
         top_bar.addWidget(self.analyze_button)
+        top_bar.addWidget(self.export_report_button)
 
         layout = QVBoxLayout()
         layout.addLayout(top_bar)
@@ -97,6 +106,7 @@ class MainWindow(QMainWindow):
             self.load_file(path)
 
     def load_file(self, path: str) -> None:
+        self._source_path = path
         try:
             if path.lower().endswith(".xlsx"):
                 sheets = self.controller.list_excel_sheets(path)
@@ -120,6 +130,7 @@ class MainWindow(QMainWindow):
         self.column_table.clearSelection()
         self.column_table.setRowCount(0)
         self.analyze_button.setEnabled(False)
+        self.export_report_button.setEnabled(False)
         self.preprocessing_panel.setEnabled(False)
         self._columns = []
         self._clear_chart()
@@ -156,6 +167,36 @@ class MainWindow(QMainWindow):
             return
         self._render_chart(result)
         self.summary_label.setText(summarize_result(result))
+        self.export_report_button.setEnabled(True)
+
+    def _on_export_report_clicked(self) -> None:
+        result = self.controller.state.last_result
+        if result is None:
+            return
+        preview = self.controller.configure_preprocessing(
+            self.preprocessing_panel.current_options()
+        )
+        context = ReportContext(
+            source_name=Path(self._source_path).name if self._source_path else "",
+            column_name=self.controller.state.selected_column,
+            preprocessing_options=self.controller.state.preprocessing_options,
+            preprocessing_preview=preview,
+            suitability=self.controller.check_suitability(),
+            result=result,
+            result_summary=summarize_result(result),
+            chart_figure=build_first_digit_figure(result),
+        )
+        html = render_html_report(context)
+
+        path, _selected_filter = QFileDialog.getSaveFileName(
+            self, "Export report", "", "HTML files (*.html)"
+        )
+        if not path:
+            return
+        try:
+            Path(path).write_text(html, encoding="utf-8")
+        except Exception as exc:
+            QMessageBox.critical(self, "Could not export report", str(exc))
 
     def _on_preprocessing_preview_requested(self, options) -> None:
         preview = self.controller.configure_preprocessing(options)
