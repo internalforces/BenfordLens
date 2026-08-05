@@ -12,9 +12,11 @@ _Last updated: 2026-08-05_
 | ID | Task | Priority | Milestone | Size | Notes |
 |----|------|----------|-----------|------|-------|
 | TASK-011 | Expert statistics panel (MAD, Chi-square, KS Test) — hidden by default | Low | M2 | S | Confirmed via ADR-004 — stays hidden by default, no change |
-| TASK-014 | Review UI demo mockup (Benford Lens 0.1.0 screenshot, image-only, no code) and fold its design details into TASK-004/006/007/009/011 | Medium | M1/M2 | S | See "TASK-014 Detail" section below. Both open discrepancies resolved via ADR-004. |
 
-## TASK-014 Detail — UI Mockup Analysis
+## TASK-014 Review Record — Completed
+
+TASK-014 is archived in `tasks/completed.md`. This record is retained here as reference for
+future UI polish; ADR-007 documents which mockup details were adopted or deferred.
 
 **Source**: A single screenshot shared by the user, described as a "simple UI demo version" (목업). No source code or working prototype exists behind it — it's a visual reference only.
 

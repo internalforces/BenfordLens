@@ -111,6 +111,39 @@ def test_load_file_shows_error_dialog_on_bad_path(window, tmp_path, monkeypatch)
     assert window.column_table.rowCount() == 0
 
 
+def test_failed_file_load_keeps_the_previous_analysis_source(window, tmp_path, monkeypatch):
+    original_path = _write_csv(tmp_path)
+    window.load_file(original_path)
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    original_result = window.controller.state.last_result
+
+    monkeypatch.setattr("benford_lens.ui.main_window.QMessageBox.critical", lambda *args: None)
+    window.load_file(str(tmp_path / "missing.csv"))
+
+    assert window._source_path == original_path
+    assert window.controller.state.last_result is original_result
+
+
+def test_cancelling_sheet_selection_keeps_the_previous_analysis_source(
+    window, tmp_path, monkeypatch
+):
+    original_path = _write_csv(tmp_path)
+    window.load_file(original_path)
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    original_result = window.controller.state.last_result
+
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QInputDialog.getItem",
+        lambda *args, **kwargs: ("", False),
+    )
+    window.load_file(_write_multi_sheet_excel_with_numeric_headers(tmp_path))
+
+    assert window._source_path == original_path
+    assert window.controller.state.last_result is original_result
+
+
 def test_load_file_single_sheet_excel_populates_columns_without_dialog(
     window, tmp_path, monkeypatch
 ):

@@ -17,8 +17,8 @@ external server.
 
 ## Current State
 
-- **Version**: v0.2.0-dev
-- **Phase**: M2 (Phase 2) implemented on `feature/m2-phase2`, pending human approval to merge
+- **Version**: v0.2.0.dev0
+- **Phase**: M2 (Phase 2) complete on `main` via PR #2 and merge-gate follow-up PR #3
 - **Next milestone**: M3 — v1.0 (second-digit analysis, combined analysis, performance, expanded i18n)
 - **Overall health**: 🟢 Good
 
@@ -59,6 +59,8 @@ BenfordLens/
 | 2026-08-04 | UI mockup reviewed (TASK-014); ADR-004 decided: expert stats stay hidden by default, default UI language is English with Korean/Chinese/Japanese selectable by M2 (TASK-015) |
 | 2026-08-04 | M1 (MVP) implemented on `feature/m1-mvp` via subagent-driven-development: TASK-001–006, TASK-012 done. Dev environment pinned to Python 3.11 (`.python-version`) after a numpy/mypy stub incompatibility surfaced mid-implementation — see `memory/decisions.md` ADR-005 and `memory/known-issues.md` |
 | 2026-08-05 | M2 (Phase 2) implemented: preprocessing, suitability check, drill-down, HTML report, i18n (real KO/ZH/JA translations), PyInstaller packaging specs |
+| 2026-08-05 | M2 PR #2 merged to `main`; follow-up review fixed report-source state handling, synchronized README/version metadata, and verified 91% line coverage |
+| 2026-08-05 | M2 merge-gate follow-up PR #3 passed CI and merged to `main`; TASK-016 complete |
 
 ## Constraints
 

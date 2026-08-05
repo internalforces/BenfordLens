@@ -140,7 +140,6 @@ class MainWindow(QMainWindow):
             self.load_file(path)
 
     def load_file(self, path: str) -> None:
-        self._source_path = path
         try:
             if path.lower().endswith(".xlsx"):
                 sheets = self.controller.list_excel_sheets(path)
@@ -157,6 +156,10 @@ class MainWindow(QMainWindow):
         except Exception as exc:
             QMessageBox.critical(self, self.tr("Could not open file"), str(exc))
             return
+        # Commit the report's source identity only after the new dataframe is
+        # open. Cancelling sheet selection or hitting a load error leaves the
+        # previous analysis intact, so its source name must remain intact too.
+        self._source_path = path
         self._populate_columns()
 
     def _populate_columns(self) -> None:
