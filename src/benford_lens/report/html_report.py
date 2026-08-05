@@ -7,6 +7,7 @@ and exploratory, never accusatory or conclusive about data manipulation.
 from __future__ import annotations
 
 import base64
+import html
 import io
 import string
 from dataclasses import dataclass
@@ -110,10 +111,10 @@ def _digit_table_rows(result: BenfordResult) -> str:
 
 
 def render_html_report(context: ReportContext) -> str:
-    notes_html = "".join(f"<li>{note}</li>" for note in context.suitability.notes)
+    notes_html = "".join(f"<li>{html.escape(note)}</li>" for note in context.suitability.notes)
     return _TEMPLATE.substitute(
-        source_name=context.source_name,
-        column_name=str(context.column_name),
+        source_name=html.escape(context.source_name),
+        column_name=html.escape(str(context.column_name)),
         generated_at=datetime.now().isoformat(timespec="seconds"),
         preprocessing_summary=_preprocessing_summary(
             context.preprocessing_options, context.preprocessing_preview
@@ -121,6 +122,6 @@ def render_html_report(context: ReportContext) -> str:
         suitability_badge=_LEVEL_BADGE[context.suitability.level],
         suitability_notes=notes_html,
         chart_base64=_figure_to_base64(context.chart_figure),
-        result_summary=context.result_summary,
+        result_summary=html.escape(context.result_summary),
         digit_table_rows=_digit_table_rows(context.result),
     )
