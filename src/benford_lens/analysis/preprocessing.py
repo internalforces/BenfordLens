@@ -67,6 +67,12 @@ def apply_preprocessing(
         working = working.map(_coerce_string_to_number)
     numeric = pd.to_numeric(working, errors="coerce")
 
+    # Infinity is not NaN, so it survives dropna() and would reach
+    # math.trunc() below and raise OverflowError. A leading digit is
+    # undefined for an infinite value anyway, so count it as non-numeric —
+    # the same bucket as a value that failed coercion outright.
+    numeric = numeric.replace([math.inf, -math.inf], float("nan"))
+
     non_numeric_mask = numeric.isna() & ~original_blank_mask
     excluded_non_numeric = int(non_numeric_mask.sum())
 

@@ -121,3 +121,29 @@ def test_preview_samples_are_capped_and_reflect_before_after():
     assert len(preview.sample_before) == 5
     assert preview.sample_before == [0, 1, 2, 3, 4]
     assert math.isclose(preview.sample_after[0], 1.0)
+
+
+def test_infinite_values_are_excluded_and_counted_as_non_numeric():
+    # Regression test: inf is not NaN, so it survived the blank/non-numeric
+    # exclusion and reached math.trunc(), raising an uncaught OverflowError
+    # from inside the Analyze and Preview handlers.
+    series = pd.Series([111.0, float("inf"), float("-inf"), 222.0])
+
+    result, preview = apply_preprocessing(series, PreprocessingOptions(decimal_handling="truncate"))
+
+    assert list(result) == [111.0, 222.0]
+    assert preview.total_before == 4
+    assert preview.total_after == 2
+    assert preview.excluded_non_numeric == 2
+    assert preview.excluded_blank == 0
+
+
+def test_the_literal_string_inf_is_excluded_too():
+    # pd.to_numeric coerces the string "inf" to float infinity, so a text
+    # column can carry one in without any float ever being typed.
+    series = pd.Series(["111", "inf", "222"])
+
+    result, preview = apply_preprocessing(series, PreprocessingOptions(decimal_handling="truncate"))
+
+    assert list(result) == [111.0, 222.0]
+    assert preview.excluded_non_numeric == 1
