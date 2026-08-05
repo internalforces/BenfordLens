@@ -304,6 +304,20 @@ def test_switching_language_translates_visible_strings(window):
     assert window.open_button.text() == "Open File…"
 
 
+def test_switching_language_translates_drill_down_panel_strings(window):
+    assert window.drill_down_panel.search_box.placeholderText() == "Search…"
+
+    index = window.language_combo.findData("ko")
+    window.language_combo.setCurrentIndex(index)
+
+    assert window.drill_down_panel.search_box.placeholderText() != "Search…"
+
+    index_en = window.language_combo.findData("en")
+    window.language_combo.setCurrentIndex(index_en)
+
+    assert window.drill_down_panel.search_box.placeholderText() == "Search…"
+
+
 def test_switching_language_translates_preprocessing_combo_labels(window, tmp_path):
     window.load_file(_write_csv(tmp_path))
     window.column_table.selectRow(1)

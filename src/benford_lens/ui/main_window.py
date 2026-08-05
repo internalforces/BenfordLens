@@ -288,3 +288,4 @@ class MainWindow(QMainWindow):
             self.summary_label.setText(self.tr("Open a CSV or Excel file to begin."))
         self.suitability_panel.retranslate_ui()
         self.preprocessing_panel.retranslate_ui()
+        self.drill_down_panel.retranslate_ui()

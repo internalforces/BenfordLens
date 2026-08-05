@@ -40,6 +40,10 @@ class DrillDownPanel(QWidget):
         layout.addWidget(self.table)
         self.setLayout(layout)
 
+    def retranslate_ui(self) -> None:
+        self.search_box.setPlaceholderText(self.tr("Search…"))
+        self.export_button.setText(self.tr("Export CSV…"))
+
     def show_rows(self, rows: pd.DataFrame) -> None:
         self._rows = rows
         self.search_box.clear()
