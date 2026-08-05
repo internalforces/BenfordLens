@@ -26,6 +26,7 @@ from PySide6.QtWidgets import (
 from benford_lens.analysis.benford import BenfordResult
 from benford_lens.charts.benford_chart import build_first_digit_figure, summarize_result
 from benford_lens.ui.controller import SessionController
+from benford_lens.ui.drill_down_panel import DrillDownPanel
 from benford_lens.ui.preprocessing_panel import PreprocessingPanel
 from benford_lens.ui.suitability_panel import SuitabilityPanel
 
@@ -61,6 +62,7 @@ class MainWindow(QMainWindow):
         self.preprocessing_panel.setEnabled(False)
 
         self.suitability_panel = SuitabilityPanel()
+        self.drill_down_panel = DrillDownPanel()
 
         self.summary_label = QLabel("Open a CSV or Excel file to begin.")
         self.summary_label.setWordWrap(True)
@@ -78,6 +80,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.suitability_panel)
         layout.addWidget(self.summary_label)
         layout.addLayout(self.chart_container)
+        layout.addWidget(self.drill_down_panel)
 
         central = QWidget()
         central.setLayout(layout)
@@ -176,4 +179,18 @@ class MainWindow(QMainWindow):
         self._clear_chart()
         figure = build_first_digit_figure(result)
         self.canvas = FigureCanvasQTAgg(figure)
+        self.canvas.mpl_connect("button_press_event", self._on_chart_clicked)
         self.chart_container.addWidget(self.canvas)
+
+    def _on_chart_clicked(self, event) -> None:
+        if event.xdata is None:
+            return
+        digit = round(event.xdata)
+        if digit < 1 or digit > 9:
+            return
+        try:
+            rows = self.controller.drill_down(int(digit))
+        except Exception as exc:
+            QMessageBox.warning(self, "Cannot show rows", str(exc))
+            return
+        self.drill_down_panel.show_rows(rows)

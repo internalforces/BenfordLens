@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 import pandas as pd
 import pytest
 from PySide6.QtCore import Qt
@@ -215,3 +217,24 @@ def test_selecting_a_column_shows_a_suitability_badge(window, tmp_path):
     window.column_table.selectRow(1)
 
     assert window.suitability_panel.badge_label.text() != ""
+
+
+def test_clicking_a_digit_on_the_chart_shows_matching_rows(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    window._on_chart_clicked(SimpleNamespace(xdata=1.2))
+
+    assert window.drill_down_panel.table.rowCount() == 2  # alice=111, carol=111 both lead with 1
+
+
+def test_clicking_outside_the_digit_range_does_nothing(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+
+    window._on_chart_clicked(SimpleNamespace(xdata=None))
+    window._on_chart_clicked(SimpleNamespace(xdata=15))
+
+    assert window.drill_down_panel.table.rowCount() == 0
