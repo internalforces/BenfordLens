@@ -12,65 +12,61 @@ Harness Version: 1.1
 ## Session Info
 
 - **Date**: 2026-08-06
-- **Agent Role**: Reviewer / Architect / Planner
-- **Session Goal**: Complete TASK-011 post-merge review and cleanup, synchronize local `main`,
-  correct M2/glossary drift, and finalize the M3 analysis-mode design.
+- **Agent Role**: Planner / Implementer / Tester / Performance Engineer / Documenter
+- **Session Goal**: Execute the accepted M3 analysis-mode design through the core merge gate.
 
 ## Previous Session Summary
 
-TASK-011 added user-approved SciPy-backed MAD, Chi-square, and log-mantissa KS reference
-statistics in a hidden-by-default expert panel. PR #4 was open at the prior handoff with 162
-tests passing and 95.19% traced line coverage.
-
-The prior session record is archived at
-`memory/sessions/2026-08-05-TASK-011-Expert-Statistics.md`.
+PR #5 merged the accepted ADR-009 design as `a62d9dc`. The prior architecture/review session is
+archived at `memory/sessions/2026-08-06-M3-Architecture.md`.
 
 ## Completed This Session
 
-- [x] Confirmed PR #4 passed GitHub CI and merged to `main` as `fd1fa98`.
-- [x] Reviewed the merged TASK-011 diff; verdict Approved with no blocking finding.
-- [x] Re-ran Ruff lint/format, mypy, and all 162 tests successfully.
-- [x] Saved `reports/review-2026-08-06-task-011-post-merge.md`.
-- [x] Fast-forwarded local `main` to exactly match `origin/main`.
-- [x] Preserved documentation work on `codex/m3-design`; no direct commit to `main`.
-- [x] Archived the TASK-011 session record.
-- [x] Marked M2 merged in `roadmap.md` and corrected second-digit scope to M3/v1.0 in the
-  glossary; TD-006 is resolved.
-- [x] Defined combined analysis as first- and second-digit results displayed together in one
-  results view, not a joint first-two-digit distribution.
-- [x] Recorded the M3 architecture as ADR-009 and added the detailed M3 design spec.
-- [x] Added completed TASK-017 for the architecture decision.
-- [x] Published `codex/m3-design` and opened a ready-for-review PR against `main`.
+- [x] Fast-forwarded local `main` to PR #5 and created `codex/m3-core`; no direct `main` edits.
+- [x] Added `docs/superpowers/plans/2026-08-06-m3-v1.md` and decomposed TASK-018–025.
+- [x] Completed TASK-018: resolved ISS-002 with neutral UI/report copy and regenerated all
+  KO/ZH/JA `.qm` catalogs.
+- [x] Completed TASK-019: added shared first/second extraction, reference second-digit
+  probabilities, second-digit analysis, and one-pass combined analysis while preserving every
+  existing first-digit entry point.
+- [x] Completed TASK-020: generalized MAD/Chi-square across positions and exposed per-position
+  statistics with one shared log-mantissa KS result.
+- [x] Completed TASK-021: added explicit analysis modes and one frozen snapshot containing the
+  exact preprocessing, suitability, results, statistics, and position-aware row mappings.
+- [x] Completed TASK-022: added reusable digit-result panels, a user-driven mode selector,
+  simultaneous combined layout, position-aware chart clicks, and combined expert details.
+- [x] Completed TASK-023: made HTML reports mode-aware and completed 93-entry KO/ZH/JA
+  translation catalogs for the new UI.
+- [x] Completed TASK-024: removed repeated digit extraction; 100k-row local synthetic benchmark
+  medians improved 30.0–31.8%.
+- [x] Completed TASK-025: added selectable Spanish and French with complete 93-message source
+  catalogs, compiled resources, and catalog/UI state-preservation regression tests.
+- [x] Completed TASK-026: added selectable Russian with a complete 93-message source catalog,
+  compiled resource, and catalog/UI state-preservation regression tests.
+- [x] Completed focused M3 review with no blocking findings.
+- [x] Passed Ruff lint/format, mypy, all 229 tests, and 95.00% stdlib-trace line coverage.
 
-## Design Handoff
+## Verification
 
-- Preserve `BenfordResult`, `first_digit()`, `expected_first_digit_distribution()`, and
-  `analyze_first_digit()` compatibility.
-- Add second-digit and combined entry points backed by shared extraction and aggregation.
-- Preprocess once and store all mode-specific outputs in one immutable snapshot.
-- Use a reusable digit-result panel; combined mode renders first and second panels side by side.
-- Pass digit position through chart clicks and drill-down; retain the current drill-down call
-  as a first-digit wrapper.
-- Calculate MAD/Chi-square per position and show the shared log-mantissa KS result once.
-- Make HTML export mode-aware from the same snapshot.
+- Ruff: pass
+- Ruff format check: pass
+- mypy (`src/`): pass
+- pytest: 229 passed
+- Line coverage: 95.00% (1,578 / 1,661 executable lines via Python stdlib `trace`)
+- Performance report: `reports/performance-2026-08-06-m3.md`
+- Review report: `reports/review-2026-08-06-m3-core.md`
+- New dependency: none
 
-See `docs/superpowers/specs/2026-08-06-m3-analysis-modes-design.md` and ADR-009.
+## Remaining Work
 
-## Issues Found
-
-- **ISS-002**: current result/report copy contains a pre-existing term restricted by
-  `AGENTS.md`. PR #4 did not introduce it. Resolve in a focused copy-only task with matching
-  UI/report/i18n tests and regenerated `.qm` catalogs.
-- ENV-001, TD-001, TD-003, and TD-005 remain open as documented.
-
-## Next Session: To-Do
-
-1. Create an implementation plan for ADR-009 and decompose M3 into testable tasks.
-2. Resolve ISS-002 before adding new M3 summary/report strings.
-3. Implement shared digit extraction and second-digit formula tests first.
+1. Review the draft M3 PR and its CI result, then merge after approval.
+2. After merge, synchronize version/README/release notes for the v1.0 release path.
 
 ## Important Context
 
-`main` and `origin/main` both point to `fd1fa98`. Documentation changes are on
-`codex/m3-design`. No product code or dependency changed in this session. The existing 162-test
-suite remains green.
+- Current branch: `codex/m3-core`.
+- `main` was synchronized to PR #5 merge commit `a62d9dc` before branching.
+- No source file is ever modified by analysis, no data leaves the machine, and no new network
+  path or dependency was introduced.
+- M3 functionality, Spanish/French/Russian expansion, verification, and local merge-gate
+  review are complete; only remote PR review/merge and subsequent release metadata work remain.

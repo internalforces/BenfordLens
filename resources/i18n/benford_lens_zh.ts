@@ -22,8 +22,15 @@
     <message><source>Could not export report</source><translation>无法导出报告</translation></message>
     <message><source>No valid numeric values were found in the selected column.</source><translation>在所选列中未找到有效的数值。</translation></message>
     <message><source>Only {sample_size} valid numeric value(s) were found, which is too few for a meaningful comparison to the expected Benford distribution. Try a column with more data.</source><translation>仅找到 {sample_size} 个有效数值，不足以与预期的本福特分布进行有意义的比较。请尝试数据更多的列。</translation></message>
-    <message><source>The overall distribution is close to the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation.</source><translation>整体分布接近预期的本福特分布。仅凭此结果无法判断数据是否存在错误或被人为改动。</translation></message>
-    <message><source>The overall distribution differs somewhat from the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation; further review may be warranted.</source><translation>整体分布与预期的本福特分布存在一定差异。仅凭此结果无法判断数据是否存在错误或被人为改动；可能需要进一步审查。</translation></message>
+    <message><source>The overall distribution is close to the expected Benford distribution. Interpret this comparison together with the characteristics of the data.</source><translation>整体分布接近预期的本福特分布。请结合数据特征解读此比较结果。</translation></message>
+    <message><source>The overall distribution differs somewhat from the expected Benford distribution. Further review of the data characteristics may be warranted.</source><translation>整体分布与预期的本福特分布存在一定差异。可能需要进一步审查数据特征。</translation></message>
+    <message><source>First digit</source><translation>首位数字</translation></message>
+    <message><source>Second digit</source><translation>第二位数字</translation></message>
+    <message><source>First + second</source><translation>首位 + 第二位</translation></message>
+    <message><source>Observed</source><translation>观测值</translation></message>
+    <message><source>Expected (Benford)</source><translation>预期值（本福特）</translation></message>
+    <message><source>Proportion (%)</source><translation>比例（%）</translation></message>
+    <message><source>{position} analysis</source><translation>{position}分析</translation></message>
 </context>
 <context>
     <name>PreprocessingPanel</name>
@@ -83,6 +90,17 @@
     <message><source>KS statistic</source><translation>KS 统计量</translation></message>
     <message><source>KS p-value</source><translation>KS p 值</translation></message>
     <message><source>Reference statistics only. Interpret them in light of the data and sample characteristics. KS compares base-10 log mantissas with a uniform distribution.</source><translation>这些统计量仅供参考。请结合数据和样本特征进行解释。KS 将以 10 为底的对数小数部分与均匀分布进行比较。</translation></message>
+    <message><source>First-digit sample size</source><translation>首位数字样本量</translation></message>
+    <message><source>First-digit mean absolute deviation (MAD)</source><translation>首位数字平均绝对偏差 (MAD)</translation></message>
+    <message><source>First-digit Chi-square statistic</source><translation>首位数字卡方统计量</translation></message>
+    <message><source>First-digit Chi-square p-value</source><translation>首位数字卡方 p 值</translation></message>
+    <message><source>Second-digit sample size</source><translation>第二位数字样本量</translation></message>
+    <message><source>Second-digit mean absolute deviation (MAD)</source><translation>第二位数字平均绝对偏差 (MAD)</translation></message>
+    <message><source>Second-digit Chi-square statistic</source><translation>第二位数字卡方统计量</translation></message>
+    <message><source>Second-digit Chi-square p-value</source><translation>第二位数字卡方 p 值</translation></message>
+    <message><source>Shared KS sample size</source><translation>共享 KS 样本量</translation></message>
+    <message><source>Shared KS statistic</source><translation>共享 KS 统计量</translation></message>
+    <message><source>Shared KS p-value</source><translation>共享 KS p 值</translation></message>
 </context>
 <context>
     <name>DrillDownPanel</name>

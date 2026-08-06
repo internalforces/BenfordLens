@@ -1,7 +1,7 @@
 """HTML report rendering (stdlib templating only — no new dependency).
 
-Report wording follows AGENTS.md's Product Philosophy & Tone Rules: neutral
-and exploratory, never accusatory or conclusive about data manipulation.
+Report wording follows AGENTS.md's Product Philosophy & Tone Rules: neutral,
+exploratory, and focused on interpreting distribution characteristics.
 """
 
 from __future__ import annotations
@@ -12,10 +12,12 @@ import io
 import string
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Literal
 
 from matplotlib.figure import Figure
 
 from benford_lens.analysis.benford import BenfordResult
+from benford_lens.analysis.expert_statistics import CombinedExpertStatistics, ExpertStatistics
 from benford_lens.analysis.preprocessing import PreprocessingOptions, PreprocessingPreview
 from benford_lens.analysis.suitability import (
     NOTE_HIGH_MISSING_RATE,
@@ -77,12 +79,11 @@ RESULT_SUMMARY_TEMPLATES = {
     ),
     SUMMARY_CLOSE_TO_BENFORD: (
         "The overall distribution is close to the expected Benford distribution. "
-        "This result alone cannot be used to judge data errors or manipulation."
+        "Interpret this comparison together with the characteristics of the data."
     ),
     SUMMARY_DIVERGES_FROM_BENFORD: (
         "The overall distribution differs somewhat from the expected Benford distribution. "
-        "This result alone cannot be used to judge data errors or manipulation; "
-        "further review may be warranted."
+        "Further review of the data characteristics may be warranted."
     ),
 }
 
@@ -130,18 +131,13 @@ footer { margin-top: 2rem; font-size: 0.85rem; color: #666; }
 <p class="badge">$suitability_badge</p>
 <ul>$suitability_notes</ul>
 
-<h2>First-digit distribution</h2>
-<img src="data:image/png;base64,$chart_base64" alt="Expected vs. actual first-digit distribution">
-<p>$result_summary</p>
-<table>
-<tr><th>Digit</th><th>Observed %</th><th>Expected %</th></tr>
-$digit_table_rows
-</table>
+$result_sections
+$statistics_section
 
 <footer>
 <p>This report was generated entirely on your local machine; no data was sent anywhere.</p>
-<p>This result alone cannot be used to judge data errors or manipulation; further review may
-be warranted.</p>
+<p>This comparison is descriptive. Interpret it together with the characteristics of the
+data.</p>
 </footer>
 </body>
 </html>
@@ -162,6 +158,11 @@ class ReportContext:
     # Worksheet the column came from; None for CSV sources, where the report
     # omits the sheet fragment entirely rather than showing an empty one.
     sheet_name: str | None = None
+    mode: Literal["first", "second", "combined"] = "first"
+    second_result: BenfordResult | None = None
+    second_result_summary: ResultSummary | None = None
+    second_chart_figure: Figure | None = None
+    expert_statistics: ExpertStatistics | CombinedExpertStatistics | None = None
 
 
 def _figure_to_base64(figure: Figure) -> str:
@@ -191,6 +192,76 @@ def _digit_table_rows(result: BenfordResult) -> str:
     return "\n".join(rows)
 
 
+def _result_section(
+    title: str,
+    alt_text: str,
+    result: BenfordResult,
+    summary: ResultSummary,
+    chart_figure: Figure,
+) -> str:
+    return (
+        f'<section class="digit-result">\n<h2>{title}</h2>\n'
+        f'<img src="data:image/png;base64,{_figure_to_base64(chart_figure)}" '
+        f'alt="{alt_text}">\n'
+        f"<p>{html.escape(format_result_summary(summary))}</p>\n"
+        "<table>\n<tr><th>Digit</th><th>Observed %</th><th>Expected %</th></tr>\n"
+        f"{_digit_table_rows(result)}\n</table>\n</section>"
+    )
+
+
+def _format_statistic(value: int | float | None) -> str:
+    if value is None:
+        return "—"
+    if isinstance(value, int):
+        return f"{value:,}"
+    if value != 0 and abs(value) < 0.0001:
+        return f"{value:.3e}"
+    return f"{value:.6f}"
+
+
+def _statistics_section(
+    statistics: ExpertStatistics | CombinedExpertStatistics | None,
+) -> str:
+    if statistics is None:
+        return ""
+    rows: tuple[tuple[str, int | float | None], ...]
+    if isinstance(statistics, ExpertStatistics):
+        rows = (
+            ("Sample size", statistics.sample_size),
+            ("Mean absolute deviation (MAD)", statistics.mean_absolute_deviation),
+            ("Chi-square statistic", statistics.chi_square_statistic),
+            ("Chi-square p-value", statistics.chi_square_p_value),
+            ("KS statistic", statistics.ks_statistic),
+            ("KS p-value", statistics.ks_p_value),
+        )
+    else:
+        rows = (
+            ("First-digit sample size", statistics.first.sample_size),
+            ("First-digit mean absolute deviation (MAD)", statistics.first.mean_absolute_deviation),
+            ("First-digit Chi-square statistic", statistics.first.chi_square_statistic),
+            ("First-digit Chi-square p-value", statistics.first.chi_square_p_value),
+            ("Second-digit sample size", statistics.second.sample_size),
+            (
+                "Second-digit mean absolute deviation (MAD)",
+                statistics.second.mean_absolute_deviation,
+            ),
+            ("Second-digit Chi-square statistic", statistics.second.chi_square_statistic),
+            ("Second-digit Chi-square p-value", statistics.second.chi_square_p_value),
+            ("Shared KS sample size", statistics.log_mantissa.sample_size),
+            ("Shared KS statistic", statistics.log_mantissa.ks_statistic),
+            ("Shared KS p-value", statistics.log_mantissa.ks_p_value),
+        )
+    table_rows = "\n".join(
+        f"<tr><th>{label}</th><td>{_format_statistic(value)}</td></tr>" for label, value in rows
+    )
+    return (
+        '<section class="reference-statistics">\n<h2>Reference statistics</h2>\n'
+        f"<table>\n{table_rows}\n</table>\n"
+        "<p>These values are descriptive references. Interpret them together with the data "
+        "and sample characteristics.</p>\n</section>"
+    )
+
+
 def render_html_report(context: ReportContext) -> str:
     notes_html = "".join(
         f"<li>{html.escape(format_suitability_note(note))}</li>"
@@ -199,6 +270,47 @@ def render_html_report(context: ReportContext) -> str:
     # Sheet names come from the user's own workbook, so escape like the other
     # user-derived strings.
     sheet_fragment = f" — Sheet: {html.escape(context.sheet_name)}" if context.sheet_name else ""
+    if context.mode == "first":
+        result_sections = _result_section(
+            "First-digit distribution",
+            "Expected vs. actual first-digit distribution",
+            context.result,
+            context.result_summary,
+            context.chart_figure,
+        )
+    elif context.mode == "second":
+        result_sections = _result_section(
+            "Second-digit distribution",
+            "Expected vs. actual second-digit distribution",
+            context.result,
+            context.result_summary,
+            context.chart_figure,
+        )
+    else:
+        if (
+            context.second_result is None
+            or context.second_result_summary is None
+            or context.second_chart_figure is None
+        ):
+            raise ValueError("Combined reports require both digit-position results.")
+        result_sections = "\n".join(
+            (
+                _result_section(
+                    "First-digit distribution",
+                    "Expected vs. actual first-digit distribution",
+                    context.result,
+                    context.result_summary,
+                    context.chart_figure,
+                ),
+                _result_section(
+                    "Second-digit distribution",
+                    "Expected vs. actual second-digit distribution",
+                    context.second_result,
+                    context.second_result_summary,
+                    context.second_chart_figure,
+                ),
+            )
+        )
     return _TEMPLATE.substitute(
         source_name=html.escape(context.source_name),
         sheet_fragment=sheet_fragment,
@@ -209,7 +321,6 @@ def render_html_report(context: ReportContext) -> str:
         ),
         suitability_badge=_LEVEL_BADGE[context.suitability.level],
         suitability_notes=notes_html,
-        chart_base64=_figure_to_base64(context.chart_figure),
-        result_summary=html.escape(format_result_summary(context.result_summary)),
-        digit_table_rows=_digit_table_rows(context.result),
+        result_sections=result_sections,
+        statistics_section=_statistics_section(context.expert_statistics),
     )

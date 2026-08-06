@@ -18,9 +18,9 @@ external server.
 ## Current State
 
 - **Version**: v0.2.0.dev0
-- **Phase**: M2 complete on `main` via PRs #2–#4; M3 architecture accepted (ADR-009)
-- **Next milestone**: M3 — v1.0 (second-digit analysis, first+second results in one view,
-  performance, expanded i18n)
+- **Phase**: M3 feature scope and local merge gate complete on `codex/m3-core`; PR #6 review
+  and merge remain
+- **Next milestone**: Review CI and merge M3, then synchronize v1.0 release metadata
 - **Overall health**: 🟢 Good
 
 ## Tech Summary
@@ -38,19 +38,21 @@ external server.
 BenfordLens/
 ├── src/benford_lens/
 │   ├── io/                   (csv_loader.py, excel_loader.py)
-│   ├── analysis/              (benford.py — first-digit calculation; preprocessing.py;
-│   │                            suitability.py; expert_statistics.py — all zero UI dependency)
+│   ├── analysis/              (benford.py — first/second/combined calculation;
+│   │                            preprocessing.py; suitability.py; expert_statistics.py — all
+│   │                            zero UI dependency)
 │   ├── charts/                (benford_chart.py — chart + result summary)
 │   ├── report/                 (html_report.py — stdlib string.Template, no new dependency)
 │   └── ui/                    (controller.py — framework-agnostic session state;
 │                                main_window.py — PySide6 MainWindow; preprocessing_panel.py;
-│                                suitability_panel.py; expert_statistics_panel.py;
-│                                drill_down_panel.py; __main__.py entry point)
-├── resources/i18n/           (benford_lens_{ko,zh,ja}.ts/.qm — QTranslator translations)
+│                                suitability_panel.py; digit_result_panel.py;
+│                                expert_statistics_panel.py; drill_down_panel.py;
+│                                __main__.py entry point)
+├── resources/i18n/           (benford_lens_{ko,zh,ja,es,fr,ru}.ts/.qm — QTranslator translations)
 ├── packaging/                 (benford-lens-{macos,windows,linux}.spec — PyInstaller)
 ├── tests/                    (mirrors src/ layout; tests/conftest.py sets QT_QPA_PLATFORM=offscreen)
 ├── .github/workflows/ci.yml  (lint, format-check, type-check, test on push/PR to main)
-└── docs/superpowers/plans/    (2026-08-04-m1-mvp.md, 2026-08-05-m2-phase2.md — subagent-driven-development plans)
+└── docs/superpowers/plans/    (M1, M2, and 2026-08-06-m3-v1.md implementation plans)
 ```
 
 ## Recent Changes
@@ -66,6 +68,9 @@ BenfordLens/
 | 2026-08-05 | TASK-011 implemented approved SciPy-backed MAD, Chi-square, and KS reference statistics in a hidden-by-default expert details panel |
 | 2026-08-06 | TASK-011 PR #4 passed CI, merged to `main`, and passed post-merge review (162 tests) |
 | 2026-08-06 | M3 combined analysis defined as first- and second-digit results displayed together in one view; compatibility-first architecture accepted as ADR-009 |
+| 2026-08-06 | M3 TASK-018–024 implemented on `codex/m3-core`: neutral copy cleanup, second/combined analysis, generic statistics, immutable snapshots, reusable UI, mode-aware reports, complete EN/KO/ZH/JA additions, and 30.0–31.8% faster 100k-row analysis |
+| 2026-08-06 | TASK-025 added complete 93-message Spanish and French UI catalogs with compiled `.qm` files and catalog completeness tests; M3 feature scope complete |
+| 2026-08-06 | TASK-026 added a complete 93-message Russian UI catalog, compiled resource, selector entry, and state-preserving UI coverage to M3 PR #6 |
 
 ## Constraints
 

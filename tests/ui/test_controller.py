@@ -1,9 +1,12 @@
+from dataclasses import FrozenInstanceError
+
 import pandas as pd
 import pytest
 
+from benford_lens.analysis.benford import CombinedBenfordResult, DigitPosition
 from benford_lens.analysis.preprocessing import PreprocessingOptions
 from benford_lens.analysis.suitability import SuitabilityLevel
-from benford_lens.ui.controller import SessionController
+from benford_lens.ui.controller import AnalysisMode, SessionController
 
 
 def _write_csv(tmp_path):
@@ -144,14 +147,17 @@ def test_analyze_snapshots_the_options_preview_and_suitability_it_used(tmp_path)
     assert state.last_suitability.metrics.sample_count == 2
     assert state.last_expert_statistics is not None
     assert state.last_expert_statistics.sample_size == 2
+    snapshot = state.analysis_snapshot
+    assert snapshot is not None
 
-    # Changing the live options afterwards must not rewrite the snapshot.
+    # Changing the live options invalidates the displayed/exportable snapshot,
+    # while the immutable object already returned remains unchanged.
     controller.configure_preprocessing(PreprocessingOptions(negative_handling="exclude"))
 
-    assert state.last_preprocessing_options.negative_handling == "absolute"
-    assert state.last_preprocessing_preview.total_after == 2
-    assert state.last_suitability.metrics.sample_count == 2
-    assert state.last_expert_statistics.sample_size == 2
+    assert state.analysis_snapshot is None
+    assert snapshot.preprocessing_options.negative_handling == "absolute"
+    assert snapshot.preprocessing_preview.total_after == 2
+    assert snapshot.suitability.metrics.sample_count == 2
 
 
 def test_check_suitability_returns_an_assessment(tmp_path):
@@ -190,3 +196,147 @@ def test_open_excel_records_the_sheet_name_and_csv_leaves_it_none(tmp_path):
 
     controller.open_csv(_write_csv(tmp_path))
     assert controller.state.sheet_name is None
+
+
+def test_second_digit_mode_returns_second_digit_result_and_snapshot(tmp_path):
+    path = tmp_path / "second.csv"
+    path.write_text("amount\n101\n111\n222\n5\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+
+    result = controller.analyze(AnalysisMode.SECOND)
+
+    assert result.observed_counts[0] == 2
+    assert result.observed_counts[1] == 1
+    assert result.observed_counts[2] == 1
+    assert controller.state.analysis_mode is AnalysisMode.SECOND
+    assert controller.state.analysis_snapshot is not None
+    assert controller.state.analysis_snapshot.mode is AnalysisMode.SECOND
+
+
+def test_combined_mode_snapshots_both_results_and_shared_statistics(tmp_path):
+    controller = SessionController()
+    controller.open_csv(_write_csv(tmp_path))
+    controller.select_column("amount")
+
+    result = controller.analyze(AnalysisMode.COMBINED)
+
+    assert isinstance(result, CombinedBenfordResult)
+    assert result.first.observed_counts[1] == 2
+    assert result.second.observed_counts[1] == 2
+    snapshot = controller.state.analysis_snapshot
+    assert snapshot is not None
+    assert snapshot.result is result
+    assert snapshot.mode is AnalysisMode.COMBINED
+    assert snapshot.expert_statistics.log_mantissa.sample_size == 3
+
+
+@pytest.mark.parametrize("mode", list(AnalysisMode))
+def test_each_analysis_mode_preprocesses_exactly_once(tmp_path, monkeypatch, mode):
+    from benford_lens.analysis.preprocessing import apply_preprocessing as real_apply
+
+    calls = 0
+
+    def counting_apply(raw_series, options):
+        nonlocal calls
+        calls += 1
+        return real_apply(raw_series, options)
+
+    monkeypatch.setattr("benford_lens.ui.controller.apply_preprocessing", counting_apply)
+    controller = SessionController()
+    controller.open_csv(_write_csv(tmp_path))
+    controller.select_column("amount")
+
+    controller.analyze(mode)
+
+    assert calls == 1
+
+
+@pytest.mark.parametrize("mode", list(AnalysisMode))
+def test_each_analysis_mode_extracts_digits_once_per_preprocessed_value(
+    tmp_path, monkeypatch, mode
+):
+    from benford_lens.analysis import benford
+
+    real_extract = benford._significant_digits
+    calls = 0
+
+    def counting_extract(value):
+        nonlocal calls
+        calls += 1
+        return real_extract(value)
+
+    monkeypatch.setattr(benford, "_significant_digits", counting_extract)
+    controller = SessionController()
+    controller.open_csv(_write_csv(tmp_path))
+    controller.select_column("amount")
+
+    controller.analyze(mode)
+
+    assert calls == 3
+
+
+def test_analysis_snapshot_is_frozen(tmp_path):
+    controller = SessionController()
+    controller.open_csv(_write_csv(tmp_path))
+    controller.select_column("amount")
+    controller.analyze()
+    snapshot = controller.state.analysis_snapshot
+    assert snapshot is not None
+
+    with pytest.raises(FrozenInstanceError):
+        snapshot.mode = AnalysisMode.SECOND
+
+
+def test_source_column_options_and_mode_changes_invalidate_snapshot(tmp_path):
+    path = tmp_path / "two_columns.csv"
+    path.write_text("amount,other\n111,333\n222,444\n", encoding="utf-8")
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+    controller.analyze()
+
+    controller.select_column("other")
+    assert controller.state.analysis_snapshot is None
+
+    controller.analyze()
+    controller.configure_preprocessing(PreprocessingOptions(negative_handling="exclude"))
+    assert controller.state.analysis_snapshot is None
+
+    controller.analyze()
+    controller.set_analysis_mode(AnalysisMode.SECOND)
+    assert controller.state.analysis_snapshot is None
+
+    controller.analyze()
+    controller.open_csv(str(path))
+    assert controller.state.analysis_snapshot is None
+
+
+def test_position_aware_drill_down_uses_stored_mapping_and_original_rows(tmp_path):
+    path = tmp_path / "drill_both.csv"
+    path.write_text(
+        "name,amount\nalice,101\nbob,111\ncarol,-105\ndave,222\n",
+        encoding="utf-8",
+    )
+    controller = SessionController()
+    controller.open_csv(str(path))
+    controller.select_column("amount")
+    controller.analyze(AnalysisMode.COMBINED)
+
+    first_rows = controller.drill_down_digit(DigitPosition.FIRST, 1)
+    second_rows = controller.drill_down_digit(DigitPosition.SECOND, 0)
+
+    assert list(first_rows["name"]) == ["alice", "bob", "carol"]
+    assert list(second_rows["name"]) == ["alice", "carol"]
+    assert list(second_rows["amount"]) == [101, -105]
+
+
+def test_drill_down_rejects_position_not_in_current_mode(tmp_path):
+    controller = SessionController()
+    controller.open_csv(_write_csv(tmp_path))
+    controller.select_column("amount")
+    controller.analyze(AnalysisMode.SECOND)
+
+    with pytest.raises(ValueError, match="does not include first-digit"):
+        controller.drill_down_digit(DigitPosition.FIRST, 1)

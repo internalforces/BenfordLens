@@ -22,8 +22,15 @@
     <message><source>Could not export report</source><translation>レポートを書き出せませんでした</translation></message>
     <message><source>No valid numeric values were found in the selected column.</source><translation>選択した列に有効な数値が見つかりませんでした。</translation></message>
     <message><source>Only {sample_size} valid numeric value(s) were found, which is too few for a meaningful comparison to the expected Benford distribution. Try a column with more data.</source><translation>有効な数値が {sample_size} 件しか見つからず、期待されるベンフォード分布と有意義に比較するには少なすぎます。データがより多い列をお試しください。</translation></message>
-    <message><source>The overall distribution is close to the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation.</source><translation>全体の分布は期待されるベンフォード分布に近い形です。この結果だけでデータの誤りや改変の有無を判断することはできません。</translation></message>
-    <message><source>The overall distribution differs somewhat from the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation; further review may be warranted.</source><translation>全体の分布は期待されるベンフォード分布とやや異なります。この結果だけでデータの誤りや改変の有無を判断することはできません。さらに確認が必要な場合があります。</translation></message>
+    <message><source>The overall distribution is close to the expected Benford distribution. Interpret this comparison together with the characteristics of the data.</source><translation>全体の分布は期待されるベンフォード分布に近い形です。この比較結果はデータの特性と合わせて解釈してください。</translation></message>
+    <message><source>The overall distribution differs somewhat from the expected Benford distribution. Further review of the data characteristics may be warranted.</source><translation>全体の分布は期待されるベンフォード分布とやや異なります。データの特性をさらに確認することが望ましい場合があります。</translation></message>
+    <message><source>First digit</source><translation>第1桁</translation></message>
+    <message><source>Second digit</source><translation>第2桁</translation></message>
+    <message><source>First + second</source><translation>第1桁 + 第2桁</translation></message>
+    <message><source>Observed</source><translation>観測値</translation></message>
+    <message><source>Expected (Benford)</source><translation>期待値（ベンフォード）</translation></message>
+    <message><source>Proportion (%)</source><translation>割合（%）</translation></message>
+    <message><source>{position} analysis</source><translation>{position}の分析</translation></message>
 </context>
 <context>
     <name>PreprocessingPanel</name>
@@ -83,6 +90,17 @@
     <message><source>KS statistic</source><translation>KS 統計量</translation></message>
     <message><source>KS p-value</source><translation>KS p 値</translation></message>
     <message><source>Reference statistics only. Interpret them in light of the data and sample characteristics. KS compares base-10 log mantissas with a uniform distribution.</source><translation>これらは参考用の統計量です。データとサンプルの特性を踏まえて解釈してください。KS は常用対数の小数部分を一様分布と比較します。</translation></message>
+    <message><source>First-digit sample size</source><translation>第1桁のサンプルサイズ</translation></message>
+    <message><source>First-digit mean absolute deviation (MAD)</source><translation>第1桁の平均絶対偏差 (MAD)</translation></message>
+    <message><source>First-digit Chi-square statistic</source><translation>第1桁のカイ二乗統計量</translation></message>
+    <message><source>First-digit Chi-square p-value</source><translation>第1桁のカイ二乗 p 値</translation></message>
+    <message><source>Second-digit sample size</source><translation>第2桁のサンプルサイズ</translation></message>
+    <message><source>Second-digit mean absolute deviation (MAD)</source><translation>第2桁の平均絶対偏差 (MAD)</translation></message>
+    <message><source>Second-digit Chi-square statistic</source><translation>第2桁のカイ二乗統計量</translation></message>
+    <message><source>Second-digit Chi-square p-value</source><translation>第2桁のカイ二乗 p 値</translation></message>
+    <message><source>Shared KS sample size</source><translation>共通 KS のサンプルサイズ</translation></message>
+    <message><source>Shared KS statistic</source><translation>共通 KS 統計量</translation></message>
+    <message><source>Shared KS p-value</source><translation>共通 KS p 値</translation></message>
 </context>
 <context>
     <name>DrillDownPanel</name>

@@ -22,8 +22,15 @@
     <message><source>Could not export report</source><translation>보고서를 내보낼 수 없습니다</translation></message>
     <message><source>No valid numeric values were found in the selected column.</source><translation>선택한 열에서 유효한 숫자 값을 찾지 못했습니다.</translation></message>
     <message><source>Only {sample_size} valid numeric value(s) were found, which is too few for a meaningful comparison to the expected Benford distribution. Try a column with more data.</source><translation>유효한 숫자 값이 {sample_size}개뿐이어서 기대되는 벤포드 분포와 의미 있게 비교하기에는 너무 적습니다. 데이터가 더 많은 열을 사용해 보세요.</translation></message>
-    <message><source>The overall distribution is close to the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation.</source><translation>전체 분포가 기대되는 벤포드 분포에 가깝습니다. 이 결과만으로는 데이터 오류나 조작 여부를 판단할 수 없습니다.</translation></message>
-    <message><source>The overall distribution differs somewhat from the expected Benford distribution. This result alone cannot be used to judge data errors or manipulation; further review may be warranted.</source><translation>전체 분포가 기대되는 벤포드 분포와 다소 차이가 있습니다. 이 결과만으로는 데이터 오류나 조작 여부를 판단할 수 없으며, 추가 검토가 필요할 수 있습니다.</translation></message>
+    <message><source>The overall distribution is close to the expected Benford distribution. Interpret this comparison together with the characteristics of the data.</source><translation>전체 분포가 기대되는 벤포드 분포에 가깝습니다. 이 비교 결과를 데이터의 특성과 함께 해석하세요.</translation></message>
+    <message><source>The overall distribution differs somewhat from the expected Benford distribution. Further review of the data characteristics may be warranted.</source><translation>전체 분포가 기대되는 벤포드 분포와 다소 차이가 있습니다. 데이터 특성에 대한 추가 검토가 필요할 수 있습니다.</translation></message>
+    <message><source>First digit</source><translation>첫째 자리</translation></message>
+    <message><source>Second digit</source><translation>둘째 자리</translation></message>
+    <message><source>First + second</source><translation>첫째 + 둘째 자리</translation></message>
+    <message><source>Observed</source><translation>관측값</translation></message>
+    <message><source>Expected (Benford)</source><translation>기대값 (벤포드)</translation></message>
+    <message><source>Proportion (%)</source><translation>비율 (%)</translation></message>
+    <message><source>{position} analysis</source><translation>{position} 분석</translation></message>
 </context>
 <context>
     <name>PreprocessingPanel</name>
@@ -83,6 +90,17 @@
     <message><source>KS statistic</source><translation>KS 통계량</translation></message>
     <message><source>KS p-value</source><translation>KS p-값</translation></message>
     <message><source>Reference statistics only. Interpret them in light of the data and sample characteristics. KS compares base-10 log mantissas with a uniform distribution.</source><translation>참고용 통계입니다. 데이터와 표본의 특성을 함께 고려해 해석하세요. KS는 밑이 10인 로그의 소수 부분을 균등분포와 비교합니다.</translation></message>
+    <message><source>First-digit sample size</source><translation>첫째 자리 표본 크기</translation></message>
+    <message><source>First-digit mean absolute deviation (MAD)</source><translation>첫째 자리 평균 절대 편차 (MAD)</translation></message>
+    <message><source>First-digit Chi-square statistic</source><translation>첫째 자리 카이제곱 통계량</translation></message>
+    <message><source>First-digit Chi-square p-value</source><translation>첫째 자리 카이제곱 p-값</translation></message>
+    <message><source>Second-digit sample size</source><translation>둘째 자리 표본 크기</translation></message>
+    <message><source>Second-digit mean absolute deviation (MAD)</source><translation>둘째 자리 평균 절대 편차 (MAD)</translation></message>
+    <message><source>Second-digit Chi-square statistic</source><translation>둘째 자리 카이제곱 통계량</translation></message>
+    <message><source>Second-digit Chi-square p-value</source><translation>둘째 자리 카이제곱 p-값</translation></message>
+    <message><source>Shared KS sample size</source><translation>공통 KS 표본 크기</translation></message>
+    <message><source>Shared KS statistic</source><translation>공통 KS 통계량</translation></message>
+    <message><source>Shared KS p-value</source><translation>공통 KS p-값</translation></message>
 </context>
 <context>
     <name>DrillDownPanel</name>

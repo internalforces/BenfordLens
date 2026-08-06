@@ -33,11 +33,13 @@ external server.
 - [x] Expert statistics panel (MAD, Chi-square, KS Test, sample size) — hidden by default
 
 ### M3 — v1.0 (Phase 3)
-- [ ] Second-digit analysis
-- [ ] Combined first+second-digit analysis — both independent results shown together in one
+- [x] Second-digit analysis
+- [x] Combined first+second-digit analysis — both independent results shown together in one
   results view (not a joint first-two-digit distribution; see ADR-009)
-- [ ] Performance optimization for large datasets
-- [ ] Expand language support beyond the initial EN/KO/ZH/JA set added in M2 (ADR-004)
+- [x] Performance optimization for large datasets — removed repeated digit extraction;
+  100k-row controller benchmark improved 30.0–31.8% (TASK-024)
+- [x] Expand language support beyond the initial EN/KO/ZH/JA set added in M2 — Spanish,
+  French, and Russian added in M3 (ADR-010, ADR-011)
 
 ## Backlog Ideas
 

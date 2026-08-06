@@ -261,3 +261,53 @@ public API cleanup is warranted.
 **Consequences**: M3 implementation follows
 `docs/superpowers/specs/2026-08-06-m3-analysis-modes-design.md`. No new dependency is required,
 and the local-only, explicit-selection, and neutral-interpretation constraints remain intact.
+
+---
+
+### ADR-010: M3 Language Expansion to Spanish and French
+
+- **Date**: 2026-08-06
+- **Status**: Accepted
+- **Decided by**: User
+
+**Context**: ADR-004 established English, Korean, Chinese, and Japanese for M2 and left M3
+language expansion open. TASK-025 required a bounded language choice before translation work.
+
+**Decision**: Add Spanish and French as fully selectable UI languages in M3. Each language
+must cover every current translatable message, preserve formatting placeholders, compile to a
+packaged `.qm` catalog, and keep English as the default.
+
+**Rationale**: These are the two languages explicitly selected by the user to complete M3's
+expanded-i18n scope.
+
+**Trade-offs**: The maintained catalog set grows from three translated catalogs to five, so
+future UI strings require two additional translations and completeness checks.
+
+**Consequences**: `resources/i18n/` now contains complete ES/FR `.ts` and `.qm` files, the
+language selector exposes Español and Français, and automated catalog tests enforce the same
+93-message key set and placeholder structure across KO/ZH/JA/ES/FR.
+
+---
+
+### ADR-011: M3 Russian Language Expansion
+
+- **Date**: 2026-08-06
+- **Status**: Accepted
+- **Decided by**: User
+
+**Context**: After TASK-025 completed the Spanish and French expansion, the user requested
+Russian as an additional language in the same M3 pull request.
+
+**Decision**: Add Russian as a fully selectable UI language. The Russian catalog must cover
+all current translatable messages, preserve formatting placeholders, compile to a packaged
+`.qm` resource, and keep English as the default.
+
+**Rationale**: Russian is the additional language explicitly selected by the user before the
+M3 pull request is merged.
+
+**Trade-offs**: The maintained translated-catalog set grows from five to six, so future UI
+strings require one additional translation and completeness check.
+
+**Consequences**: `resources/i18n/` contains complete RU `.ts` and `.qm` files, the selector
+exposes Русский, and automated catalog tests enforce the same 93-message key set and
+placeholder structure across KO/ZH/JA/ES/FR/RU.

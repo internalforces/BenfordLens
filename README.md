@@ -16,7 +16,7 @@ machine. The application has no account system, telemetry, or network-based anal
 - Advisory data-characteristics panel with the underlying metrics
 - Raw-row drill-down from chart digits, substring search, and local CSV export
 - Local HTML report export
-- English, Korean, Chinese, and Japanese UI selection
+- English, Korean, Chinese, Japanese, Spanish, French, and Russian UI selection
 - PyInstaller specifications for macOS, Windows, and Linux
 
 Benford Lens does not decide whether Benford's Law applies to a dataset. The suitability

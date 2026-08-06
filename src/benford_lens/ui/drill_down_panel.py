@@ -7,6 +7,7 @@ import pandas as pd
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
+    QLabel,
     QLineEdit,
     QMessageBox,
     QPushButton,
@@ -22,6 +23,8 @@ class DrillDownPanel(QWidget):
         super().__init__()
         self._rows: pd.DataFrame | None = None
 
+        self.heading_label = QLabel("")
+
         self.search_box = QLineEdit()
         self.search_box.setPlaceholderText(self.tr("Search…"))
         self.search_box.textChanged.connect(self._apply_filter)
@@ -36,6 +39,7 @@ class DrillDownPanel(QWidget):
         top_bar.addWidget(self.export_button)
 
         layout = QVBoxLayout()
+        layout.addWidget(self.heading_label)
         layout.addLayout(top_bar)
         layout.addWidget(self.table)
         self.setLayout(layout)
@@ -44,13 +48,14 @@ class DrillDownPanel(QWidget):
         self.search_box.setPlaceholderText(self.tr("Search…"))
         self.export_button.setText(self.tr("Export CSV…"))
 
-    def show_rows(self, rows: pd.DataFrame) -> None:
+    def show_rows(self, rows: pd.DataFrame, heading: str = "") -> None:
         # Drop _rows before clearing the search box: the clear() fires
         # textChanged, and _apply_filter's early return on a None _rows makes
         # that a no-op, leaving the explicit _render below as the only render.
         self._rows = None
         self.search_box.clear()
         self._rows = rows
+        self.heading_label.setText(heading)
         self._render(rows)
 
     def clear(self) -> None:
@@ -61,6 +66,7 @@ class DrillDownPanel(QWidget):
         longer open, and Export CSV… would write them to disk.
         """
         self._rows = None
+        self.heading_label.setText("")
         self.search_box.clear()
         self.table.clearContents()
         self.table.setRowCount(0)
