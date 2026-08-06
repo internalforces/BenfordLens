@@ -286,3 +286,28 @@ future UI strings require two additional translations and completeness checks.
 **Consequences**: `resources/i18n/` now contains complete ES/FR `.ts` and `.qm` files, the
 language selector exposes Español and Français, and automated catalog tests enforce the same
 93-message key set and placeholder structure across KO/ZH/JA/ES/FR.
+
+---
+
+### ADR-011: M3 Russian Language Expansion
+
+- **Date**: 2026-08-06
+- **Status**: Accepted
+- **Decided by**: User
+
+**Context**: After TASK-025 completed the Spanish and French expansion, the user requested
+Russian as an additional language in the same M3 pull request.
+
+**Decision**: Add Russian as a fully selectable UI language. The Russian catalog must cover
+all current translatable messages, preserve formatting placeholders, compile to a packaged
+`.qm` resource, and keep English as the default.
+
+**Rationale**: Russian is the additional language explicitly selected by the user before the
+M3 pull request is merged.
+
+**Trade-offs**: The maintained translated-catalog set grows from five to six, so future UI
+strings require one additional translation and completeness check.
+
+**Consequences**: `resources/i18n/` contains complete RU `.ts` and `.qm` files, the selector
+exposes Русский, and automated catalog tests enforce the same 93-message key set and
+placeholder structure across KO/ZH/JA/ES/FR/RU.

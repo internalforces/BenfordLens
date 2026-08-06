@@ -18,7 +18,7 @@ external server.
 ## Current State
 
 - **Version**: v0.2.0.dev0
-- **Phase**: M3 feature scope and local merge gate complete on `codex/m3-core`; draft PR review
+- **Phase**: M3 feature scope and local merge gate complete on `codex/m3-core`; PR #6 review
   and merge remain
 - **Next milestone**: Review CI and merge M3, then synchronize v1.0 release metadata
 - **Overall health**: 🟢 Good
@@ -48,7 +48,7 @@ BenfordLens/
 │                                suitability_panel.py; digit_result_panel.py;
 │                                expert_statistics_panel.py; drill_down_panel.py;
 │                                __main__.py entry point)
-├── resources/i18n/           (benford_lens_{ko,zh,ja,es,fr}.ts/.qm — QTranslator translations)
+├── resources/i18n/           (benford_lens_{ko,zh,ja,es,fr,ru}.ts/.qm — QTranslator translations)
 ├── packaging/                 (benford-lens-{macos,windows,linux}.spec — PyInstaller)
 ├── tests/                    (mirrors src/ layout; tests/conftest.py sets QT_QPA_PLATFORM=offscreen)
 ├── .github/workflows/ci.yml  (lint, format-check, type-check, test on push/PR to main)
@@ -70,6 +70,7 @@ BenfordLens/
 | 2026-08-06 | M3 combined analysis defined as first- and second-digit results displayed together in one view; compatibility-first architecture accepted as ADR-009 |
 | 2026-08-06 | M3 TASK-018–024 implemented on `codex/m3-core`: neutral copy cleanup, second/combined analysis, generic statistics, immutable snapshots, reusable UI, mode-aware reports, complete EN/KO/ZH/JA additions, and 30.0–31.8% faster 100k-row analysis |
 | 2026-08-06 | TASK-025 added complete 93-message Spanish and French UI catalogs with compiled `.qm` files and catalog completeness tests; M3 feature scope complete |
+| 2026-08-06 | TASK-026 added a complete 93-message Russian UI catalog, compiled resource, selector entry, and state-preserving UI coverage to M3 PR #6 |
 
 ## Constraints
 

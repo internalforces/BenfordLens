@@ -61,6 +61,7 @@ _LANGUAGES = [
     ("ja", "日本語"),
     ("es", "Español"),
     ("fr", "Français"),
+    ("ru", "Русский"),
 ]
 
 

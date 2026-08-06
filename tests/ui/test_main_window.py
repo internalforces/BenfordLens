@@ -668,6 +668,7 @@ def test_switching_language_translates_analysis_mode_labels(window):
     [
         ("es", "Abrir archivo…", "Segundo dígito"),
         ("fr", "Ouvrir un fichier…", "Deuxième chiffre"),
+        ("ru", "Открыть файл…", "Вторая цифра"),
     ],
 )
 def test_switching_to_new_languages_translates_core_controls(
@@ -688,6 +689,7 @@ def test_switching_to_new_languages_translates_core_controls(
     [
         ("es", "Análisis: Primer dígito", "Análisis: Segundo dígito"),
         ("fr", "Analyse : Premier chiffre", "Analyse : Deuxième chiffre"),
+        ("ru", "Анализ: Первая цифра", "Анализ: Вторая цифра"),
     ],
 )
 def test_new_language_switch_preserves_combined_snapshot(

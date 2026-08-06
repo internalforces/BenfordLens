@@ -38,8 +38,8 @@ external server.
   results view (not a joint first-two-digit distribution; see ADR-009)
 - [x] Performance optimization for large datasets — removed repeated digit extraction;
   100k-row controller benchmark improved 30.0–31.8% (TASK-024)
-- [x] Expand language support beyond the initial EN/KO/ZH/JA set added in M2 — Spanish and
-  French added in M3 (ADR-010)
+- [x] Expand language support beyond the initial EN/KO/ZH/JA set added in M2 — Spanish,
+  French, and Russian added in M3 (ADR-010, ADR-011)
 
 ## Backlog Ideas
 

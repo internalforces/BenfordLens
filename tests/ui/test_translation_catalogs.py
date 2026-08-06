@@ -6,7 +6,7 @@ import pytest
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 _I18N_DIR = _PROJECT_ROOT / "resources" / "i18n"
-_LANGUAGE_CODES = ("ko", "zh", "ja", "es", "fr")
+_LANGUAGE_CODES = ("ko", "zh", "ja", "es", "fr", "ru")
 _PLACEHOLDER_RE = re.compile(r"\{[^}]+\}")
 
 

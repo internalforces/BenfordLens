@@ -49,8 +49,8 @@ Application / Controller Layer
 
 Internationalization (UI Layer only) — implemented M2, expanded M3
 └── Language selector (default English; Korean/Chinese/Japanese from ADR-004 plus
-    Spanish/French from ADR-010) via Qt's QTranslator; real, complete translations live under
-    resources/i18n/ and the Analysis Engine remains language-agnostic
+    Spanish/French from ADR-010 and Russian from ADR-011) via Qt's QTranslator; real, complete
+    translations live under resources/i18n/ and the Analysis Engine remains language-agnostic
 
 Analysis Engine (Pandas / NumPy / SciPy — no UI dependency)
 ├── File loaders (CSV, XLSX) — implemented M1: src/benford_lens/io/
@@ -101,6 +101,7 @@ at any point.
 | CI/CD | GitHub Actions (ADR-003) | 2026-08-04 |
 | UI language defaults & i18n scope | English default; KO/ZH/JA selectable by M2 (ADR-004) | 2026-08-04 |
 | M3 language expansion | Spanish and French added as selectable UI languages (ADR-010) | 2026-08-06 |
+| M3 Russian expansion | Russian added as a selectable UI language (ADR-011) | 2026-08-06 |
 | Dev environment Python version | Pinned to 3.11 via `.python-version`, matching `requires-python` and CI (ADR-005) | 2026-08-04 |
 | Data suitability thresholds | Heuristic defaults per ADR-006 | 2026-08-05 |
 | Expert-statistics methodology | MAD/Chi-square on first digits; KS on log mantissas; no automated verdict (ADR-008) | 2026-08-05 |

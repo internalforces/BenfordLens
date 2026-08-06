@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-06
 **Branch:** `codex/m3-core`
-**Scope:** TASK-018–025 against `main` at PR #5 merge commit `a62d9dc`
+**Scope:** TASK-018–026 against `main` at PR #5 merge commit `a62d9dc`
 
 ## Verdict
 
@@ -21,10 +21,10 @@
   Chi-square, and presents the sample-level log-mantissa KS result once.
 - First, second, and combined HTML reports render from the exact snapshot and keep shared
   preprocessing/suitability/KS context single.
-- Result/report wording and all six UI languages remain neutral and exploratory. Restricted
+- Result/report wording and all seven UI languages remain neutral and exploratory. Restricted
   wording searches return no product-source matches.
-- KO/ZH/JA/ES/FR catalogs each contain the same 93 messages, have no empty translations, and
-  preserve every formatting placeholder. All five `.qm` files compile and are included by the
+- KO/ZH/JA/ES/FR/RU catalogs each contain the same 93 messages, have no empty translations, and
+  preserve every formatting placeholder. All six `.qm` files compile and are included by the
   existing packaging resource-directory rule.
 - No network call, credential flow, new file format, source-file mutation, or new dependency
   was introduced.
@@ -36,10 +36,10 @@
 - Ruff lint: pass
 - Ruff format check: pass
 - mypy (`src/`): pass
-- pytest: 225 passed
-- Line coverage: 95.00% (1,578 / 1,661 executable lines), including TASK-025
+- pytest: 229 passed
+- Line coverage: 95.00% (1,578 / 1,661 executable lines), including TASK-026
 - `git diff --check`: pass
-- Translation compilation: 93 finished, 0 unfinished for both Spanish and French
+- Translation compilation: 93 finished, 0 unfinished for Spanish, French, and Russian
 
 ## Existing Non-Blocking Context
 

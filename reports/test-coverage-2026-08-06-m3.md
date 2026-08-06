@@ -5,7 +5,7 @@
 
 ## Result
 
-- Tests: **225 passed**
+- Tests: **229 passed**
 - Executable source lines: **1,661**
 - Executed source lines: **1,578**
 - Aggregate line coverage: **95.00%**
@@ -27,10 +27,10 @@ an unapproved coverage dependency. The ordinary untraced suite was also run inde
   invalidation, and position-aware original-row drill-down
 - Generic 0–9 charts, reusable result panels, single/combined layouts, and shared KS UI
 - First, second, and combined HTML reports from the exact snapshot
-- Complete KO/ZH/JA/ES/FR catalogs for all 93 current messages, including mode, result,
+- Complete KO/ZH/JA/ES/FR/RU catalogs for all 93 current messages, including mode, result,
   chart, and combined-statistics strings
 - Catalog parity, non-empty translation, placeholder-preservation, compiled-resource, and
-  live Spanish/French UI-switching regression tests
+  live Spanish/French/Russian UI-switching regression tests
 - 100,000-row performance-path regression checks through explicit extraction-count tests
 
 ## Quality Gates

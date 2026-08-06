@@ -41,15 +41,17 @@ archived at `memory/sessions/2026-08-06-M3-Architecture.md`.
   medians improved 30.0–31.8%.
 - [x] Completed TASK-025: added selectable Spanish and French with complete 93-message source
   catalogs, compiled resources, and catalog/UI state-preservation regression tests.
+- [x] Completed TASK-026: added selectable Russian with a complete 93-message source catalog,
+  compiled resource, and catalog/UI state-preservation regression tests.
 - [x] Completed focused M3 review with no blocking findings.
-- [x] Passed Ruff lint/format, mypy, all 225 tests, and 95.00% stdlib-trace line coverage.
+- [x] Passed Ruff lint/format, mypy, all 229 tests, and 95.00% stdlib-trace line coverage.
 
 ## Verification
 
 - Ruff: pass
 - Ruff format check: pass
 - mypy (`src/`): pass
-- pytest: 225 passed
+- pytest: 229 passed
 - Line coverage: 95.00% (1,578 / 1,661 executable lines via Python stdlib `trace`)
 - Performance report: `reports/performance-2026-08-06-m3.md`
 - Review report: `reports/review-2026-08-06-m3-core.md`
@@ -66,5 +68,5 @@ archived at `memory/sessions/2026-08-06-M3-Architecture.md`.
 - `main` was synchronized to PR #5 merge commit `a62d9dc` before branching.
 - No source file is ever modified by analysis, no data leaves the machine, and no new network
   path or dependency was introduced.
-- M3 functionality, Spanish/French expansion, verification, and local merge-gate review are
-  complete; only remote PR review/merge and subsequent release metadata work remain.
+- M3 functionality, Spanish/French/Russian expansion, verification, and local merge-gate
+  review are complete; only remote PR review/merge and subsequent release metadata work remain.
