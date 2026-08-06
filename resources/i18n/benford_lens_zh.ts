@@ -73,6 +73,18 @@
     <message><source>{missing_rate:.0%} of the source values were blank.</source><translation>源数据中有 {missing_rate:.0%} 的值为空。</translation></message>
 </context>
 <context>
+    <name>ExpertStatisticsPanel</name>
+    <message><source>Show Details</source><translation>显示详细信息</translation></message>
+    <message><source>Hide Details</source><translation>隐藏详细信息</translation></message>
+    <message><source>Sample size</source><translation>样本量</translation></message>
+    <message><source>Mean absolute deviation (MAD)</source><translation>平均绝对偏差 (MAD)</translation></message>
+    <message><source>Chi-square statistic</source><translation>卡方统计量</translation></message>
+    <message><source>Chi-square p-value</source><translation>卡方 p 值</translation></message>
+    <message><source>KS statistic</source><translation>KS 统计量</translation></message>
+    <message><source>KS p-value</source><translation>KS p 值</translation></message>
+    <message><source>Reference statistics only. Interpret them in light of the data and sample characteristics. KS compares base-10 log mantissas with a uniform distribution.</source><translation>这些统计量仅供参考。请结合数据和样本特征进行解释。KS 将以 10 为底的对数小数部分与均匀分布进行比较。</translation></message>
+</context>
+<context>
     <name>DrillDownPanel</name>
     <message><source>Search…</source><translation>搜索…</translation></message>
     <message><source>Export CSV…</source><translation>导出 CSV…</translation></message>

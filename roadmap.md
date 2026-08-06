@@ -30,6 +30,7 @@ external server.
 - [x] Raw data drill-down (click a leading digit in the chart → filtered original rows)
 - [x] HTML report generation
 - [x] UI language selection — default English; selectable Korean/Chinese/Japanese (i18n scaffolding, see ADR-004)
+- [x] Expert statistics panel (MAD, Chi-square, KS Test, sample size) — hidden by default
 
 ### M3 — v1.0 (Phase 3)
 - [ ] Second-digit analysis
@@ -41,7 +42,6 @@ external server.
 
 - Additional file format support: XLS, ODS, TSV (PRD §5, explicitly post-MVP)
 - Evaluate migrating charts from Matplotlib to PyQtGraph for smoother interaction on large datasets
-- Expert statistics panel ("Show Details"): MAD, Chi-square, KS Test, sample size, deviation — hidden by default (PRD §13)
 
 ## Out of Scope (MVP)
 

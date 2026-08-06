@@ -11,7 +11,7 @@ _Last updated: 2026-08-05_
 
 | ID | Task | Priority | Milestone | Size | Notes |
 |----|------|----------|-----------|------|-------|
-| TASK-011 | Expert statistics panel (MAD, Chi-square, KS Test) — hidden by default | Low | M2 | S | Confirmed via ADR-004 — stays hidden by default, no change |
+| — | (none) | — | — | — | — |
 
 ## TASK-014 Review Record — Completed
 

@@ -187,3 +187,36 @@ mockup.
 **Consequences**: TASK-014 moves to `tasks/completed.md`. Future UI polish may add a neutral
 local-processing badge, but must not introduce automated column selection or applicability
 claims.
+
+---
+
+### ADR-008: Expert Statistics Methodology and Presentation
+
+- **Date**: 2026-08-05
+- **Status**: Accepted
+- **Decided by**: User (SciPy approval and TASK-011 instruction) / Implementer
+
+**Context**: TASK-011 requires MAD, Chi-square, and KS statistics. A KS test applied directly
+to the nine discrete first-digit buckets would use a continuous-distribution p-value outside
+its assumptions, while the product constitution also prohibits turning any statistic into an
+automatic applicability judgment.
+
+**Decision**:
+- MAD is the mean absolute difference between the nine observed and expected first-digit
+  proportions.
+- Chi-square compares the nine observed counts with expected counts derived from Benford's
+  first-digit probabilities and reports both the statistic and p-value.
+- KS tests the fractional parts of `log10(abs(value))` against a uniform distribution. This
+  uses the continuous log-mantissa form equivalent to Benford's Law instead of treating the
+  discrete leading digits as continuous observations.
+- Empty samples expose no statistic (`None` in the engine, `—` in the UI). The panel displays
+  values only, adds a neutral reference caption, and remains collapsed by default; it does not
+  assign thresholds, labels, or conclusions.
+
+**Rationale**: This keeps each calculation statistically explicit, makes the KS p-value's
+continuous-distribution assumption appropriate, and preserves the user's responsibility for
+interpretation.
+
+**Consequences**: SciPy is an approved runtime dependency. `analysis/expert_statistics.py`
+stays PySide6-free, and `ui/expert_statistics_panel.py` handles formatting, translation, and
+the hidden-by-default interaction.

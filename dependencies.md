@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # dependencies.md — Benford Lens Dependencies
 
-_Last updated: 2026-08-04_
+_Last updated: 2026-08-05_
 
 ## Core Dependencies
 
@@ -16,7 +16,7 @@ _Last updated: 2026-08-04_
 | PySide6 | latest stable (TBD at implementation) | Desktop UI framework | LGPL-3.0 |
 | pandas | latest stable (TBD) | Tabular data loading and preprocessing | BSD-3-Clause |
 | numpy | latest stable (TBD) | Numerical operations underlying Pandas/SciPy | BSD-3-Clause |
-| scipy | latest stable (TBD) | Chi-square / KS statistical tests | BSD-3-Clause |
+| scipy | >=1.14 | MAD / Chi-square / KS expert statistics | BSD-3-Clause |
 | matplotlib | latest stable (TBD) | Expected vs. actual distribution charts (MVP) | PSF-based (BSD-style) |
 | openpyxl (or equivalent) | latest stable (TBD) | XLSX reading via Pandas | MIT |
 
@@ -34,6 +34,12 @@ _Last updated: 2026-08-04_
 | Service | Purpose | Auth | Notes |
 |---------|---------|------|-------|
 | — | (none) | — | By design: Benford Lens makes no external API or network calls of any kind (see AGENTS.md Absolute Restrictions) |
+
+## Approval Record
+
+- **2026-08-05 — SciPy**: Explicitly approved by the user for TASK-011. SciPy runs entirely
+  in-process on the locally preprocessed values; no dataset content or derived value leaves
+  the machine.
 
 ## Version Policy
 

@@ -73,6 +73,18 @@
     <message><source>{missing_rate:.0%} of the source values were blank.</source><translation>원본 값의 {missing_rate:.0%}가 비어 있었습니다.</translation></message>
 </context>
 <context>
+    <name>ExpertStatisticsPanel</name>
+    <message><source>Show Details</source><translation>상세 통계 보기</translation></message>
+    <message><source>Hide Details</source><translation>상세 통계 숨기기</translation></message>
+    <message><source>Sample size</source><translation>표본 크기</translation></message>
+    <message><source>Mean absolute deviation (MAD)</source><translation>평균 절대 편차 (MAD)</translation></message>
+    <message><source>Chi-square statistic</source><translation>카이제곱 통계량</translation></message>
+    <message><source>Chi-square p-value</source><translation>카이제곱 p-값</translation></message>
+    <message><source>KS statistic</source><translation>KS 통계량</translation></message>
+    <message><source>KS p-value</source><translation>KS p-값</translation></message>
+    <message><source>Reference statistics only. Interpret them in light of the data and sample characteristics. KS compares base-10 log mantissas with a uniform distribution.</source><translation>참고용 통계입니다. 데이터와 표본의 특성을 함께 고려해 해석하세요. KS는 밑이 10인 로그의 소수 부분을 균등분포와 비교합니다.</translation></message>
+</context>
+<context>
     <name>DrillDownPanel</name>
     <message><source>Search…</source><translation>검색…</translation></message>
     <message><source>Export CSV…</source><translation>CSV 내보내기…</translation></message>

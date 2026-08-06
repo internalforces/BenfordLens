@@ -27,7 +27,7 @@ external server.
 | Field | Value |
 |-------|-------|
 | Language | Python 3.11 (pinned via `.python-version`) |
-| Framework | PySide6 (UI); Pandas/NumPy (analysis); Matplotlib (charts) — SciPy still not added, deferred to TASK-011's expert statistics panel, blocked on its own dependency approval |
+| Framework | PySide6 (UI); Pandas/NumPy/SciPy (analysis); Matplotlib (charts) |
 | Infrastructure | None — local desktop app, packaged via PyInstaller (`packaging/*.spec`; macOS built + headless-smoke-tested, Windows/Linux config-only per TD-003) |
 | Repo Structure | Single Repo |
 
@@ -38,12 +38,13 @@ BenfordLens/
 ├── src/benford_lens/
 │   ├── io/                   (csv_loader.py, excel_loader.py)
 │   ├── analysis/              (benford.py — first-digit calculation; preprocessing.py;
-│   │                            suitability.py — all zero UI dependency)
+│   │                            suitability.py; expert_statistics.py — all zero UI dependency)
 │   ├── charts/                (benford_chart.py — chart + result summary)
 │   ├── report/                 (html_report.py — stdlib string.Template, no new dependency)
 │   └── ui/                    (controller.py — framework-agnostic session state;
 │                                main_window.py — PySide6 MainWindow; preprocessing_panel.py;
-│                                suitability_panel.py; drill_down_panel.py; __main__.py entry point)
+│                                suitability_panel.py; expert_statistics_panel.py;
+│                                drill_down_panel.py; __main__.py entry point)
 ├── resources/i18n/           (benford_lens_{ko,zh,ja}.ts/.qm — QTranslator translations)
 ├── packaging/                 (benford-lens-{macos,windows,linux}.spec — PyInstaller)
 ├── tests/                    (mirrors src/ layout; tests/conftest.py sets QT_QPA_PLATFORM=offscreen)
@@ -61,6 +62,7 @@ BenfordLens/
 | 2026-08-05 | M2 (Phase 2) implemented: preprocessing, suitability check, drill-down, HTML report, i18n (real KO/ZH/JA translations), PyInstaller packaging specs |
 | 2026-08-05 | M2 PR #2 merged to `main`; follow-up review fixed report-source state handling, synchronized README/version metadata, and verified 91% line coverage |
 | 2026-08-05 | M2 merge-gate follow-up PR #3 passed CI and merged to `main`; TASK-016 complete |
+| 2026-08-05 | TASK-011 implemented approved SciPy-backed MAD, Chi-square, and KS reference statistics in a hidden-by-default expert details panel |
 
 ## Constraints
 

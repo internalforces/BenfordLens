@@ -7,24 +7,38 @@ Harness Version: 1.1
 
 # Current Session — Benford Lens
 
-> After this session, copy this file to `memory/sessions/2026-08-05-M2-Phase2-Implementation.md`.
+> After this session, copy this file to `memory/sessions/2026-08-05-TASK-011-Expert-Statistics.md`.
 
 ---
 
 ## Session Info
 
 - **Date**: 2026-08-05
-- **Agent Role**: Planner → Implementer (subagent-driven-development, 10 dispatched implementer/reviewer subagent rounds) → Implementer (Task 11: harness bookkeeping + final whole-branch review)
-- **Session Goal**: Implement the M2 (Phase 2) milestone on `feature/m2-phase2`: preprocessing options, data suitability check, raw data drill-down, HTML report generation, PyInstaller packaging, and UI language selection (i18n).
+- **Agent Role**: Implementer / Tester
+- **Session Goal**: Complete TASK-011 on `codex/task-011-expert-statistics`: add the
+  user-approved SciPy dependency, statistically explicit MAD/Chi-square/KS calculations,
+  and a hidden-by-default expert details panel.
 
 ## Previous Session Summary
 
-Prior session (2026-08-04, M1 MVP Implementation) implemented and merge-readied M1 on
-`feature/m1-mvp`: CSV/Excel reading, manual column selection, first-digit Benford analysis,
-expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
-`memory/sessions/2026-08-04-M1-MVP-Implementation.md`.
+The previous session completed and merged M2 plus its merge-gate follow-up into `main` through
+PRs #2 and #3. The post-merge audit confirmed 152 tests and all static checks passed. TASK-011
+remained the next candidate only until the user approved SciPy in this session.
 
 ## Current Work
+
+### TASK-011 follow-up
+
+- [x] Create `codex/task-011-expert-statistics` without committing directly to `main`
+- [x] Add and lock the user-approved SciPy runtime dependency
+- [x] Implement and unit-test MAD, Chi-square, and continuous log-mantissa KS calculations
+- [x] Snapshot expert statistics from the same preprocessed series used by the chart
+- [x] Add the hidden-by-default expert panel and analysis-invalidation behavior
+- [x] Add and compile Korean/Chinese/Japanese translations
+- [x] Verify 162 tests, Ruff, mypy, and 95.19% traced line coverage
+- [x] Commit and push `cb266e4`; open draft PR #4 against `main`
+
+### Retained M2 implementation history
 
 - [x] Create `feature/m2-phase2` branch (off `main`, in an isolated git worktree at `.worktrees/feature-m2-phase2`)
 - [x] Write full implementation plan: `docs/superpowers/plans/2026-08-05-m2-phase2.md`
@@ -38,6 +52,14 @@ expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
 
 ## Completed This Session
 
+- [x] TASK-011: SciPy-backed expert statistics engine and default-collapsed details panel
+- [x] Added deterministic calculation, controller, panel, integration, invalidation, and i18n
+  tests; full suite now contains 162 passing tests
+- [x] Recorded the method and interpretation boundary as ADR-008 and the dependency approval in
+  `dependencies.md`
+- [x] Added `reports/test-coverage-2026-08-05.md`; TASK-011 engine and panel both measured 100%
+  and total traced line coverage measured 95.19%
+
 - [x] TASK-007: Preprocessing options + before/after preview — `src/benford_lens/analysis/preprocessing.py`, `src/benford_lens/ui/preprocessing_panel.py`
 - [x] TASK-008: Data suitability check (🟢/🟡/🔴) — `src/benford_lens/analysis/suitability.py`, `src/benford_lens/ui/suitability_panel.py`; thresholds recorded as ADR-006
 - [x] TASK-009: Raw data drill-down from chart digit click — `src/benford_lens/ui/drill_down_panel.py`, wired via `mpl_connect`
@@ -48,6 +70,16 @@ expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
 - [x] `roadmap.md` M2 checklist fully checked off
 
 ## Issues Found / Decisions Made
+
+- **ADR-008**: MAD and Chi-square operate on the nine first-digit buckets; KS operates on the
+  continuous fractional parts of `log10(abs(value))` to avoid using a continuous KS p-value
+  directly on discrete digits. No threshold, verdict, or automatic applicability decision is
+  produced.
+- **SciPy approval recorded**: the user explicitly approved adding SciPy for TASK-011. All
+  calculations remain local and in-memory; no data or derived value is transmitted.
+- **No new product issue found**: the documented ENV-001 hidden-file flag recurred in the fresh
+  local `.venv` during coverage measurement and was resolved with the recorded `chflags -R
+  nohidden .venv` workaround.
 
 - **ADR-006** (`memory/decisions.md`, recorded during Task 3): data suitability heuristic thresholds — sample count, digit-magnitude range, distinct-value ratio, zero/negative/missing rate. Advisory only, never a determination of Benford applicability.
 - **TD-003** (`memory/known-issues.md`, recorded during Task 10): Windows/Linux PyInstaller specs are written but unbuilt/untested — this dev environment is macOS-only. macOS build itself only headless-smoke-tested, not verified interactively.
@@ -60,11 +92,21 @@ expected-vs-actual chart, and CI, plus ADR-005 and TD-001/TD-002. See
 - **TD-004/TD-005** (`memory/known-issues.md`): the README is still a one-line placeholder and `pyproject.toml` still reports `0.1.0` despite the M2 snapshot being `v0.2.0-dev`; CI runs tests but does not measure the documented 80% coverage threshold.
 - Worktree hygiene: an untracked older copy, `src/benford_lens/ui/suitability_panel 2.py`, is present. It is preserved as local user-owned state and explicitly excluded from staging and the follow-up PR.
 - **Merge-gate follow-up completed locally**: ISS-001 fixed with failure/cancellation regression tests; README and version metadata synchronized to `0.2.0.dev0`; TASK-014 closed through ADR-007 without automated per-column verdicts; final verification passed with 152 tests and 91% line coverage. The untracked older copy remains preserved and is excluded from the follow-up PR.
+- **Local verification environment**: TASK-011 created and synchronized a repository-root
+  Python 3.11 `.venv` from the updated lockfile. ENV-001 recurred on its editable-path file;
+  after the documented `chflags -R nohidden .venv` workaround, all 162 tests and the traced
+  coverage run passed.
 
 ## Next Session: To-Do
 
-1. TASK-011 (expert statistics: MAD, Chi-square, KS Test) is the next candidate work item — it remains out of scope until SciPy, a new external dependency, clears its own Human Approval Gate per `dependencies.md`.
+1. Review draft PR #4. Do not self-merge; reviewer sign-off and explicit human direction
+   remain required.
 
 ## Important Context
 
-`src/`, `tests/`, `resources/i18n/`, and `packaging/` are now fully populated for M2 — preprocessing, suitability, drill-down, HTML report, i18n, and packaging all exist as real, tested code, not just plan documents. Any agent picking up work should read `docs/superpowers/plans/2026-08-05-m2-phase2.md` for the exact module layout and interfaces established this milestone (`PreprocessingOptions`, `SuitabilityAssessment`, `ReportContext`, etc.) before adding new code. The dev environment still requires `.python-version` (3.11) — see ADR-005 if a numpy/mypy stub error resurfaces. AGENTS.md's Absolute Restrictions (no auto-column-selection, no auto-applicability-judgment, neutral tone) remain fully binding and are enforced in code across the M2 surface too (`suitability.py` notes, `html_report.py` footer, all four language translations) — TASK-011 work must preserve these invariants, and must not begin until the SciPy dependency is separately approved.
+TASK-011 is implemented, not merely planned. `analysis/expert_statistics.py` is UI-free and
+returns an `ExpertStatistics` snapshot; `SessionController.analyze()` calculates it from the
+same preprocessed series as the chart; `ui/expert_statistics_panel.py` keeps the values hidden
+until the user explicitly expands the panel. SciPy is now approved and locked. The panel has
+real EN/KO/ZH/JA strings, and invalidation clears it whenever the selected column or preprocessing
+settings change. AGENTS.md's local-only and neutral-interpretation constraints remain binding.

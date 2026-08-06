@@ -12,6 +12,10 @@ from dataclasses import dataclass, field, replace
 import pandas as pd
 
 from benford_lens.analysis.benford import BenfordResult, analyze_first_digit, first_digit
+from benford_lens.analysis.expert_statistics import (
+    ExpertStatistics,
+    calculate_expert_statistics,
+)
 from benford_lens.analysis.preprocessing import (
     PreprocessingOptions,
     PreprocessingPreview,
@@ -45,6 +49,7 @@ class SessionState:
     last_preprocessing_options: PreprocessingOptions | None = None
     last_preprocessing_preview: PreprocessingPreview | None = None
     last_suitability: SuitabilityAssessment | None = None
+    last_expert_statistics: ExpertStatistics | None = None
 
 
 class SessionController:
@@ -81,11 +86,13 @@ class SessionController:
         numeric_series, preview = apply_preprocessing(raw_series, options)
         result = analyze_first_digit(numeric_series)
         assessment = assess_suitability(compute_suitability_metrics(numeric_series, raw_series))
+        expert_statistics = calculate_expert_statistics(numeric_series, result)
 
         self.state.last_result = result
         self.state.last_preprocessing_options = replace(options)
         self.state.last_preprocessing_preview = preview
         self.state.last_suitability = assessment
+        self.state.last_expert_statistics = expert_statistics
         return result
 
     def configure_preprocessing(self, options: PreprocessingOptions) -> PreprocessingPreview:

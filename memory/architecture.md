@@ -15,8 +15,7 @@ A local-first desktop system built to achieve: non-experts can easily analyze Be
 on their own CSV/Excel data, entirely on their local machine, with no data leaving it.
 
 **Pattern**: Layered desktop architecture (UI → Controller → Analysis Engine → Report/Export),
-with the Analysis Engine kept framework-agnostic (plain Python + Pandas/NumPy; SciPy anticipated
-for TASK-011's expert statistics, pending its own dependency approval — not yet added) so it can
+with the Analysis Engine kept framework-agnostic (plain Python + Pandas/NumPy/SciPy) so it can
 be unit tested independently of the PySide6 UI.
 
 ## Component Structure
@@ -34,9 +33,8 @@ UI Layer (PySide6)
 ├── Analysis Results View
 │   ├── Chart (expected vs. actual distribution)
 │   ├── Result summary (plain-language explanation)
-│   ├── Expert statistics (hidden by default — MAD, Chi-square, KS Test, sample size, deviation;
-│   │   still pending — see TASK-011 in tasks/backlog.md, blocked on its own SciPy dependency
-│   │   approval)
+│   ├── Expert statistics — implemented by TASK-011: hidden by default in
+│   │   src/benford_lens/ui/expert_statistics_panel.py (MAD, Chi-square, KS Test, sample size)
 │   └── Raw data explorer — implemented M2: src/benford_lens/ui/drill_down_panel.py (click a
 │       digit on the chart → filtered original rows, wired via `mpl_connect`)
 └── Report Export (HTML) — implemented M2
@@ -50,15 +48,14 @@ Internationalization (UI Layer only) — implemented M2
     QTranslator, real (not placeholder) KO/ZH/JA translations under resources/i18n/; the
     Analysis Engine remains language-agnostic
 
-Analysis Engine (Pandas / NumPy — no UI dependency; SciPy not added — still pending TASK-011's
-own dependency approval, out of scope for this M2 plan)
+Analysis Engine (Pandas / NumPy / SciPy — no UI dependency)
 ├── File loaders (CSV, XLSX) — implemented M1: src/benford_lens/io/
 ├── Preprocessing pipeline — implemented M2: src/benford_lens/analysis/preprocessing.py
 ├── Suitability checker — implemented M2: src/benford_lens/analysis/suitability.py
 ├── Benford digit-frequency calculator (first digit — implemented M1: src/benford_lens/analysis/;
 │   second digit / combined — M3)
-└── Statistical tests (MAD, Chi-square, KS Test) — still pending TASK-011, requires SciPy (human
-    approval needed for the new dependency per dependencies.md)
+└── Statistical tests (MAD, Chi-square, KS Test) — implemented by TASK-011 in
+    src/benford_lens/analysis/expert_statistics.py; SciPy approved by the user on 2026-08-05
 
 Report Generator — implemented M2: src/benford_lens/report/html_report.py
 └── Assembles the HTML report (analysis target, preprocessing options, suitability result,
@@ -101,6 +98,7 @@ at any point.
 | UI language defaults & i18n scope | English default; KO/ZH/JA selectable by M2 (ADR-004) | 2026-08-04 |
 | Dev environment Python version | Pinned to 3.11 via `.python-version`, matching `requires-python` and CI (ADR-005) | 2026-08-04 |
 | Data suitability thresholds | Heuristic defaults per ADR-006 | 2026-08-05 |
+| Expert-statistics methodology | MAD/Chi-square on first digits; KS on log mantissas; no automated verdict (ADR-008) | 2026-08-05 |
 
 ## Architecture Constraints
 

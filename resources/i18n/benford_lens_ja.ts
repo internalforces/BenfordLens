@@ -73,6 +73,18 @@
     <message><source>{missing_rate:.0%} of the source values were blank.</source><translation>元データの値のうち {missing_rate:.0%} が空欄でした。</translation></message>
 </context>
 <context>
+    <name>ExpertStatisticsPanel</name>
+    <message><source>Show Details</source><translation>詳細を表示</translation></message>
+    <message><source>Hide Details</source><translation>詳細を隠す</translation></message>
+    <message><source>Sample size</source><translation>サンプルサイズ</translation></message>
+    <message><source>Mean absolute deviation (MAD)</source><translation>平均絶対偏差 (MAD)</translation></message>
+    <message><source>Chi-square statistic</source><translation>カイ二乗統計量</translation></message>
+    <message><source>Chi-square p-value</source><translation>カイ二乗 p 値</translation></message>
+    <message><source>KS statistic</source><translation>KS 統計量</translation></message>
+    <message><source>KS p-value</source><translation>KS p 値</translation></message>
+    <message><source>Reference statistics only. Interpret them in light of the data and sample characteristics. KS compares base-10 log mantissas with a uniform distribution.</source><translation>これらは参考用の統計量です。データとサンプルの特性を踏まえて解釈してください。KS は常用対数の小数部分を一様分布と比較します。</translation></message>
+</context>
+<context>
     <name>DrillDownPanel</name>
     <message><source>Search…</source><translation>検索…</translation></message>
     <message><source>Export CSV…</source><translation>CSVを書き出す…</translation></message>
