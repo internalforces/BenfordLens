@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Project: Benford Lens
 
-_Last updated: 2026-08-05_
+_Last updated: 2026-08-06_
 
 ## Summary
 
@@ -18,8 +18,9 @@ external server.
 ## Current State
 
 - **Version**: v0.2.0.dev0
-- **Phase**: M2 (Phase 2) complete on `main` via PR #2 and merge-gate follow-up PR #3
-- **Next milestone**: M3 — v1.0 (second-digit analysis, combined analysis, performance, expanded i18n)
+- **Phase**: M2 complete on `main` via PRs #2–#4; M3 architecture accepted (ADR-009)
+- **Next milestone**: M3 — v1.0 (second-digit analysis, first+second results in one view,
+  performance, expanded i18n)
 - **Overall health**: 🟢 Good
 
 ## Tech Summary
@@ -63,6 +64,8 @@ BenfordLens/
 | 2026-08-05 | M2 PR #2 merged to `main`; follow-up review fixed report-source state handling, synchronized README/version metadata, and verified 91% line coverage |
 | 2026-08-05 | M2 merge-gate follow-up PR #3 passed CI and merged to `main`; TASK-016 complete |
 | 2026-08-05 | TASK-011 implemented approved SciPy-backed MAD, Chi-square, and KS reference statistics in a hidden-by-default expert details panel |
+| 2026-08-06 | TASK-011 PR #4 passed CI, merged to `main`, and passed post-merge review (162 tests) |
+| 2026-08-06 | M3 combined analysis defined as first- and second-digit results displayed together in one view; compatibility-first architecture accepted as ADR-009 |
 
 ## Constraints
 

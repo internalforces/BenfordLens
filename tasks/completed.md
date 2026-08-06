@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Completed Tasks — Benford Lens
 
-_Last updated: 2026-08-05_
+_Last updated: 2026-08-06_
 
 | ID | Task | Completed | Owner | Notes |
 |----|------|-----------|-------|-------|
@@ -28,3 +28,4 @@ _Last updated: 2026-08-05_
 | TASK-015 | UI language selection & i18n scaffolding | 2026-08-05 | Implementer | `resources/i18n/*.ts/.qm`, `QTranslator`-based switching in `ui/main_window.py`; real KO/ZH/JA translations, not placeholders |
 | TASK-016 | M2 merge-gate hardening, final review, and follow-up merge | 2026-08-05 | Implementer / Reviewer / Release Manager | Fixed ISS-001, synchronized README/version metadata, verified 152 tests and 91% coverage, received an Approved review verdict, and merged follow-up PR #3 after CI passed. |
 | TASK-011 | Expert statistics panel (MAD, Chi-square, KS Test) | 2026-08-05 | Implementer / Tester | User-approved SciPy dependency; PySide6-free calculation engine plus a hidden-by-default EN/KO/ZH/JA details panel. 162 tests pass; traced line coverage 95.19%. See ADR-008. |
+| TASK-017 | M3 analysis-mode architecture and combined-view definition | 2026-08-06 | Architect / Reviewer | Defined combined analysis as first- and second-digit results shown together, preserved existing public entry points, and specified reusable chart/drill-down/statistics/report boundaries. See ADR-009 and the M3 design spec. |

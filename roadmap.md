@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # roadmap.md — Benford Lens Roadmap
 
-_Last updated: 2026-08-05_
+_Last updated: 2026-08-06_
 
 ## Goal
 
@@ -24,7 +24,7 @@ external server.
 - [x] First-digit Benford analysis
 - [x] Expected vs. actual distribution chart output
 
-### M2 — Phase 2 — implemented on `feature/m2-phase2`, pending merge
+### M2 — Phase 2 — implemented and merged to `main` (PRs #2–#4)
 - [x] Preprocessing options (negative handling, zero handling, decimal handling, blank handling, duplicate handling, string-to-number parsing) with before/after preview
 - [x] Data suitability check (🟢/🟡/🔴) with sample count, min/max, digit range, duplicate rate, zero rate, negative rate, missing rate, distinct-value count
 - [x] Raw data drill-down (click a leading digit in the chart → filtered original rows)
@@ -34,7 +34,8 @@ external server.
 
 ### M3 — v1.0 (Phase 3)
 - [ ] Second-digit analysis
-- [ ] Combined first+second-digit analysis
+- [ ] Combined first+second-digit analysis — both independent results shown together in one
+  results view (not a joint first-two-digit distribution; see ADR-009)
 - [ ] Performance optimization for large datasets
 - [ ] Expand language support beyond the initial EN/KO/ZH/JA set added in M2 (ADR-004)
 
