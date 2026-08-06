@@ -6,7 +6,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
+from benford_lens.analysis.benford import CombinedBenfordResult, DigitPosition
 from benford_lens.analysis.preprocessing import PreprocessingOptions
+from benford_lens.ui.controller import AnalysisMode
 from benford_lens.ui.main_window import MainWindow
 
 
@@ -30,6 +32,15 @@ def window(app):
 def _write_csv(tmp_path):
     path = tmp_path / "data.csv"
     path.write_text("name,amount\nalice,111\nbob,222\ncarol,111\n", encoding="utf-8")
+    return str(path)
+
+
+def _write_mode_csv(tmp_path):
+    path = tmp_path / "mode_data.csv"
+    path.write_text(
+        "name,amount\nalice,101\nbob,105\ncarol,111\ndave,222\n",
+        encoding="utf-8",
+    )
     return str(path)
 
 
@@ -85,6 +96,73 @@ def test_analyze_renders_chart_and_summary(window, tmp_path):
     assert window.summary_label.text() != ""
     assert window.expert_statistics_panel.toggle_button.isEnabled() is True
     assert window.expert_statistics_panel.details_widget.isHidden() is True
+
+
+def test_mode_selector_is_explicit_and_defaults_to_first_digit(window):
+    assert window.mode_combo.currentData() == AnalysisMode.FIRST.value
+    assert window.controller.state.analysis_mode is AnalysisMode.FIRST
+
+
+def test_second_digit_mode_renders_one_second_digit_panel(window, tmp_path):
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.SECOND.value))
+
+    window._on_analyze_clicked()
+
+    result = window.controller.state.last_result
+    assert result is not None
+    assert result.observed_counts[0] == 2
+    assert window.first_result_panel.isHidden() is True
+    assert window.second_result_panel.isHidden() is False
+    assert window.second_result_panel.canvas is not None
+    assert window.second_result_panel.summary_label.text().startswith("Second digit:")
+
+
+def test_combined_mode_shows_both_result_panels_and_one_shared_ks_group(window, tmp_path):
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+
+    window._on_analyze_clicked()
+
+    result = window.controller.state.last_result
+    assert isinstance(result, CombinedBenfordResult)
+    assert window.first_result_panel.isHidden() is False
+    assert window.second_result_panel.isHidden() is False
+    assert window.first_result_panel.canvas is not None
+    assert window.second_result_panel.canvas is not None
+    panel = window.expert_statistics_panel
+    assert panel.value_labels["first_sample_size"].text() == "4"
+    assert panel.value_labels["second_sample_size"].text() == "4"
+    assert panel.value_labels["shared_sample_size"].text() == "4"
+    assert panel.name_labels["ks_statistic"].isHidden() is True
+
+
+def test_second_digit_chart_click_shows_matching_original_rows_and_heading(window, tmp_path):
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+    window._on_analyze_clicked()
+
+    window.second_result_panel.digit_clicked.emit(DigitPosition.SECOND, 0)
+
+    assert window.drill_down_panel.heading_label.text() == "Second digit: 0"
+    assert window.drill_down_panel.table.rowCount() == 2
+
+
+def test_mode_change_invalidates_existing_snapshot_and_result_panels(window, tmp_path):
+    window.load_file(_write_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window._on_analyze_clicked()
+    assert window.controller.state.analysis_snapshot is not None
+    assert window.first_result_panel.canvas is not None
+
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.SECOND.value))
+
+    assert window.controller.state.analysis_snapshot is None
+    assert window.first_result_panel.canvas is None
+    assert window.second_result_panel.canvas is None
 
 
 def test_expert_statistics_details_can_be_revealed_after_analysis(window, tmp_path):
@@ -352,6 +430,44 @@ def test_export_report_writes_an_html_file(window, tmp_path, monkeypatch):
     assert "amount" in out_path.read_text(encoding="utf-8")
 
 
+def test_export_report_reflects_second_digit_mode(window, tmp_path, monkeypatch):
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.SECOND.value))
+    window._on_analyze_clicked()
+    out_path = tmp_path / "second-report.html"
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QFileDialog.getSaveFileName",
+        lambda *a, **k: (str(out_path), "HTML files (*.html)"),
+    )
+
+    window._on_export_report_clicked()
+
+    html_text = out_path.read_text(encoding="utf-8")
+    assert "Second-digit distribution" in html_text
+    assert "First-digit distribution" not in html_text
+    assert "<tr><td>0</td>" in html_text
+
+
+def test_export_report_reflects_combined_snapshot(window, tmp_path, monkeypatch):
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+    window._on_analyze_clicked()
+    out_path = tmp_path / "combined-report.html"
+    monkeypatch.setattr(
+        "benford_lens.ui.main_window.QFileDialog.getSaveFileName",
+        lambda *a, **k: (str(out_path), "HTML files (*.html)"),
+    )
+
+    window._on_export_report_clicked()
+
+    html_text = out_path.read_text(encoding="utf-8")
+    assert html_text.count("First-digit distribution") == 1
+    assert html_text.count("Second-digit distribution") == 1
+    assert html_text.count("Shared KS statistic") == 1
+
+
 def test_export_report_button_disabled_after_reselecting_a_column(window, tmp_path):
     window.load_file(_write_csv(tmp_path))
     window.column_table.selectRow(1)
@@ -497,10 +613,10 @@ def test_changing_a_combo_after_preview_clears_the_stale_preview_label(window, t
     assert window.preprocessing_panel.result_label.text() == ""
 
 
-def test_export_report_describes_the_analysis_that_was_actually_run(window, tmp_path, monkeypatch):
-    # Regression test: export used to re-run configure_preprocessing() against
-    # the live panel, so the report's preprocessing section could claim
-    # "3 → 0 values used" while its digit table showed 3 analyzed values.
+def test_option_change_invalidates_snapshot_before_report_export(window, tmp_path, monkeypatch):
+    # A report can only describe the active immutable snapshot. Once an input
+    # option changes, the snapshot and export action both become unavailable
+    # until the user explicitly analyzes again.
     path = tmp_path / "negatives.csv"
     path.write_text("amount\n-111\n-222\n-333\n", encoding="utf-8")
     window.load_file(str(path))
@@ -512,6 +628,9 @@ def test_export_report_describes_the_analysis_that_was_actually_run(window, tmp_
     combo = window.preprocessing_panel.negative_combo
     combo.setCurrentIndex(combo.findData("exclude"))
 
+    assert window.controller.state.analysis_snapshot is None
+    assert window.export_report_button.isEnabled() is False
+
     out_path = tmp_path / "report.html"
     monkeypatch.setattr(
         "benford_lens.ui.main_window.QFileDialog.getSaveFileName",
@@ -519,13 +638,7 @@ def test_export_report_describes_the_analysis_that_was_actually_run(window, tmp_
     )
     window._on_export_report_clicked()
 
-    html_text = out_path.read_text(encoding="utf-8")
-    # Preprocessing section and digit table must agree: 3 values in, 3 used.
-    assert "3 → 3 values used" in html_text
-    assert "Negative values: absolute" in html_text
-    assert "0 values used" not in html_text
-    for digit in (1, 2, 3):
-        assert f"<tr><td>{digit}</td><td>33.3%</td>" in html_text
+    assert out_path.exists() is False
 
 
 def test_switching_language_translates_visible_strings(window):
@@ -538,6 +651,59 @@ def test_switching_language_translates_visible_strings(window):
     window.language_combo.setCurrentIndex(index_en)
 
     assert window.open_button.text() == "Open File…"
+
+
+def test_switching_language_translates_analysis_mode_labels(window):
+    second_index = window.mode_combo.findData(AnalysisMode.SECOND.value)
+    assert window.mode_combo.itemText(second_index) == "Second digit"
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
+
+    second_index = window.mode_combo.findData(AnalysisMode.SECOND.value)
+    assert window.mode_combo.itemText(second_index) == "둘째 자리"
+
+
+@pytest.mark.parametrize(
+    "language_code,open_text,second_digit_text",
+    [
+        ("es", "Abrir archivo…", "Segundo dígito"),
+        ("fr", "Ouvrir un fichier…", "Deuxième chiffre"),
+    ],
+)
+def test_switching_to_new_languages_translates_core_controls(
+    window, language_code, open_text, second_digit_text
+):
+    language_index = window.language_combo.findData(language_code)
+    assert language_index >= 0
+
+    window.language_combo.setCurrentIndex(language_index)
+
+    assert window.open_button.text() == open_text
+    second_index = window.mode_combo.findData(AnalysisMode.SECOND.value)
+    assert window.mode_combo.itemText(second_index) == second_digit_text
+
+
+@pytest.mark.parametrize(
+    "language_code,first_title,second_title",
+    [
+        ("es", "Análisis: Primer dígito", "Análisis: Segundo dígito"),
+        ("fr", "Analyse : Premier chiffre", "Analyse : Deuxième chiffre"),
+    ],
+)
+def test_new_language_switch_preserves_combined_snapshot(
+    window, tmp_path, language_code, first_title, second_title
+):
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+    window._on_analyze_clicked()
+    snapshot = window.controller.state.analysis_snapshot
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData(language_code))
+
+    assert window.controller.state.analysis_snapshot is snapshot
+    assert window.first_result_panel.title_label.text() == first_title
+    assert window.second_result_panel.title_label.text() == second_title
 
 
 def test_switching_language_translates_drill_down_panel_strings(window):
@@ -669,6 +835,23 @@ def test_switching_language_translates_the_expert_statistics_panel(window, tmp_p
     assert panel.toggle_button.text() == "상세 통계 보기"
     assert panel.name_labels["mean_absolute_deviation"].text() == "평균 절대 편차 (MAD)"
     assert panel.value_labels["sample_size"].text() == "3"
+
+
+def test_switching_language_translates_combined_result_and_statistics(window, tmp_path):
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+    window._on_analyze_clicked()
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
+
+    assert window.first_result_panel.title_label.text() == "첫째 자리 분석"
+    assert window.second_result_panel.title_label.text() == "둘째 자리 분석"
+    assert (
+        window.expert_statistics_panel.name_labels["shared_ks_statistic"].text() == "공통 KS 통계량"
+    )
+    assert window.first_result_panel.canvas is not None
+    assert window.first_result_panel.canvas.figure.axes[0].get_ylabel() == "비율 (%)"
 
 
 def test_export_report_records_the_excel_sheet_that_was_analyzed(window, tmp_path, monkeypatch):

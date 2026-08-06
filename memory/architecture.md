@@ -31,38 +31,39 @@ UI Layer (PySide6)
 ├── Suitability Check Panel — implemented M2: src/benford_lens/ui/suitability_panel.py
 │   (🟢/🟡/🔴 result + underlying metrics)
 ├── Analysis Results View
-│   ├── M3 mode selector (first digit / second digit / first + second; always user-triggered)
+│   ├── Analysis mode selector — implemented M3 (first digit / second digit / first + second;
+│   │   always user-triggered)
 │   ├── Reusable digit-result panel (position title, chart, summary, click signal)
 │   │   └── Combined mode places first and second panels side by side in the same view
 │   ├── Expert statistics — implemented by TASK-011: hidden by default in
 │   │   src/benford_lens/ui/expert_statistics_panel.py; M3 separates per-position MAD and
-│   │   Chi-square from the shared log-mantissa KS result
+│   │   Chi-square from the shared log-mantissa KS result — implemented TASK-022
 │   └── Raw data explorer — implemented M2: src/benford_lens/ui/drill_down_panel.py (click a
-│       digit on a chart → filtered original rows; M3 click events include digit position)
+│       digit on a chart → filtered original rows; M3 click events include digit position —
+│       implemented TASK-021/022)
 └── Report Export (HTML) — implemented M2
 
 Application / Controller Layer
 └── Orchestrates the flow above; holds in-memory session state (selected file, sheet, column,
     preprocessing choices, analysis results, selected UI language)
 
-Internationalization (UI Layer only) — implemented M2
-└── Language selector (default English; Korean/Chinese/Japanese — see ADR-004) via Qt's
-    QTranslator, real (not placeholder) KO/ZH/JA translations under resources/i18n/; the
-    Analysis Engine remains language-agnostic
+Internationalization (UI Layer only) — implemented M2, expanded M3
+└── Language selector (default English; Korean/Chinese/Japanese from ADR-004 plus
+    Spanish/French from ADR-010) via Qt's QTranslator; real, complete translations live under
+    resources/i18n/ and the Analysis Engine remains language-agnostic
 
 Analysis Engine (Pandas / NumPy / SciPy — no UI dependency)
 ├── File loaders (CSV, XLSX) — implemented M1: src/benford_lens/io/
 ├── Preprocessing pipeline — implemented M2: src/benford_lens/analysis/preprocessing.py
 ├── Suitability checker — implemented M2: src/benford_lens/analysis/suitability.py
-├── Benford digit-frequency calculator (first digit — implemented M1; M3 adds second digit
-│   and a compatibility-preserving combined result calculated from one preprocessing pass)
+├── Benford digit-frequency calculator (first digit — implemented M1; second digit and a
+│   compatibility-preserving combined result — implemented M3 TASK-019/024)
 └── Statistical tests (MAD, Chi-square, KS Test) — implemented by TASK-011 in
     src/benford_lens/analysis/expert_statistics.py; SciPy approved by the user on 2026-08-05
 
-Report Generator — implemented M2: src/benford_lens/report/html_report.py
-└── Assembles the HTML report (analysis target, preprocessing options, suitability result,
-    chart, first-digit distribution table, plain-language explanation, caveats) using stdlib
-    `string.Template` only — no new dependency
+Report Generator — implemented M2, mode-aware M3: src/benford_lens/report/html_report.py
+└── Assembles first-, second-, or combined-mode HTML reports from one immutable snapshot using
+    stdlib `string.Template` only — no new dependency
 
 Packaging — implemented M2: packaging/*.spec (PyInstaller)
 └── Standalone executable, no separate runtime install required. macOS built and
@@ -99,6 +100,7 @@ at any point.
 | Package manager | `uv` (ADR-002) | 2026-08-04 |
 | CI/CD | GitHub Actions (ADR-003) | 2026-08-04 |
 | UI language defaults & i18n scope | English default; KO/ZH/JA selectable by M2 (ADR-004) | 2026-08-04 |
+| M3 language expansion | Spanish and French added as selectable UI languages (ADR-010) | 2026-08-06 |
 | Dev environment Python version | Pinned to 3.11 via `.python-version`, matching `requires-python` and CI (ADR-005) | 2026-08-04 |
 | Data suitability thresholds | Heuristic defaults per ADR-006 | 2026-08-05 |
 | Expert-statistics methodology | MAD/Chi-square on first digits; KS on log mantissas; no automated verdict (ADR-008) | 2026-08-05 |
@@ -111,6 +113,9 @@ at any point.
 - No component may write to the user's original input file
 
 ## M3 Extension Boundary
+
+Status: implemented on `codex/m3-core` by TASK-019–024; retained here as the compatibility and
+review boundary for the merge gate.
 
 M3 must generalize the fixed first-digit behavior without copying the current pipeline. The
 accepted design is detailed in

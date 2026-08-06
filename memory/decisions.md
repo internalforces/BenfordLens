@@ -261,3 +261,28 @@ public API cleanup is warranted.
 **Consequences**: M3 implementation follows
 `docs/superpowers/specs/2026-08-06-m3-analysis-modes-design.md`. No new dependency is required,
 and the local-only, explicit-selection, and neutral-interpretation constraints remain intact.
+
+---
+
+### ADR-010: M3 Language Expansion to Spanish and French
+
+- **Date**: 2026-08-06
+- **Status**: Accepted
+- **Decided by**: User
+
+**Context**: ADR-004 established English, Korean, Chinese, and Japanese for M2 and left M3
+language expansion open. TASK-025 required a bounded language choice before translation work.
+
+**Decision**: Add Spanish and French as fully selectable UI languages in M3. Each language
+must cover every current translatable message, preserve formatting placeholders, compile to a
+packaged `.qm` catalog, and keep English as the default.
+
+**Rationale**: These are the two languages explicitly selected by the user to complete M3's
+expanded-i18n scope.
+
+**Trade-offs**: The maintained catalog set grows from three translated catalogs to five, so
+future UI strings require two additional translations and completeness checks.
+
+**Consequences**: `resources/i18n/` now contains complete ES/FR `.ts` and `.qm` files, the
+language selector exposes Español and Français, and automated catalog tests enforce the same
+93-message key set and placeholder structure across KO/ZH/JA/ES/FR.

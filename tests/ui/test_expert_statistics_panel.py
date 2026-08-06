@@ -1,7 +1,12 @@
 import pytest
 from PySide6.QtWidgets import QApplication
 
-from benford_lens.analysis.expert_statistics import ExpertStatistics
+from benford_lens.analysis.expert_statistics import (
+    CombinedExpertStatistics,
+    DistributionStatistics,
+    ExpertStatistics,
+    LogMantissaStatistics,
+)
 from benford_lens.ui.expert_statistics_panel import ExpertStatisticsPanel
 
 
@@ -87,3 +92,19 @@ def test_undefined_statistics_use_a_placeholder(panel):
     assert panel.value_labels["sample_size"].text() == "0"
     assert panel.value_labels["mean_absolute_deviation"].text() == "—"
     assert panel.value_labels["ks_p_value"].text() == "—"
+
+
+def test_combined_statistics_show_each_position_and_one_shared_ks_group(panel):
+    panel.show_combined_statistics(
+        CombinedExpertStatistics(
+            first=DistributionStatistics(100, 0.01, 2.0, 0.5),
+            second=DistributionStatistics(100, 0.02, 3.0, 0.4),
+            log_mantissa=LogMantissaStatistics(100, 0.08, 0.3),
+        )
+    )
+
+    assert panel.value_labels["first_mean_absolute_deviation"].text() == "0.010000"
+    assert panel.value_labels["second_mean_absolute_deviation"].text() == "0.020000"
+    assert panel.value_labels["shared_ks_statistic"].text() == "0.080000"
+    assert panel.name_labels["ks_statistic"].isHidden() is True
+    assert panel.name_labels["shared_ks_statistic"].isHidden() is False

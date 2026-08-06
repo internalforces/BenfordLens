@@ -1,4 +1,4 @@
-"""Expected-vs-actual first-digit chart and a structured result summary.
+"""Expected-vs-actual digit charts and structured result summaries.
 
 This module is UI-agnostic Matplotlib code, so like the Analysis Engine it
 does not own user-facing prose: summarize_result() returns a code plus its
@@ -27,6 +27,17 @@ SUMMARY_SAMPLE_TOO_SMALL = "SAMPLE_TOO_SMALL"
 SUMMARY_CLOSE_TO_BENFORD = "CLOSE_TO_BENFORD"
 SUMMARY_DIVERGES_FROM_BENFORD = "DIVERGES_FROM_BENFORD"
 
+# Prefer a broad Unicode font where the host provides one, while retaining
+# Matplotlib's bundled DejaVu Sans fallback for minimal installations.
+_CHART_FONT_FAMILIES = [
+    "Arial Unicode MS",
+    "Apple SD Gothic Neo",
+    "Noto Sans CJK KR",
+    "Noto Sans CJK SC",
+    "Noto Sans CJK JP",
+    "DejaVu Sans",
+]
+
 
 @dataclass(frozen=True)
 class ResultSummary:
@@ -36,22 +47,34 @@ class ResultSummary:
     params: dict[str, object] = field(default_factory=dict)
 
 
-def build_first_digit_figure(result: BenfordResult) -> Figure:
-    """Build a bar-plus-line chart comparing observed vs. expected proportions."""
+def build_digit_figure(
+    result: BenfordResult,
+    *,
+    x_axis_label: str = "Digit",
+    y_axis_label: str = "Proportion (%)",
+    observed_label: str = "Observed",
+    expected_label: str = "Expected (Benford)",
+) -> Figure:
+    """Build a position-neutral observed-vs-expected digit chart."""
     digits = sorted(result.expected_proportions)
     observed = [result.observed_proportions[d] * 100 for d in digits]
     expected = [result.expected_proportions[d] * 100 for d in digits]
 
     figure = Figure(figsize=(6, 4))
     axes = figure.add_subplot(111)
-    axes.bar(digits, observed, color="#4C72B0", label="Observed")
-    axes.plot(digits, expected, color="black", marker="o", label="Expected (Benford)")
-    axes.set_xlabel("Leading digit")
-    axes.set_ylabel("Proportion (%)")
+    axes.bar(digits, observed, color="#4C72B0", label=observed_label)
+    axes.plot(digits, expected, color="black", marker="o", label=expected_label)
+    axes.set_xlabel(x_axis_label, fontfamily=_CHART_FONT_FAMILIES)
+    axes.set_ylabel(y_axis_label, fontfamily=_CHART_FONT_FAMILIES)
     axes.set_xticks(digits)
-    axes.legend()
+    axes.legend(prop={"family": _CHART_FONT_FAMILIES})
     figure.tight_layout()
     return figure
+
+
+def build_first_digit_figure(result: BenfordResult) -> Figure:
+    """Build the existing first-digit chart (compatibility wrapper)."""
+    return build_digit_figure(result, x_axis_label="Leading digit")
 
 
 def summarize_result(result: BenfordResult) -> ResultSummary:

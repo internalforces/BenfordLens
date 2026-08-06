@@ -10,7 +10,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from PySide6.QtCore import QEvent, QTranslator
 from PySide6.QtWidgets import (
     QApplication,
@@ -18,7 +17,6 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
     QInputDialog,
-    QLabel,
     QMainWindow,
     QMessageBox,
     QPushButton,
@@ -28,7 +26,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from benford_lens.analysis.benford import BenfordResult
+from benford_lens.analysis.benford import BenfordResult, CombinedBenfordResult, DigitPosition
+from benford_lens.analysis.expert_statistics import CombinedExpertStatistics, ExpertStatistics
 from benford_lens.analysis.suitability import SuitabilityAssessment
 from benford_lens.charts.benford_chart import (
     SUMMARY_CLOSE_TO_BENFORD,
@@ -36,11 +35,13 @@ from benford_lens.charts.benford_chart import (
     SUMMARY_NO_VALID_VALUES,
     SUMMARY_SAMPLE_TOO_SMALL,
     ResultSummary,
+    build_digit_figure,
     build_first_digit_figure,
     summarize_result,
 )
 from benford_lens.report.html_report import ReportContext, render_html_report
-from benford_lens.ui.controller import SessionController
+from benford_lens.ui.controller import AnalysisMode, AnalysisSnapshot, SessionController
+from benford_lens.ui.digit_result_panel import DigitResultPanel
 from benford_lens.ui.drill_down_panel import DrillDownPanel
 from benford_lens.ui.expert_statistics_panel import ExpertStatisticsPanel
 from benford_lens.ui.preprocessing_panel import PreprocessingPanel
@@ -53,7 +54,14 @@ def _i18n_dir() -> Path:
     return Path(__file__).resolve().parents[3] / "resources" / "i18n"
 
 
-_LANGUAGES = [("en", "English"), ("ko", "한국어"), ("zh", "中文"), ("ja", "日本語")]
+_LANGUAGES = [
+    ("en", "English"),
+    ("ko", "한국어"),
+    ("zh", "中文"),
+    ("ja", "日本語"),
+    ("es", "Español"),
+    ("fr", "Français"),
+]
 
 
 class MainWindow(QMainWindow):
@@ -61,7 +69,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle(self.tr("Benford Lens"))
         self.controller = SessionController()
-        self.canvas: FigureCanvasQTAgg | None = None
         # Column identities for the current file, in the same order as the
         # column table's rows. Row -> identity lookups must go through this
         # list rather than through QTableWidgetItem.text(): pd.read_excel can
@@ -85,6 +92,10 @@ class MainWindow(QMainWindow):
         self.analyze_button.setEnabled(False)
         self.analyze_button.clicked.connect(self._on_analyze_clicked)
 
+        self.mode_combo = QComboBox()
+        self._populate_mode_combo()
+        self.mode_combo.currentIndexChanged.connect(self._on_analysis_mode_changed)
+
         self.export_report_button = QPushButton(self.tr("Export Report…"))
         self.export_report_button.setEnabled(False)
         self.export_report_button.clicked.connect(self._on_export_report_clicked)
@@ -107,13 +118,23 @@ class MainWindow(QMainWindow):
         self.expert_statistics_panel = ExpertStatisticsPanel()
         self.drill_down_panel = DrillDownPanel()
 
-        self.summary_label = QLabel(self.tr("Open a CSV or Excel file to begin."))
-        self.summary_label.setWordWrap(True)
+        self.first_result_panel = DigitResultPanel(DigitPosition.FIRST)
+        self.second_result_panel = DigitResultPanel(DigitPosition.SECOND)
+        self.first_result_panel.digit_clicked.connect(self._on_result_digit_clicked)
+        self.second_result_panel.digit_clicked.connect(self._on_result_digit_clicked)
+        # Compatibility alias for existing callers/tests that read the
+        # original first-mode summary label directly.
+        self.summary_label = self.first_result_panel.summary_label
+        self.first_result_panel.set_prompt(self.tr("Open a CSV or Excel file to begin."))
+        self.second_result_panel.hide()
 
-        self.chart_container = QVBoxLayout()
+        self.results_layout = QHBoxLayout()
+        self.results_layout.addWidget(self.first_result_panel)
+        self.results_layout.addWidget(self.second_result_panel)
 
         top_bar = QHBoxLayout()
         top_bar.addWidget(self.open_button)
+        top_bar.addWidget(self.mode_combo)
         top_bar.addWidget(self.analyze_button)
         top_bar.addWidget(self.export_report_button)
         top_bar.addWidget(self.language_combo)
@@ -123,14 +144,65 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.column_table)
         layout.addWidget(self.preprocessing_panel)
         layout.addWidget(self.suitability_panel)
-        layout.addWidget(self.summary_label)
+        layout.addLayout(self.results_layout)
         layout.addWidget(self.expert_statistics_panel)
-        layout.addLayout(self.chart_container)
         layout.addWidget(self.drill_down_panel)
 
         central = QWidget()
         central.setLayout(layout)
         self.setCentralWidget(central)
+
+    @property
+    def canvas(self):
+        """Compatibility view of the primary chart canvas for the active mode."""
+        mode = self.controller.state.analysis_mode
+        if mode is AnalysisMode.SECOND:
+            return self.second_result_panel.canvas
+        return self.first_result_panel.canvas
+
+    def _mode_labels(self) -> dict[AnalysisMode, str]:
+        return {
+            AnalysisMode.FIRST: self.tr("First digit"),
+            AnalysisMode.SECOND: self.tr("Second digit"),
+            AnalysisMode.COMBINED: self.tr("First + second"),
+        }
+
+    def _populate_mode_combo(self) -> None:
+        current_mode = self.controller.state.analysis_mode
+        self.mode_combo.blockSignals(True)
+        self.mode_combo.clear()
+        for mode, label in self._mode_labels().items():
+            self.mode_combo.addItem(label, mode.value)
+        self.mode_combo.setCurrentIndex(self.mode_combo.findData(current_mode.value))
+        self.mode_combo.blockSignals(False)
+
+    def _selected_analysis_mode(self) -> AnalysisMode:
+        return AnalysisMode(self.mode_combo.currentData())
+
+    def _on_analysis_mode_changed(self, _index: int) -> None:
+        mode = self._selected_analysis_mode()
+        self.controller.set_analysis_mode(mode)
+        self._invalidate_analyzed_state()
+        self._set_workflow_prompt()
+
+    def _set_result_panel_visibility(self, mode: AnalysisMode) -> None:
+        self.first_result_panel.setVisible(mode in (AnalysisMode.FIRST, AnalysisMode.COMBINED))
+        self.second_result_panel.setVisible(mode in (AnalysisMode.SECOND, AnalysisMode.COMBINED))
+
+    def _set_workflow_prompt(self) -> None:
+        state = self.controller.state
+        if state.dataframe is None:
+            prompt = self.tr("Open a CSV or Excel file to begin.")
+        else:
+            prompt = self.tr("Select a column, then click Analyze.")
+        mode = state.analysis_mode
+        self._set_result_panel_visibility(mode)
+        if mode is AnalysisMode.SECOND:
+            self.second_result_panel.set_prompt(prompt)
+        else:
+            self.first_result_panel.set_prompt(prompt)
+            if mode is AnalysisMode.COMBINED:
+                self.second_result_panel.set_prompt(prompt)
 
     def _on_open_clicked(self) -> None:
         path, _selected_filter = QFileDialog.getOpenFileName(
@@ -185,7 +257,7 @@ class MainWindow(QMainWindow):
             self._columns.append(column)
             self.column_table.setItem(row, 0, QTableWidgetItem(str(column)))
             self.column_table.setItem(row, 1, QTableWidgetItem(str(dataframe[column].dtype)))
-        self.summary_label.setText(self.tr("Select a column, then click Analyze."))
+        self._set_workflow_prompt()
 
     def _on_column_selected(self) -> None:
         selected_rows = self.column_table.selectionModel().selectedRows()
@@ -204,33 +276,97 @@ class MainWindow(QMainWindow):
         # whichever column/options were active at analyze() time — see Task 11
         # final review.
         self._invalidate_analyzed_state()
+        self._set_workflow_prompt()
         self._update_suitability()
 
     def _on_analyze_clicked(self) -> None:
         self.controller.configure_preprocessing(self.preprocessing_panel.current_options())
         try:
-            result = self.controller.analyze()
+            self.controller.analyze(self._selected_analysis_mode())
         except Exception as exc:
             QMessageBox.warning(self, self.tr("Cannot analyze"), str(exc))
             return
-        self._render_chart(result)
-        self.summary_label.setText(self._summary_text(summarize_result(result)))
+        snapshot = self.controller.state.analysis_snapshot
+        if snapshot is None:  # pragma: no cover - controller always snapshots successful runs
+            return
+        self._render_snapshot(snapshot)
         # Show the exact assessment analyze() snapshotted into
         # last_suitability, not a fresh check_suitability() recompute — the
         # on-screen panel must always match what a report export would embed
         # for this analysis, with no room for the two to diverge.
         self._update_suitability(self.controller.state.last_suitability)
-        expert_statistics = self.controller.state.last_expert_statistics
-        if expert_statistics is not None:
-            self.expert_statistics_panel.show_statistics(expert_statistics)
         self.export_report_button.setEnabled(True)
+
+    def _render_snapshot(self, snapshot: AnalysisSnapshot) -> None:
+        """Render every result and statistic from one controller snapshot."""
+        self._set_result_panel_visibility(snapshot.mode)
+        observed_label = self.tr("Observed")
+        expected_label = self.tr("Expected (Benford)")
+
+        if isinstance(snapshot.result, CombinedBenfordResult):
+            self._show_result_panel(
+                self.first_result_panel,
+                snapshot.result.first,
+                DigitPosition.FIRST,
+                observed_label,
+                expected_label,
+            )
+            self._show_result_panel(
+                self.second_result_panel,
+                snapshot.result.second,
+                DigitPosition.SECOND,
+                observed_label,
+                expected_label,
+            )
+        else:
+            position = (
+                DigitPosition.FIRST if snapshot.mode is AnalysisMode.FIRST else DigitPosition.SECOND
+            )
+            panel = (
+                self.first_result_panel
+                if position is DigitPosition.FIRST
+                else self.second_result_panel
+            )
+            self._show_result_panel(
+                panel,
+                snapshot.result,
+                position,
+                observed_label,
+                expected_label,
+            )
+
+        statistics = snapshot.expert_statistics
+        if isinstance(statistics, CombinedExpertStatistics):
+            self.expert_statistics_panel.show_combined_statistics(statistics)
+        elif isinstance(statistics, ExpertStatistics):
+            self.expert_statistics_panel.show_statistics(statistics)
+
+    def _show_result_panel(
+        self,
+        panel: DigitResultPanel,
+        result: BenfordResult,
+        position: DigitPosition,
+        observed_label: str,
+        expected_label: str,
+    ) -> None:
+        position_label = (
+            self.tr("First digit") if position is DigitPosition.FIRST else self.tr("Second digit")
+        )
+        panel.show_result(
+            result,
+            title=self.tr("{position} analysis").format(position=position_label),
+            summary=f"{position_label}: {self._summary_text(summarize_result(result))}",
+            x_axis_label=position_label,
+            y_axis_label=self.tr("Proportion (%)"),
+            observed_label=observed_label,
+            expected_label=expected_label,
+        )
 
     def _summary_templates(self) -> dict[str, str]:
         """Translatable template per result-summary code.
 
-        Wording is neutral and exploratory per AGENTS.md; the "cannot be used
-        to judge data errors or manipulation" phrasing is the pre-approved
-        negated construction.
+        Wording is neutral and exploratory per AGENTS.md and directs users to
+        interpret the comparison alongside the characteristics of the data.
         """
         return {
             SUMMARY_NO_VALID_VALUES: self.tr(
@@ -243,12 +379,11 @@ class MainWindow(QMainWindow):
             ),
             SUMMARY_CLOSE_TO_BENFORD: self.tr(
                 "The overall distribution is close to the expected Benford distribution. "
-                "This result alone cannot be used to judge data errors or manipulation."
+                "Interpret this comparison together with the characteristics of the data."
             ),
             SUMMARY_DIVERGES_FROM_BENFORD: self.tr(
                 "The overall distribution differs somewhat from the expected Benford "
-                "distribution. This result alone cannot be used to judge data errors or "
-                "manipulation; further review may be warranted."
+                "distribution. Further review of the data characteristics may be warranted."
             ),
         }
 
@@ -264,23 +399,57 @@ class MainWindow(QMainWindow):
         # always describe the same single analysis — never a mix of the live
         # panel selection and an older result.
         state = self.controller.state
-        result = state.last_result
-        options = state.last_preprocessing_options
-        preview = state.last_preprocessing_preview
-        suitability = state.last_suitability
-        if result is None or options is None or preview is None or suitability is None:
+        snapshot = state.analysis_snapshot
+        if snapshot is None:
             return
-        context = ReportContext(
-            source_name=Path(self._source_path).name if self._source_path else "",
-            column_name=state.selected_column,
-            sheet_name=state.sheet_name,
-            preprocessing_options=options,
-            preprocessing_preview=preview,
-            suitability=suitability,
-            result=result,
-            result_summary=summarize_result(result),
-            chart_figure=build_first_digit_figure(result),
-        )
+        source_name = Path(self._source_path).name if self._source_path else ""
+        if isinstance(snapshot.result, CombinedBenfordResult):
+            context = ReportContext(
+                source_name=source_name,
+                column_name=state.selected_column,
+                sheet_name=state.sheet_name,
+                preprocessing_options=snapshot.preprocessing_options,
+                preprocessing_preview=snapshot.preprocessing_preview,
+                suitability=snapshot.suitability,
+                expert_statistics=snapshot.expert_statistics,
+                mode="combined",
+                result=snapshot.result.first,
+                result_summary=summarize_result(snapshot.result.first),
+                chart_figure=build_first_digit_figure(snapshot.result.first),
+                second_result=snapshot.result.second,
+                second_result_summary=summarize_result(snapshot.result.second),
+                second_chart_figure=build_digit_figure(
+                    snapshot.result.second, x_axis_label="Second digit"
+                ),
+            )
+        elif snapshot.mode is AnalysisMode.FIRST:
+            context = ReportContext(
+                source_name=source_name,
+                column_name=state.selected_column,
+                sheet_name=state.sheet_name,
+                preprocessing_options=snapshot.preprocessing_options,
+                preprocessing_preview=snapshot.preprocessing_preview,
+                suitability=snapshot.suitability,
+                expert_statistics=snapshot.expert_statistics,
+                mode="first",
+                result=snapshot.result,
+                result_summary=summarize_result(snapshot.result),
+                chart_figure=build_first_digit_figure(snapshot.result),
+            )
+        else:
+            context = ReportContext(
+                source_name=source_name,
+                column_name=state.selected_column,
+                sheet_name=state.sheet_name,
+                preprocessing_options=snapshot.preprocessing_options,
+                preprocessing_preview=snapshot.preprocessing_preview,
+                suitability=snapshot.suitability,
+                expert_statistics=snapshot.expert_statistics,
+                mode="second",
+                result=snapshot.result,
+                result_summary=summarize_result(snapshot.result),
+                chart_figure=build_digit_figure(snapshot.result, x_axis_label="Second digit"),
+            )
         html = render_html_report(context)
 
         path, _selected_filter = QFileDialog.getSaveFileName(
@@ -302,13 +471,9 @@ class MainWindow(QMainWindow):
     def _invalidate_analyzed_state(self) -> None:
         """Drop on-screen analysis output that no longer matches the settings.
 
-        The displayed chart was rendered under the preprocessing options and
-        column active at analyze() time, but drill_down() always recomputes
-        from the *current* options, so a stale chart click would silently
-        return mismatched rows. The export button is disabled for the same
-        reason: there is no longer an analysis on screen to export, and the
-        drill-down table (with it, the Export CSV… source) is dropped because
-        its rows were picked by a click on the chart being cleared here.
+        Charts, report export, expert details, and raw rows all belong to one
+        controller snapshot and therefore disappear together when its inputs
+        change.
         """
         self.export_report_button.setEnabled(False)
         self.expert_statistics_panel.clear()
@@ -324,7 +489,12 @@ class MainWindow(QMainWindow):
         stale preview text (describing the previous combo selection) is
         cleared here instead.
         """
+        try:
+            self.controller.configure_preprocessing(self.preprocessing_panel.current_options())
+        except Exception:
+            pass
         self._invalidate_analyzed_state()
+        self._set_workflow_prompt()
         self.preprocessing_panel.clear_preview()
 
     def _update_suitability(self, assessment: SuitabilityAssessment | None = None) -> None:
@@ -346,30 +516,39 @@ class MainWindow(QMainWindow):
         self.suitability_panel.show_assessment(assessment)
 
     def _clear_chart(self) -> None:
-        if self.canvas is not None:
-            self.chart_container.removeWidget(self.canvas)
-            self.canvas.deleteLater()
-            self.canvas = None
+        self.first_result_panel.clear()
+        self.second_result_panel.clear()
 
     def _render_chart(self, result: BenfordResult) -> None:
-        self._clear_chart()
-        figure = build_first_digit_figure(result)
-        self.canvas = FigureCanvasQTAgg(figure)
-        self.canvas.mpl_connect("button_press_event", self._on_chart_clicked)
-        self.chart_container.addWidget(self.canvas)
+        """Render the legacy first-digit view (compatibility wrapper)."""
+        self._show_result_panel(
+            self.first_result_panel,
+            result,
+            DigitPosition.FIRST,
+            self.tr("Observed"),
+            self.tr("Expected (Benford)"),
+        )
 
     def _on_chart_clicked(self, event) -> None:
-        if event.xdata is None:
+        """Handle a legacy first-chart click (compatibility wrapper)."""
+        result = self.first_result_panel.result
+        if result is None or event.xdata is None:
             return
         digit = round(event.xdata)
-        if digit < 1 or digit > 9:
+        if digit not in result.expected_proportions:
             return
+        self._on_result_digit_clicked(DigitPosition.FIRST, int(digit))
+
+    def _on_result_digit_clicked(self, position: DigitPosition, digit: int) -> None:
         try:
-            rows = self.controller.drill_down(int(digit))
+            rows = self.controller.drill_down_digit(position, digit)
         except Exception as exc:
             QMessageBox.warning(self, self.tr("Cannot show rows"), str(exc))
             return
-        self.drill_down_panel.show_rows(rows)
+        position_label = (
+            self.tr("First digit") if position is DigitPosition.FIRST else self.tr("Second digit")
+        )
+        self.drill_down_panel.show_rows(rows, f"{position_label}: {digit}")
 
     def _switch_language(self, language_code: str) -> None:
         app = QApplication.instance()
@@ -395,11 +574,12 @@ class MainWindow(QMainWindow):
         self.open_button.setText(self.tr("Open File…"))
         self.analyze_button.setText(self.tr("Analyze"))
         self.export_report_button.setText(self.tr("Export Report…"))
-        self._retranslate_summary_label()
+        self._populate_mode_combo()
         self.suitability_panel.retranslate_ui()
         self.expert_statistics_panel.retranslate_ui()
         self.preprocessing_panel.retranslate_ui()
         self.drill_down_panel.retranslate_ui()
+        self._retranslate_summary_label()
 
     def _retranslate_summary_label(self) -> None:
         """Restore summary_label in the current language, whatever stage we're at.
@@ -409,11 +589,7 @@ class MainWindow(QMainWindow):
         language after picking a column but before analyzing.
         """
         state = self.controller.state
-        if state.last_result is not None:
-            self.summary_label.setText(self._summary_text(summarize_result(state.last_result)))
-        elif state.dataframe is not None:
-            # _populate_columns shows this prompt as soon as a file is open,
-            # whether or not a column has been picked yet.
-            self.summary_label.setText(self.tr("Select a column, then click Analyze."))
+        if state.analysis_snapshot is not None:
+            self._render_snapshot(state.analysis_snapshot)
         else:
-            self.summary_label.setText(self.tr("Open a CSV or Excel file to begin."))
+            self._set_workflow_prompt()

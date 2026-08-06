@@ -2,13 +2,14 @@ from pathlib import Path
 
 from matplotlib.figure import Figure
 
-from benford_lens.analysis.benford import analyze_first_digit
+from benford_lens.analysis.benford import analyze_first_digit, analyze_second_digit
 from benford_lens.charts import benford_chart
 from benford_lens.charts.benford_chart import (
     SUMMARY_CLOSE_TO_BENFORD,
     SUMMARY_DIVERGES_FROM_BENFORD,
     SUMMARY_NO_VALID_VALUES,
     SUMMARY_SAMPLE_TOO_SMALL,
+    build_digit_figure,
     build_first_digit_figure,
     summarize_result,
 )
@@ -21,6 +22,16 @@ def test_build_first_digit_figure_returns_a_figure_with_one_axes():
 
     assert isinstance(figure, Figure)
     assert len(figure.axes) == 1
+
+
+def test_build_digit_figure_supports_second_digit_buckets_and_labels():
+    result = analyze_second_digit([101, 111, 222, 5])
+
+    figure = build_digit_figure(result, x_axis_label="Second digit")
+
+    axes = figure.axes[0]
+    assert list(axes.get_xticks()) == list(range(10))
+    assert axes.get_xlabel() == "Second digit"
 
 
 def test_summarize_result_flags_empty_sample():

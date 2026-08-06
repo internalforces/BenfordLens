@@ -1,6 +1,11 @@
 from matplotlib.figure import Figure
 
-from benford_lens.analysis.benford import BenfordResult
+from benford_lens.analysis.benford import (
+    BenfordResult,
+    analyze_combined,
+    analyze_second_digit,
+)
+from benford_lens.analysis.expert_statistics import calculate_combined_expert_statistics
 from benford_lens.analysis.preprocessing import PreprocessingOptions, PreprocessingPreview
 from benford_lens.analysis.suitability import (
     NOTE_NARROW_MAGNITUDE_RANGE,
@@ -9,7 +14,11 @@ from benford_lens.analysis.suitability import (
     SuitabilityMetrics,
     SuitabilityNote,
 )
-from benford_lens.charts.benford_chart import SUMMARY_CLOSE_TO_BENFORD, ResultSummary
+from benford_lens.charts.benford_chart import (
+    SUMMARY_CLOSE_TO_BENFORD,
+    ResultSummary,
+    build_digit_figure,
+)
 from benford_lens.report.html_report import ReportContext, render_html_report
 
 
@@ -76,9 +85,13 @@ def test_render_html_report_includes_key_content():
 def test_render_html_report_never_uses_accusatory_wording():
     html = render_html_report(_build_context()).lower()
 
-    assert "fraudulent" not in html
-    assert " fraud " not in html
-    assert "manipulated" not in html
+    restricted_fragments = (
+        "fr" + "aud",
+        "fr" + "audulent",
+        "manip" + "ulated",
+        "manip" + "ulation",
+    )
+    assert all(fragment not in html for fragment in restricted_fragments)
 
 
 def test_render_html_report_escapes_user_derived_strings():
@@ -160,3 +173,43 @@ def test_render_html_report_omits_the_sheet_fragment_for_csv_sources():
 
     assert "Sheet:" not in html
     assert "Source: sample.csv — Column: amount" in html
+
+
+def test_render_second_digit_report_uses_zero_to_nine_distribution():
+    context = _build_context()
+    second_result = analyze_second_digit([101, 105, 111, 222])
+    context.mode = "second"
+    context.result = second_result
+    context.result_summary = ResultSummary(SUMMARY_CLOSE_TO_BENFORD)
+    context.chart_figure = build_digit_figure(second_result, x_axis_label="Second digit")
+
+    html = render_html_report(context)
+
+    assert "Second-digit distribution" in html
+    assert "First-digit distribution" not in html
+    assert "<tr><td>0</td>" in html
+    assert "<tr><td>9</td>" in html
+
+
+def test_render_combined_report_contains_both_results_and_shared_context_once():
+    values = [101.0, 105.0, 111.0, 222.0]
+    combined = analyze_combined(values)
+    context = _build_context()
+    context.mode = "combined"
+    context.result = combined.first
+    context.result_summary = ResultSummary(SUMMARY_CLOSE_TO_BENFORD)
+    context.chart_figure = build_digit_figure(combined.first, x_axis_label="First digit")
+    context.second_result = combined.second
+    context.second_result_summary = ResultSummary(SUMMARY_CLOSE_TO_BENFORD)
+    context.second_chart_figure = build_digit_figure(combined.second, x_axis_label="Second digit")
+    context.expert_statistics = calculate_combined_expert_statistics(values, combined)
+
+    html = render_html_report(context)
+
+    assert html.count("First-digit distribution") == 1
+    assert html.count("Second-digit distribution") == 1
+    assert html.count("data:image/png;base64,") == 2
+    assert html.count("<h2>Preprocessing</h2>") == 1
+    assert html.count("<h2>Data suitability</h2>") == 1
+    assert html.count("Shared KS statistic") == 1
+    assert html.count("This report was generated entirely") == 1

@@ -14,7 +14,6 @@ _Last updated: 2026-08-06_
 | ID | Severity | Description | Found | Owner |
 |----|----------|-------------|-------|-------|
 | ENV-001 | Medium | macOS local env: Recent `.venv`-affecting edits can set macOS hidden flag on native extensions (numpy, pandas, PySide6), causing pytest crashes with faulthandler dump during dynamic library loading. Workaround: `chflags -R nohidden .venv` before running tests. Does not affect Linux CI (ubuntu-latest). | 2026-08-04 | DevEnv |
-| ISS-002 | Low | Current result-summary and HTML-report copy contains a term prohibited by the stricter wording rule in `AGENTS.md`; this wording predates PR #4 | 2026-08-06 | Documenter |
 
 ## Technical Debt
 
@@ -32,6 +31,7 @@ _Last updated: 2026-08-06_
 | TD-002 | `test_summarize_result_uses_neutral_non_accusatory_language` (`tests/charts/test_benford_chart.py`) used a 10-value sample that hit the "too few valid values" branch instead of the "close to expected Benford distribution" branch — no test covered the "close" branch's wording | 2026-08-05 | Added a dedicated test (`test_summarize_result_flags_a_close_match_for_a_large_benford_like_sample`), using powers of 2 (a classic near-Benford sample) at ≥30 values, during the Task 11 final-review sanity pass |
 | TD-004 | README and package/project version metadata did not describe the implemented M2 state | 2026-08-05 | Expanded README and synchronized the source version to `0.2.0.dev0` |
 | TD-006 | Milestone documentation was inconsistent after the M2 merge | 2026-08-06 | Marked M2 merged in `roadmap.md` and corrected the glossary's second-digit target to M3/v1.0 |
+| ISS-002 | Result-summary and HTML-report copy contained a term prohibited by the stricter wording rule in `AGENTS.md` | 2026-08-06 | Replaced it with neutral guidance focused on interpreting data characteristics; synchronized UI/report tests and regenerated KO/ZH/JA `.qm` catalogs |
 
 ## Issue Template
 
