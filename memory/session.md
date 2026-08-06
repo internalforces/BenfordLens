@@ -40,6 +40,7 @@ The prior session record is archived at
   results view, not a joint first-two-digit distribution.
 - [x] Recorded the M3 architecture as ADR-009 and added the detailed M3 design spec.
 - [x] Added completed TASK-017 for the architecture decision.
+- [x] Published `codex/m3-design` and opened a ready-for-review PR against `main`.
 
 ## Design Handoff
 

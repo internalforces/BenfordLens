@@ -1,7 +1,7 @@
 # M3 Analysis Modes Design
 
-**Date:** 2026-08-06  
-**Status:** Accepted  
+**Date:** 2026-08-06
+**Status:** Accepted
 **Scope:** First-digit, second-digit, and combined analysis in M3/v1.0
 
 ## Product Definition
