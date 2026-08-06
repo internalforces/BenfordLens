@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Decision Log — Benford Lens
 
-_Last updated: 2026-08-04_
+_Last updated: 2026-08-06_
 
 ## Template
 
@@ -220,3 +220,44 @@ interpretation.
 **Consequences**: SciPy is an approved runtime dependency. `analysis/expert_statistics.py`
 stays PySide6-free, and `ui/expert_statistics_panel.py` handles formatting, translation, and
 the hidden-by-default interaction.
+
+---
+
+### ADR-009: M3 Analysis Modes and Combined Results View
+
+- **Date**: 2026-08-06
+- **Status**: Accepted
+- **Decided by**: User / Architect
+
+**Context**: M3 adds second-digit and combined analysis, while the current calculation entry
+point, chart, drill-down, expert details, and report are fixed to first digit. Extending each
+path independently would duplicate workflow and make the two displayed results vulnerable to
+different preprocessing or state.
+
+**Decision**:
+
+- Define combined analysis as independent first- and second-significant-digit results shown
+  together in one results view. It is not a joint 10–99 first-two-digit distribution.
+- Keep existing first-digit public entry points available unchanged. Add second-digit and
+  combined functions backed by shared internal digit extraction and aggregation.
+- Preprocess once per user action and store first/second results, statistics, suitability, and
+  row-to-digit mappings in one immutable controller snapshot.
+- Build a reusable digit-result panel. Single modes render one instance; combined mode renders
+  first and second instances side by side with neither hidden behind tabs.
+- Make chart clicks and drill-down position-aware. Keep the existing first-digit drill-down
+  call as a compatibility wrapper.
+- Calculate MAD and Chi-square per position. Show the sample-level log-mantissa KS result once
+  in combined mode.
+- Make HTML reporting mode-aware and render all sections from the same snapshot.
+
+**Rationale**: A shared engine and reusable panel eliminate the largest duplication risks while
+preserving working M1/M2 behavior. One snapshot guarantees that combined results describe the
+same user-selected column and preprocessing choices.
+
+**Trade-offs**: The controller and report context need a deliberate migration, and combined
+mode needs more horizontal space. Compatibility wrappers remain until a separately approved
+public API cleanup is warranted.
+
+**Consequences**: M3 implementation follows
+`docs/superpowers/specs/2026-08-06-m3-analysis-modes-design.md`. No new dependency is required,
+and the local-only, explicit-selection, and neutral-interpretation constraints remain intact.
