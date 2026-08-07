@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Known Issues — Benford Lens
 
-_Last updated: 2026-08-06_
+_Last updated: 2026-08-07_
 
 ## Active Bugs
 
@@ -32,6 +32,7 @@ _Last updated: 2026-08-06_
 | TD-004 | README and package/project version metadata did not describe the implemented M2 state | 2026-08-05 | Expanded README and synchronized the source version to `0.2.0.dev0` |
 | TD-006 | Milestone documentation was inconsistent after the M2 merge | 2026-08-06 | Marked M2 merged in `roadmap.md` and corrected the glossary's second-digit target to M3/v1.0 |
 | ISS-002 | Result-summary and HTML-report copy contained a term prohibited by the stricter wording rule in `AGENTS.md` | 2026-08-06 | Replaced it with neutral guidance focused on interpreting data characteristics; synchronized UI/report tests and regenerated KO/ZH/JA `.qm` catalogs |
+| ISS-003 | The single-page UI exceeded common screen heights and compressed suitability metrics and combined charts below a readable size | 2026-08-07 | Added a scroll-bounded workflow, responsive stacked/side-by-side result layout, 300 px minimum chart height, result auto-reveal, and geometry regression tests; 900x700 now remains 900x700 with 828x400 compact charts |
 
 ## Issue Template
 

@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QBoxLayout
 
 from benford_lens.analysis.benford import CombinedBenfordResult, DigitPosition
 from benford_lens.analysis.preprocessing import PreprocessingOptions
@@ -137,6 +137,68 @@ def test_combined_mode_shows_both_result_panels_and_one_shared_ks_group(window, 
     assert panel.value_labels["second_sample_size"].text() == "4"
     assert panel.value_labels["shared_sample_size"].text() == "4"
     assert panel.name_labels["ks_statistic"].isHidden() is True
+
+
+def test_compact_combined_layout_is_bounded_scrollable_and_readable(window, app, tmp_path):
+    window.resize(900, 700)
+    window.show()
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+
+    window._on_analyze_clicked()
+    app.processEvents()
+    app.processEvents()
+
+    assert window.size().width() == 900
+    assert window.size().height() == 700
+    assert window.results_layout.direction() is QBoxLayout.Direction.TopToBottom
+    assert window.scroll_area.verticalScrollBar().maximum() > 0
+    assert window.scroll_area.verticalScrollBar().value() > 0
+    assert window.scroll_area.horizontalScrollBar().maximum() == 0
+    assert window.suitability_panel.height() >= window.suitability_panel.minimumSizeHint().height()
+    assert window.first_result_panel.canvas.height() >= 300
+    assert window.second_result_panel.canvas.height() >= 300
+
+
+def test_wide_combined_layout_uses_readable_side_by_side_charts(window, app, tmp_path):
+    window.resize(1280, 900)
+    window.show()
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+
+    window._on_analyze_clicked()
+    app.processEvents()
+    app.processEvents()
+
+    assert window.size().width() == 1280
+    assert window.size().height() == 900
+    assert window.results_layout.direction() is QBoxLayout.Direction.LeftToRight
+    assert window.scroll_area.horizontalScrollBar().maximum() == 0
+    assert window.first_result_panel.canvas.width() >= 500
+    assert window.second_result_panel.canvas.width() >= 500
+    assert window.first_result_panel.canvas.height() >= 300
+    assert window.second_result_panel.canvas.height() >= 300
+
+
+def test_compact_translated_layout_remains_inside_the_viewport(window, app, tmp_path):
+    window.resize(900, 700)
+    window.show()
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+    window._on_analyze_clicked()
+
+    window._switch_language("ru")
+    app.processEvents()
+    app.processEvents()
+
+    assert window.size().width() == 900
+    assert window.size().height() == 700
+    assert window.results_layout.direction() is QBoxLayout.Direction.TopToBottom
+    assert window.scroll_area.verticalScrollBar().maximum() > 0
+    assert window.scroll_area.horizontalScrollBar().maximum() == 0
 
 
 def test_second_digit_chart_click_shows_matching_original_rows_and_heading(window, tmp_path):

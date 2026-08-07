@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Decision Log — Benford Lens
 
-_Last updated: 2026-08-06_
+_Last updated: 2026-08-07_
 
 ## Template
 
@@ -311,3 +311,35 @@ strings require one additional translation and completeness check.
 **Consequences**: `resources/i18n/` contains complete RU `.ts` and `.qm` files, the selector
 exposes Русский, and automated catalog tests enforce the same 93-message key set and
 placeholder structure across KO/ZH/JA/ES/FR/RU.
+
+---
+
+### ADR-012: Responsive, Scroll-Bounded Desktop Workflow
+
+- **Date**: 2026-08-07
+- **Status**: Accepted
+- **Decided by**: User / Implementer
+
+**Context**: After M2/M3 added preprocessing, suitability, a second result panel, expert
+statistics, and drill-down to the original M1 vertical page, a requested 900x700 window expanded
+to 900x944 and still clipped child content. Combined charts were compressed to roughly 420x101
+pixels each.
+
+**Decision**: Keep the toolbar outside a resizable `QScrollArea`, place all vertically growing
+workflow content inside it, and enforce layout minimum sizes so overflow becomes reachable
+scrolling instead of clipping. Combined results stay in one view but stack vertically below a
+1100-pixel result width and switch to side-by-side above it, with hysteresis to avoid oscillation
+around scrollbar boundaries. Every rendered chart keeps a 300-pixel minimum height, and a
+successful analysis scrolls the new result into view.
+
+**Rationale**: This preserves the existing workflow and ADR-009's simultaneous combined results
+while making compact windows usable. It introduces no new user-facing strings, dependency, or
+analysis behavior.
+
+**Trade-offs**: Compact combined mode requires vertical scrolling between the first- and
+second-digit charts; wide layouts continue to show both charts side by side.
+
+**Consequences**: The 900x700 window remains 900x700, compact charts render at approximately
+828x400, suitability content respects its minimum height, and horizontal scrolling is not needed
+at tested 900- and 1280-pixel viewports. Geometry tests cover compact, wide, and Russian combined
+states.
