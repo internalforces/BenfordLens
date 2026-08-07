@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QEvent, Qt, QTimer, QTranslator
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QApplication,
     QBoxLayout,
@@ -68,6 +69,39 @@ _LANGUAGES = [
     ("ru", "Русский"),
 ]
 
+_UI_FONT_FAMILIES = {
+    "ko": (
+        "Malgun Gothic",
+        "Apple SD Gothic Neo",
+        "Noto Sans CJK KR",
+    ),
+    "zh": (
+        "Microsoft YaHei UI",
+        "Microsoft YaHei",
+        "Microsoft JhengHei UI",
+        "Microsoft JhengHei",
+        "PingFang SC",
+        "Noto Sans CJK SC",
+    ),
+    "ja": (
+        "Yu Gothic UI",
+        "Yu Gothic",
+        "Meiryo UI",
+        "Meiryo",
+        "Hiragino Sans",
+        "Noto Sans CJK JP",
+    ),
+}
+
+
+def _font_for_language(base_font: QFont, language_code: str) -> QFont:
+    """Return a copy with platform CJK fallbacks suitable for the UI locale."""
+    font = QFont(base_font)
+    candidates = _UI_FONT_FAMILIES.get(language_code)
+    if candidates is not None:
+        font.setFamilies([*candidates, *base_font.families()])
+    return font
+
 
 class _ResponsiveResultsWidget(QWidget):
     """Keep combined charts readable across compact and wide viewports."""
@@ -97,6 +131,9 @@ class _ResponsiveResultsWidget(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
+        app = QApplication.instance()
+        assert isinstance(app, QApplication)
+        self._default_application_font = QFont(app.font())
         self.setWindowTitle(self.tr("Benford Lens"))
         self.controller = SessionController()
         # Column identities for the current file, in the same order as the
@@ -134,6 +171,9 @@ class MainWindow(QMainWindow):
         self.language_combo = QComboBox()
         for code, label in _LANGUAGES:
             self.language_combo.addItem(label, code)
+            item_index = self.language_combo.count() - 1
+            item_font = _font_for_language(self._default_application_font, code)
+            self.language_combo.setItemData(item_index, item_font, Qt.ItemDataRole.FontRole)
         self.language_combo.currentIndexChanged.connect(
             lambda _index: self._switch_language(self.language_combo.currentData())
         )
@@ -604,7 +644,8 @@ class MainWindow(QMainWindow):
 
     def _switch_language(self, language_code: str) -> None:
         app = QApplication.instance()
-        assert app is not None
+        assert isinstance(app, QApplication)
+        app.setFont(_font_for_language(self._default_application_font, language_code))
         if self._translator is not None:
             app.removeTranslator(self._translator)
             self._translator = None

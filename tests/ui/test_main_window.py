@@ -3,6 +3,7 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QBoxLayout
 
@@ -713,6 +714,41 @@ def test_switching_language_translates_visible_strings(window):
     window.language_combo.setCurrentIndex(index_en)
 
     assert window.open_button.text() == "Open File…"
+
+
+@pytest.mark.parametrize(
+    "language_code,expected_family",
+    [
+        ("ko", "Malgun Gothic"),
+        ("zh", "Microsoft YaHei UI"),
+        ("ja", "Yu Gothic UI"),
+    ],
+)
+def test_switching_cjk_language_sets_a_script_appropriate_ui_font(
+    window, app, language_code, expected_family
+):
+    default_families = app.font().families()
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData(language_code))
+
+    assert app.font().families()[0] == expected_family
+
+    window.language_combo.setCurrentIndex(window.language_combo.findData("en"))
+
+    assert app.font().families() == default_families
+
+
+@pytest.mark.parametrize(
+    "language_code,expected_family",
+    [("zh", "Microsoft YaHei UI"), ("ja", "Yu Gothic UI")],
+)
+def test_language_selector_uses_cjk_font_for_its_own_labels(window, language_code, expected_family):
+    index = window.language_combo.findData(language_code)
+
+    item_font = window.language_combo.itemData(index, Qt.ItemDataRole.FontRole)
+
+    assert isinstance(item_font, QFont)
+    assert item_font.families()[0] == expected_family
 
 
 def test_switching_language_translates_analysis_mode_labels(window):
