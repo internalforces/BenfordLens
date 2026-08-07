@@ -4,10 +4,18 @@ from __future__ import annotations
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from PySide6.QtCore import Signal
+from PySide6.QtGui import QWheelEvent
 from PySide6.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 from benford_lens.analysis.benford import BenfordResult, DigitPosition
 from benford_lens.charts.benford_chart import build_digit_figure
+
+
+class _ScrollFriendlyFigureCanvas(FigureCanvasQTAgg):
+    """Let an enclosing scroll area handle wheel input over the chart."""
+
+    def wheelEvent(self, event: QWheelEvent) -> None:
+        event.ignore()
 
 
 class DigitResultPanel(QWidget):
@@ -19,7 +27,7 @@ class DigitResultPanel(QWidget):
         super().__init__()
         self.position = position
         self.result: BenfordResult | None = None
-        self.canvas: FigureCanvasQTAgg | None = None
+        self.canvas: _ScrollFriendlyFigureCanvas | None = None
 
         self.title_label = QLabel("")
         self.summary_label = QLabel("")
@@ -55,7 +63,7 @@ class DigitResultPanel(QWidget):
             observed_label=observed_label,
             expected_label=expected_label,
         )
-        self.canvas = FigureCanvasQTAgg(figure)
+        self.canvas = _ScrollFriendlyFigureCanvas(figure)
         self.canvas.setMinimumHeight(300)
         self.canvas.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.canvas.mpl_connect("button_press_event", self._on_chart_clicked)

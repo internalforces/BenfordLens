@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import pandas as pd
 import pytest
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QFont
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QBoxLayout
@@ -160,6 +160,31 @@ def test_compact_combined_layout_is_bounded_scrollable_and_readable(window, app,
     assert window.suitability_panel.height() >= window.suitability_panel.minimumSizeHint().height()
     assert window.first_result_panel.canvas.height() >= 300
     assert window.second_result_panel.canvas.height() >= 300
+
+
+def test_mouse_wheel_over_chart_scrolls_the_workflow(window, app, tmp_path):
+    window.resize(900, 700)
+    window.show()
+    window.load_file(_write_mode_csv(tmp_path))
+    window.column_table.selectRow(1)
+    window.mode_combo.setCurrentIndex(window.mode_combo.findData(AnalysisMode.COMBINED.value))
+    window._on_analyze_clicked()
+    app.processEvents()
+    app.processEvents()
+
+    canvas = window.first_result_panel.canvas
+    scroll_bar = window.scroll_area.verticalScrollBar()
+    assert canvas is not None
+    assert scroll_bar.value() > 0
+    initial_value = scroll_bar.value()
+    position_over_chart = canvas.mapTo(window, canvas.rect().center())
+
+    window_handle = window.windowHandle()
+    assert window_handle is not None
+    QTest.wheelEvent(window_handle, position_over_chart, QPoint(0, 120))
+    app.processEvents()
+
+    assert scroll_bar.value() < initial_value
 
 
 def test_wide_combined_layout_uses_readable_side_by_side_charts(window, app, tmp_path):
