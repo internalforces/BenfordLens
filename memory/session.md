@@ -13,47 +13,52 @@ Harness Version: 1.1
 
 - **Date**: 2026-08-07
 - **Agent Role**: Release Manager / Implementer / Tester
-- **Session Goal**: Build and verify a macOS PyInstaller distribution candidate after TASK-027.
+- **Session Goal**: Prepare, sign, notarize, tag, and publish Benford Lens v1.0.0.
 
 ## Previous Session Summary
 
-TASK-027 resolved the clipped desktop layout and was merged to `main` through PR #7. All 232
-tests and the layout-specific compact, wide, and Russian geometry checks passed.
+PR #8 merged the version-aware macOS packaging configuration and locally verified arm64
+distribution-candidate workflow to `main`.
 
 ## Completed This Session
 
-- [x] Confirmed TASK-027 and PR #7 are present on `main`.
-- [x] Passed Ruff lint, Ruff format check, mypy, and all 232 tests.
-- [x] Built the macOS PyInstaller application bundle on Apple Silicon.
-- [x] Changed the macOS specification to derive numeric bundle versions from `pyproject.toml`.
-- [x] Verified bundle version `0.2.0`, arm64 architecture, and all six packaged `.qm` catalogs
-  plus default English.
-- [x] Passed strict ad-hoc signature validation and a headless startup smoke test.
-- [x] Produced and re-extracted the distribution ZIP, then revalidated its signature integrity.
-- [x] Recorded the macOS signing/notarization boundary as ADR-013 and TD-007.
+- [x] Confirmed PR #8 is merged and synchronized local `main`.
+- [x] Confirmed no pre-existing `v1.0.0` tag or GitHub Release.
+- [x] Started TASK-029 on `codex/v1-release` without committing directly to `main`.
+- [x] Synchronized package and project metadata to v1.0.0 and added `CHANGELOG.md`.
+- [x] Audited local signing prerequisites without exposing credential values.
+- [x] Passed Ruff, format, mypy, and all 232 tests.
+- [x] Built and headless-smoke-tested the v1.0.0 macOS arm64 app bundle.
 
 ## Verification
 
+- GitHub CLI authentication: pass
+- Existing v1.0.0 tag: absent
+- Existing v1.0.0 GitHub Release: absent
+- Available signing identity: Apple Development only
+- Required Developer ID Application identity: not available
+- Notarization environment/profile configuration: not detected
 - Ruff check: pass
 - Ruff format check: pass (46 files)
 - mypy: pass (22 source files)
 - pytest: 232 passed
 - PyInstaller: 6.21.0; Python 3.11.15; macOS arm64
-- App bundle: 202 MB; archive: 81 MB
-- Archive: `dist/Benford-Lens-0.2.0-macOS-arm64.zip`
-- SHA-256: `537fbb55bad689b461b4b848d1d535d49cf21558bd67cf1161d83550c9773764`
-- No new dependency, network path, public analysis API change, or source-data mutation
+- App bundle versions: `1.0.0`
+- Packaged translation catalogs: 6 plus built-in English
+- Current bundle signature: ad-hoc; Developer ID signing not yet possible
+- No new dependency, network analysis path, public analysis API change, or source-data mutation
 
 ## Remaining Work
 
-1. Synchronize project metadata from `0.2.0.dev0` to the approved v1.0 version.
-2. For public macOS distribution, obtain explicit approval and available credentials for
-   Developer ID signing, notarization, ticket stapling, and clean-machine verification.
-3. Build and verify Windows/Linux packages on their target platforms.
+1. Install or provide access to a valid Developer ID Application certificate and private key.
+2. Provide a configured `notarytool` keychain profile name, or configure approved Apple
+   notarization credentials without committing them to the repository.
+3. Sign, notarize, staple, package, merge the release PR, tag `v1.0.0`, and publish the GitHub
+   Release asset.
 
 ## Important Context
 
-- Work is on `codex/macos-release-build`; no commit was made directly to `main`.
-- The local artifact is a distribution candidate, not a notarized public release.
-- The build is Apple Silicon (`arm64`) only.
+- Work is on `codex/v1-release`; direct commits to `main` remain prohibited.
+- Tagging and GitHub Release publication must not proceed before successful notarization.
+- The build host is Apple Silicon (`arm64`).
 - Build outputs under `dist/` and `build/` are ignored by Git.
