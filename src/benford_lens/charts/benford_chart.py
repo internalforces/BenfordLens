@@ -11,7 +11,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from matplotlib import font_manager
 from matplotlib.figure import Figure
+from matplotlib.font_manager import FontProperties
 
 from benford_lens.analysis.benford import MIN_MEANINGFUL_SAMPLE, BenfordResult
 
@@ -29,14 +31,52 @@ SUMMARY_DIVERGES_FROM_BENFORD = "DIVERGES_FROM_BENFORD"
 
 # Prefer a broad Unicode font where the host provides one, while retaining
 # Matplotlib's bundled DejaVu Sans fallback for minimal installations.
-_CHART_FONT_FAMILIES = [
-    "Arial Unicode MS",
+_DEFAULT_FONT_CANDIDATES = ("Arial Unicode MS", "DejaVu Sans")
+_KOREAN_FONT_CANDIDATES = (
+    "Malgun Gothic",
     "Apple SD Gothic Neo",
     "Noto Sans CJK KR",
+)
+_CHINESE_FONT_CANDIDATES = (
+    "Microsoft YaHei",
+    "Microsoft JhengHei",
+    "PingFang SC",
     "Noto Sans CJK SC",
+)
+_JAPANESE_FONT_CANDIDATES = (
+    "Yu Gothic",
+    "Meiryo",
+    "Hiragino Sans",
     "Noto Sans CJK JP",
-    "DejaVu Sans",
-]
+)
+
+
+def _font_candidates_for_text(text: str) -> tuple[str, ...]:
+    """Return platform-friendly font candidates for the scripts in *text*."""
+    codepoints = (ord(character) for character in text)
+    if any(0xAC00 <= codepoint <= 0xD7AF for codepoint in codepoints):
+        return _KOREAN_FONT_CANDIDATES + _DEFAULT_FONT_CANDIDATES
+
+    codepoints = (ord(character) for character in text)
+    if any(
+        0x3040 <= codepoint <= 0x30FF or 0x31F0 <= codepoint <= 0x31FF for codepoint in codepoints
+    ):
+        return _JAPANESE_FONT_CANDIDATES + _DEFAULT_FONT_CANDIDATES
+
+    codepoints = (ord(character) for character in text)
+    if any(0x3400 <= codepoint <= 0x9FFF for codepoint in codepoints):
+        return _CHINESE_FONT_CANDIDATES + _DEFAULT_FONT_CANDIDATES
+    return _DEFAULT_FONT_CANDIDATES
+
+
+def _font_properties(text: str) -> FontProperties:
+    """Choose the first installed font suitable for a translated chart label."""
+    installed_families = {font.name for font in font_manager.fontManager.ttflist}
+    family = next(
+        (name for name in _font_candidates_for_text(text) if name in installed_families),
+        "DejaVu Sans",
+    )
+    return FontProperties(family=family)
 
 
 @dataclass(frozen=True)
@@ -64,10 +104,11 @@ def build_digit_figure(
     axes = figure.add_subplot(111)
     axes.bar(digits, observed, color="#4C72B0", label=observed_label)
     axes.plot(digits, expected, color="black", marker="o", label=expected_label)
-    axes.set_xlabel(x_axis_label, fontfamily=_CHART_FONT_FAMILIES)
-    axes.set_ylabel(y_axis_label, fontfamily=_CHART_FONT_FAMILIES)
+    axes.set_xlabel(x_axis_label, fontproperties=_font_properties(x_axis_label))
+    axes.set_ylabel(y_axis_label, fontproperties=_font_properties(y_axis_label))
     axes.set_xticks(digits)
-    axes.legend(prop={"family": _CHART_FONT_FAMILIES})
+    legend_text = f"{observed_label} {expected_label}"
+    axes.legend(prop=_font_properties(legend_text))
     figure.tight_layout()
     return figure
 

@@ -65,3 +65,59 @@ distribution-candidate workflow to `main`.
 - Tagging and GitHub Release publication must not proceed before successful notarization.
 - The build host is Apple Silicon (`arm64`).
 - Build outputs under `dist/` and `build/` are ignored by Git.
+
+## Windows Development Environment Follow-up
+
+- Installed `uv` 0.12.1 through WinGet.
+- Installed uv-managed CPython 3.11.15 and created the repository-local `.venv` from
+  `uv.lock` with the `dev` dependency group; no dependency was added or upgraded outside the
+  lockfile.
+- Verified all runtime imports and an offscreen `MainWindow` startup smoke test.
+- Ruff, Ruff format-check, and mypy pass.
+- Pytest result on Windows: 231 passed, 1 failed. The failure is the Russian compact-layout
+  width assertion recorded as ENV-002 in `memory/known-issues.md`.
+- Git is installed at `C:\Program Files\Git\cmd\git.exe`, but the current Codex process did not
+  inherit its PATH entry; a new terminal should resolve both `git` and the newly installed
+  `uv` aliases normally.
+
+## Windows CJK Chart Font Fix
+
+- Updated the Matplotlib chart renderer to choose installed fonts by label script: Malgun
+  Gothic for Korean, Microsoft YaHei/JhengHei for Chinese, and Yu Gothic/Meiryo for Japanese,
+  with the existing macOS, Noto, and DejaVu fallbacks retained.
+- Added regression tests for Windows CJK font selection and the minimal-install fallback.
+- Verified Korean, Chinese, and Japanese chart rendering on Windows with missing-glyph warnings
+  treated as errors.
+- Ruff and mypy pass; pytest reports 233 passed and only the pre-existing ENV-002 Windows
+  offscreen layout failure.
+
+## Windows CJK UI Font Follow-up
+
+- Confirmed the Chinese and Japanese translation catalogs contain valid Unicode text; the
+  remaining display issue was Qt's reliance on the generic Windows UI font.
+- Language switching now applies Microsoft YaHei UI fallbacks for Chinese and Yu Gothic UI
+  fallbacks for Japanese; each CJK entry in the language selector also receives its own font.
+- Verified both requested families are installed and resolved by the native Windows Qt
+  platform plugin.
+- Ruff and mypy pass; the full suite reports 238 passed and only the pre-existing ENV-002
+  Windows offscreen layout failure.
+
+## Chart Wheel Scrolling Fix
+
+- Replaced the result chart canvas with a small FigureCanvas subclass that ignores wheel events
+  so Qt propagates them to the enclosing workflow scroll area.
+- Preserved Matplotlib button events used for digit drill-down.
+- Added both a canvas event-handling unit test and a MainWindow integration test that sends a
+  real wheel event over the chart and verifies the workflow scrollbar moves.
+- Ruff and mypy pass; the full suite reports 240 passed and only the pre-existing ENV-002
+  Windows offscreen layout failure.
+
+## Russian Compact-Window Fix
+
+- Traced ENV-002 to the single-row toolbar's translated minimum width rather than a test-only
+  platform discrepancy.
+- Split the fixed toolbar into primary and secondary rows, preserving every existing control and
+  keeping the results workflow scrollable below it.
+- Strengthened the Russian compact-layout regression test to verify the 900 x 700 window size and
+  the horizontal bounds of all five toolbar controls; the focused test passes on Windows.
+- Ruff, formatting, and mypy pass; all 241 tests now pass on Windows and ENV-002 is resolved.
