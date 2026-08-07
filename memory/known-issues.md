@@ -28,6 +28,7 @@ _Last updated: 2026-08-07_
 
 | ID | Description | Resolved | Method |
 |----|-------------|----------|--------|
+| ENV-002 | Windows offscreen Qt expanded the Russian combined-results window from 900 px to 972 px because all translated toolbar controls shared one row | 2026-08-07 | Split the fixed toolbar into two rows and strengthened the compact Russian layout test to verify both the exact window size and every control's horizontal bounds |
 | ISS-001 | A failed file load or cancelled Excel sheet selection could change the report source name while leaving the previous analysis active | 2026-08-05 | Assign `_source_path` only after the new dataframe opens; added regression tests for both failure and cancellation |
 | TD-002 | `test_summarize_result_uses_neutral_non_accusatory_language` (`tests/charts/test_benford_chart.py`) used a 10-value sample that hit the "too few valid values" branch instead of the "close to expected Benford distribution" branch — no test covered the "close" branch's wording | 2026-08-05 | Added a dedicated test (`test_summarize_result_flags_a_close_match_for_a_large_benford_like_sample`), using powers of 2 (a classic near-Benford sample) at ≥30 values, during the Task 11 final-review sanity pass |
 | TD-004 | README and package/project version metadata did not describe the implemented M2 state | 2026-08-05 | Expanded README and synchronized the source version to `0.2.0.dev0` |

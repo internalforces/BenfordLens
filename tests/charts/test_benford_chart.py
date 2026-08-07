@@ -34,6 +34,25 @@ def test_build_digit_figure_supports_second_digit_buckets_and_labels():
     assert axes.get_xlabel() == "Second digit"
 
 
+def test_chart_selects_installed_windows_fonts_for_cjk_labels(monkeypatch):
+    installed_fonts = [
+        type("Font", (), {"name": name})()
+        for name in ("Malgun Gothic", "Microsoft YaHei", "Yu Gothic", "DejaVu Sans")
+    ]
+    monkeypatch.setattr(benford_chart.font_manager.fontManager, "ttflist", installed_fonts)
+
+    assert benford_chart._font_properties("선행 숫자").get_family() == ["Malgun Gothic"]
+    assert benford_chart._font_properties("首位数字").get_family() == ["Microsoft YaHei"]
+    assert benford_chart._font_properties("先頭の数字").get_family() == ["Yu Gothic"]
+
+
+def test_chart_font_falls_back_to_dejavu_when_cjk_font_is_unavailable(monkeypatch):
+    installed_fonts = [type("Font", (), {"name": "DejaVu Sans"})()]
+    monkeypatch.setattr(benford_chart.font_manager.fontManager, "ttflist", installed_fonts)
+
+    assert benford_chart._font_properties("선행 숫자").get_family() == ["DejaVu Sans"]
+
+
 def test_summarize_result_flags_empty_sample():
     result = analyze_first_digit([])
 

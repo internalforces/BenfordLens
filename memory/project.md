@@ -74,7 +74,7 @@ BenfordLens/
 | 2026-08-07 | TASK-027 resolved the clipped M3 desktop UI with a scroll-bounded workflow, responsive combined charts, readable chart minimums, automatic result reveal, and geometry regression coverage; all 232 tests pass |
 | 2026-08-07 | TASK-028 built and verified a macOS arm64 PyInstaller distribution candidate, synchronized bundle version metadata with the project version, and produced a checksum-recorded ZIP; Developer ID signing/notarization remains required for public macOS distribution |
 | 2026-08-07 | TASK-029 synchronized the package, lockfile, README, roadmap, and project metadata to v1.0.0, added the v1.0 changelog, and merged PR #9 after CI passed; release signing remains gated on a Developer ID Application identity and Apple notarization credentials |
-| 2026-08-07 | TASK-030 adopted icon concept A and applied transparent PNG/ICNS assets to the macOS PyInstaller bundle; Windows/Linux icons remain unchanged and no new distribution build was produced |
+| 2026-08-07 | TASK-033 adopted icon concept A and applied transparent PNG/ICNS assets to the macOS PyInstaller bundle; Windows/Linux icons remain unchanged and no new distribution build was produced |
 
 ## Constraints
 

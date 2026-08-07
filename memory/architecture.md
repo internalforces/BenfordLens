@@ -22,8 +22,10 @@ be unit tested independently of the PySide6 UI.
 
 ```
 UI Layer (PySide6)
-├── Bounded workflow viewport — implemented TASK-027: the toolbar remains fixed while the
-│   vertically growing workflow scrolls within the requested window size
+├── Bounded workflow viewport — implemented TASK-027/032: the translation-safe two-row toolbar
+│   remains fixed without increasing the requested window width, while the
+│   vertically growing workflow scrolls within the requested window size; chart canvases leave
+│   wheel input to this enclosing viewport so scrolling continues under the pointer (TASK-031)
 ├── File Open (file picker; CSV encoding auto-detected via fixed fallback list — see TD-001 in
 │   memory/known-issues.md; Excel sheet is always an explicit user choice, never auto-picked)
 ├── Sheet & Column Selector (user picks the sheet and the column to analyze — never automatic)
@@ -53,7 +55,11 @@ Application / Controller Layer
 Internationalization (UI Layer only) — implemented M2, expanded M3
 └── Language selector (default English; Korean/Chinese/Japanese from ADR-004 plus
     Spanish/French from ADR-010 and Russian from ADR-011) via Qt's QTranslator; real, complete
-    translations live under resources/i18n/ and the Analysis Engine remains language-agnostic
+    translations live under resources/i18n/ and the Analysis Engine remains language-agnostic.
+    Matplotlib chart labels and legends select installed fonts by CJK script. Qt language
+    switching likewise applies locale-specific application-font fallbacks, and language-selector
+    entries use their own script fonts. Both paths include Windows system-font candidates while
+    retaining macOS/Linux fallbacks (TASK-030).
 
 Analysis Engine (Pandas / NumPy / SciPy — no UI dependency)
 ├── File loaders (CSV, XLSX) — implemented M1: src/benford_lens/io/
@@ -70,7 +76,7 @@ Report Generator — implemented M2, mode-aware M3: src/benford_lens/report/html
 
 Packaging — implemented M2: packaging/*.spec (PyInstaller)
 └── Standalone executable, no separate runtime install required. macOS uses the approved
-    concept A icon from resources/icons/macos/ (TASK-030 / ADR-014), and has been built and
+    concept A icon from resources/icons/macos/ (TASK-033 / ADR-014), and has been built and
     headless-smoke-tested locally; Windows/Linux specs are config-only and untested (TD-003 in
     memory/known-issues.md)
 ```
