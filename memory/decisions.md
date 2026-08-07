@@ -368,6 +368,6 @@ avoids presenting a locally valid ad-hoc signature as equivalent to Apple's publ
 **Trade-offs**: Development suffixes such as `.dev0` are omitted from the numeric macOS bundle
 version. The source package metadata remains the authoritative full development version.
 
-**Consequences**: The current `0.2.0.dev0` source produces a macOS bundle version of `0.2.0`.
-When the project metadata is synchronized to `1.0.0`, the same specification will produce a
-`1.0.0` bundle without a second manual version edit.
+**Consequences**: The earlier `0.2.0.dev0` source produced a macOS bundle version of `0.2.0`.
+After the v1.0 metadata synchronization, the same specification produces a `1.0.0` bundle
+without a second manual version edit.

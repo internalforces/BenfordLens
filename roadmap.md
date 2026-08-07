@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # roadmap.md — Benford Lens Roadmap
 
-_Last updated: 2026-08-06_
+_Last updated: 2026-08-07_
 
 ## Goal
 
@@ -32,7 +32,7 @@ external server.
 - [x] UI language selection — default English; selectable Korean/Chinese/Japanese (i18n scaffolding, see ADR-004)
 - [x] Expert statistics panel (MAD, Chi-square, KS Test, sample size) — hidden by default
 
-### M3 — v1.0 (Phase 3)
+### M3 — v1.0 (Phase 3) — implemented and merged to `main` (PRs #5–#8)
 - [x] Second-digit analysis
 - [x] Combined first+second-digit analysis — both independent results shown together in one
   results view (not a joint first-two-digit distribution; see ADR-009)

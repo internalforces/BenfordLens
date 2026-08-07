@@ -1,6 +1,6 @@
 [project]
 name = "benford-lens"
-version = "0.2.0.dev0"
+version = "1.0.0"
 description = "Analyze Benford's Law on local CSV/Excel data, entirely on your own machine."
 readme = "README.md"
 requires-python = ">=3.11"
