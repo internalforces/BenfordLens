@@ -110,6 +110,7 @@ at any point.
 | Expert-statistics methodology | MAD/Chi-square on first digits; KS on log mantissas; no automated verdict (ADR-008) | 2026-08-05 |
 | M3 analysis modes | Combined means independent first- and second-digit results shown together; shared generic internals with public compatibility wrappers (ADR-009) | 2026-08-06 |
 | Responsive desktop layout | Bounded vertical scrolling; combined charts stack below 1100 px and sit side by side on wide viewports (ADR-012) | 2026-08-07 |
+| macOS bundle metadata | Numeric app-bundle version derives from the package version; public builds require Developer ID signing and notarization (ADR-013) | 2026-08-07 |
 
 ## Architecture Constraints
 
