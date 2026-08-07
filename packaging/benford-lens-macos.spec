@@ -1,8 +1,15 @@
 # packaging/benford-lens-macos.spec
 # -*- mode: python ; coding: utf-8 -*-
+import tomllib
 from pathlib import Path
 
 project_root = Path(SPECPATH).resolve().parent
+with (project_root / "pyproject.toml").open("rb") as project_file:
+    package_version = tomllib.load(project_file)["project"]["version"]
+
+# macOS requires a numeric CFBundleShortVersionString. Development suffixes remain
+# represented by the source metadata while the app bundle uses its numeric release line.
+bundle_version = package_version.split(".dev", maxsplit=1)[0]
 
 a = Analysis(
     [str(project_root / "src" / "benford_lens" / "__main__.py")],
@@ -42,4 +49,6 @@ app = BUNDLE(
     name="Benford Lens.app",
     icon=None,
     bundle_identifier="dev.benfordlens.app",
+    version=bundle_version,
+    info_plist={"CFBundleVersion": bundle_version},
 )

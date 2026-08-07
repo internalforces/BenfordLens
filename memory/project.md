@@ -18,8 +18,8 @@ external server.
 ## Current State
 
 - **Version**: v0.2.0.dev0
-- **Phase**: M3 merged to `main` through PR #6; TASK-027 responsive desktop layout follow-up
-  complete
+- **Phase**: M3 and TASK-027 merged to `main` through PR #7; macOS Apple Silicon distribution
+  candidate built and verified
 - **Next milestone**: Synchronize v1.0 release metadata after the TASK-027 delivery gate
 - **Overall health**: 🟢 Good
 
@@ -29,7 +29,7 @@ external server.
 |-------|-------|
 | Language | Python 3.11 (pinned via `.python-version`) |
 | Framework | PySide6 (UI); Pandas/NumPy/SciPy (analysis); Matplotlib (charts) |
-| Infrastructure | None — local desktop app, packaged via PyInstaller (`packaging/*.spec`; macOS built + headless-smoke-tested, Windows/Linux config-only per TD-003) |
+| Infrastructure | None — local desktop app, packaged via PyInstaller (`packaging/*.spec`; macOS arm64 candidate built + headless-smoke-tested, Windows/Linux config-only per TD-003) |
 | Repo Structure | Single Repo |
 
 ## Key Paths
@@ -72,6 +72,7 @@ BenfordLens/
 | 2026-08-06 | TASK-025 added complete 93-message Spanish and French UI catalogs with compiled `.qm` files and catalog completeness tests; M3 feature scope complete |
 | 2026-08-06 | TASK-026 added a complete 93-message Russian UI catalog, compiled resource, selector entry, and state-preserving UI coverage to M3 PR #6 |
 | 2026-08-07 | TASK-027 resolved the clipped M3 desktop UI with a scroll-bounded workflow, responsive combined charts, readable chart minimums, automatic result reveal, and geometry regression coverage; all 232 tests pass |
+| 2026-08-07 | TASK-028 built and verified a macOS arm64 PyInstaller distribution candidate, synchronized bundle version metadata with the project version, and produced a checksum-recorded ZIP; Developer ID signing/notarization remains required for public macOS distribution |
 
 ## Constraints
 

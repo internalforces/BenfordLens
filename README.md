@@ -52,8 +52,10 @@ file flag as documented in `memory/known-issues.md` before rerunning the checks.
 ## Packaging status
 
 PyInstaller specifications live in `packaging/`. The macOS specification has been built and
-headless-smoke-tested. The Windows and Linux specifications still require verification on
-their target platforms before a distribution release.
+headless-smoke-tested on Apple Silicon, and its bundle version is derived from the project
+version. Public macOS distribution still requires Developer ID signing and notarization. The
+Windows and Linux specifications require verification on their target platforms before a
+distribution release.
 
 ## Project status
 

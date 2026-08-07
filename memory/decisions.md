@@ -343,3 +343,31 @@ second-digit charts; wide layouts continue to show both charts side by side.
 828x400, suitability content respects its minimum height, and horizontal scrolling is not needed
 at tested 900- and 1280-pixel viewports. Geometry tests cover compact, wide, and Russian combined
 states.
+
+---
+
+### ADR-013: macOS Bundle Version and Distribution Boundary
+
+- **Date**: 2026-08-07
+- **Status**: Accepted
+- **Decided by**: User / Release Manager
+
+**Context**: The first post-TASK-027 macOS PyInstaller candidate built successfully, but its
+generated `Info.plist` reported the PyInstaller default version `0.0.0`. The build host has no
+Apple Developer ID certificate or notarization credentials and produces an arm64 binary.
+
+**Decision**: Read the package version from `pyproject.toml` in the macOS PyInstaller
+specification and use its numeric release line for both `CFBundleShortVersionString` and
+`CFBundleVersion`. Treat locally ad-hoc-signed arm64 archives as distribution candidates, not
+public macOS releases. Public distribution requires an explicitly approved target architecture,
+Developer ID signing, notarization, ticket stapling, and clean-machine verification.
+
+**Rationale**: One version source prevents package/bundle drift, while the distribution boundary
+avoids presenting a locally valid ad-hoc signature as equivalent to Apple's public trust chain.
+
+**Trade-offs**: Development suffixes such as `.dev0` are omitted from the numeric macOS bundle
+version. The source package metadata remains the authoritative full development version.
+
+**Consequences**: The current `0.2.0.dev0` source produces a macOS bundle version of `0.2.0`.
+When the project metadata is synchronized to `1.0.0`, the same specification will produce a
+`1.0.0` bundle without a second manual version edit.

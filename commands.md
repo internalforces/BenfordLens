@@ -30,11 +30,13 @@ uv run mypy src/                 # Type check
 ## Build & Package
 
 ```bash
-uv run pyinstaller benford_lens.spec   # Build a standalone executable (Windows/macOS/Linux)
+uv run pyinstaller --noconfirm --clean packaging/benford-lens-macos.spec
 ```
 
-There is no staging/production server — Benford Lens is a local desktop application.
-Packaged builds are attached to GitHub Releases after Reviewer sign-off.
+Use the matching specification under `packaging/` on Windows or Linux. PyInstaller builds are
+platform-specific; a macOS build does not produce Windows or Linux executables. There is no
+staging/production server — Benford Lens is a local desktop application. Packaged builds are
+attached to GitHub Releases after Reviewer sign-off.
 
 ```bash
 # ⚠️ Publishing a release build: HUMAN APPROVAL required

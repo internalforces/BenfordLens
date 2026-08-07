@@ -12,49 +12,48 @@ Harness Version: 1.1
 ## Session Info
 
 - **Date**: 2026-08-07
-- **Agent Role**: Refactorer / Implementer / Tester / Reviewer
-- **Session Goal**: Diagnose and resolve the clipped, overly narrow desktop UI.
+- **Agent Role**: Release Manager / Implementer / Tester
+- **Session Goal**: Build and verify a macOS PyInstaller distribution candidate after TASK-027.
 
 ## Previous Session Summary
 
-M3 functionality and local merge-gate review were complete on `codex/m3-core`. A focused UI
-diagnosis identified ISS-003: the single-page layout exceeded common screen heights and compressed
-combined charts below a readable size.
+TASK-027 resolved the clipped desktop layout and was merged to `main` through PR #7. All 232
+tests and the layout-specific compact, wide, and Russian geometry checks passed.
 
 ## Completed This Session
 
-- [x] Reproduced ISS-003 at compact and laptop viewports with local synthetic data.
-- [x] Added a fixed-toolbar, scroll-bounded workflow so the requested window size is respected.
-- [x] Added a responsive combined-result container: stacked below 1100 px and side by side above
-  it, with hysteresis around the breakpoint.
-- [x] Enforced a 300 px minimum chart height and expanding canvas policy.
-- [x] Made successful analysis reveal the new result within the scroll viewport.
-- [x] Added compact, wide, and Russian translated geometry regression tests.
-- [x] Completed a focused implementation review with no blocking findings.
-- [x] Resolved ISS-003 and recorded the layout boundary as ADR-012.
+- [x] Confirmed TASK-027 and PR #7 are present on `main`.
+- [x] Passed Ruff lint, Ruff format check, mypy, and all 232 tests.
+- [x] Built the macOS PyInstaller application bundle on Apple Silicon.
+- [x] Changed the macOS specification to derive numeric bundle versions from `pyproject.toml`.
+- [x] Verified bundle version `0.2.0`, arm64 architecture, and all six packaged `.qm` catalogs
+  plus default English.
+- [x] Passed strict ad-hoc signature validation and a headless startup smoke test.
+- [x] Produced and re-extracted the distribution ZIP, then revalidated its signature integrity.
+- [x] Recorded the macOS signing/notarization boundary as ADR-013 and TD-007.
 
 ## Verification
 
-- 900x700 combined: actual 900x700, stacked, first chart 828x400, vertical scroll available,
-  no horizontal scroll
-- 1280x900 combined: actual 1280x900, side by side, each chart approximately 592x400,
-  no horizontal scroll
-- Suitability panel height remains at or above its minimum size hint
-- Russian combined layout remains bounded at 900x700
 - Ruff check: pass
 - Ruff format check: pass (46 files)
 - mypy: pass (22 source files)
 - pytest: 232 passed
+- PyInstaller: 6.21.0; Python 3.11.15; macOS arm64
+- App bundle: 202 MB; archive: 81 MB
+- Archive: `dist/Benford-Lens-0.2.0-macOS-arm64.zip`
+- SHA-256: `537fbb55bad689b461b4b848d1d535d49cf21558bd67cf1161d83550c9773764`
 - No new dependency, network path, public analysis API change, or source-data mutation
 
 ## Remaining Work
 
-1. Synchronize v1.0 release metadata after the TASK-027 delivery gate.
+1. Synchronize project metadata from `0.2.0.dev0` to the approved v1.0 version.
+2. For public macOS distribution, obtain explicit approval and available credentials for
+   Developer ID signing, notarization, ticket stapling, and clean-machine verification.
+3. Build and verify Windows/Linux packages on their target platforms.
 
 ## Important Context
 
-- M3 was merged to `main` through PR #6.
-- TASK-027 is isolated on `codex/task-027-responsive-layout`; no direct `main` edits.
-- Application changes are limited to PySide6 presentation/layout code and UI tests.
-- Analysis calculations, explicit column selection, local-only processing, reports, and source
-  file protections are unchanged.
+- Work is on `codex/macos-release-build`; no commit was made directly to `main`.
+- The local artifact is a distribution candidate, not a notarized public release.
+- The build is Apple Silicon (`arm64`) only.
+- Build outputs under `dist/` and `build/` are ignored by Git.
