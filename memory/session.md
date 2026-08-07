@@ -29,6 +29,8 @@ distribution-candidate workflow to `main`.
 - [x] Audited local signing prerequisites without exposing credential values.
 - [x] Passed Ruff, format, mypy, and all 232 tests.
 - [x] Built and headless-smoke-tested the v1.0.0 macOS arm64 app bundle.
+- [x] Pushed release metadata commit `27bd8a6`, passed GitHub Actions, and merged PR #9 to
+  `main` as `e81ebe0`.
 
 ## Verification
 
@@ -53,12 +55,13 @@ distribution-candidate workflow to `main`.
 1. Install or provide access to a valid Developer ID Application certificate and private key.
 2. Provide a configured `notarytool` keychain profile name, or configure approved Apple
    notarization credentials without committing them to the repository.
-3. Sign, notarize, staple, package, merge the release PR, tag `v1.0.0`, and publish the GitHub
-   Release asset.
+3. Sign, notarize, staple, package, tag `v1.0.0`, and publish the GitHub Release asset.
 
 ## Important Context
 
-- Work is on `codex/v1-release`; direct commits to `main` remain prohibited.
+- Release-gate record updates are on `codex/v1-release-gate`; direct commits to `main` remain
+  prohibited.
+- v1.0 metadata is present on `main` at merge commit `e81ebe0`.
 - Tagging and GitHub Release publication must not proceed before successful notarization.
 - The build host is Apple Silicon (`arm64`).
 - Build outputs under `dist/` and `build/` are ignored by Git.

@@ -26,7 +26,7 @@ _Last updated: 2026-08-07_
   - [x] All quality checks and the v1.0 PyInstaller build pass
   - [ ] The app is signed with Developer ID Application and accepted by Apple notarization
   - [ ] The notarization ticket is stapled and the final ZIP passes clean extraction checks
-  - [ ] The release metadata PR is merged to `main`
+  - [x] The release metadata PR is merged to `main`
   - [ ] Annotated `v1.0.0` tag points to the approved `main` commit
   - [ ] GitHub Release contains the notarized ZIP and checksum
 
