@@ -371,3 +371,30 @@ version. The source package metadata remains the authoritative full development 
 **Consequences**: The earlier `0.2.0.dev0` source produced a macOS bundle version of `0.2.0`.
 After the v1.0 metadata synchronization, the same specification produces a `1.0.0` bundle
 without a second manual version edit.
+
+---
+
+### ADR-014: Application Icon Concept A and macOS-First Rollout
+
+- **Date**: 2026-08-07
+- **Status**: Accepted
+- **Decided by**: User / Implementer
+
+**Context**: Benford Lens had no application icon in its PyInstaller bundle. Four neutral,
+analysis-oriented icon concepts were reviewed, and the user selected concept A: a magnifying
+lens framing a descending digit-distribution chart.
+
+**Decision**: Adopt concept A as the application icon and apply it to the macOS package first.
+Store a transparent 1024 px PNG source and a standard multi-resolution `.icns` under
+`resources/icons/macos/`, and reference the `.icns` only from the macOS PyInstaller spec.
+
+**Rationale**: The concept remains recognizable at 16 px, communicates distribution
+exploration without warning or accusatory symbolism, and uses the existing chart-blue visual
+direction. A platform-specific first step keeps the change bounded and independently verifiable.
+
+**Trade-offs**: Windows and Linux packages continue to use their current default icons until
+separate platform assets and packaging changes are approved. The generated raster source is
+not a resolution-independent master.
+
+**Consequences**: The macOS `.app` bundle will embed `benford-lens.icns`. The source PNG has
+transparent outer corners, and the ICNS contains all standard 16–1024 px representations.

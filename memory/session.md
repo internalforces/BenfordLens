@@ -13,7 +13,8 @@ Harness Version: 1.1
 
 - **Date**: 2026-08-07
 - **Agent Role**: Release Manager / Implementer / Tester
-- **Session Goal**: Prepare, sign, notarize, tag, and publish Benford Lens v1.0.0.
+- **Session Goal**: Prepare, sign, notarize, tag, and publish Benford Lens v1.0.0; apply the
+  approved application icon to the macOS package first.
 
 ## Previous Session Summary
 
@@ -31,6 +32,8 @@ distribution-candidate workflow to `main`.
 - [x] Built and headless-smoke-tested the v1.0.0 macOS arm64 app bundle.
 - [x] Pushed release metadata commit `27bd8a6`, passed GitHub Actions, and merged PR #9 to
   `main` as `e81ebe0`.
+- [x] Selected icon concept A and applied it to the macOS PyInstaller bundle on
+  `codex/macos-app-icon` without changing the Windows or Linux packages.
 
 ## Verification
 
@@ -47,6 +50,10 @@ distribution-candidate workflow to `main`.
 - PyInstaller: 6.21.0; Python 3.11.15; macOS arm64
 - App bundle versions: `1.0.0`
 - Packaged translation catalogs: 6 plus built-in English
+- macOS icon source: 1024x1024 RGBA PNG with transparent corners
+- macOS ICNS: complete 16, 32, 64, 128, 256, 512, and 1024 px representations
+- macOS spec syntax and icon path: pass
+- TASK-030 regression test: 232 passed after applying the documented ENV-001 workaround
 - Current bundle signature: ad-hoc; Developer ID signing not yet possible
 - No new dependency, network analysis path, public analysis API change, or source-data mutation
 
@@ -65,3 +72,5 @@ distribution-candidate workflow to `main`.
 - Tagging and GitHub Release publication must not proceed before successful notarization.
 - The build host is Apple Silicon (`arm64`).
 - Build outputs under `dist/` and `build/` are ignored by Git.
+- The approved concept A macOS icon change is on `codex/macos-app-icon`; no distribution build
+  was run for this change because release builds require explicit approval.

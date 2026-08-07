@@ -69,8 +69,9 @@ Report Generator — implemented M2, mode-aware M3: src/benford_lens/report/html
     stdlib `string.Template` only — no new dependency
 
 Packaging — implemented M2: packaging/*.spec (PyInstaller)
-└── Standalone executable, no separate runtime install required. macOS built and
-    headless-smoke-tested locally; Windows/Linux specs are config-only, untested (TD-003 in
+└── Standalone executable, no separate runtime install required. macOS uses the approved
+    concept A icon from resources/icons/macos/ (TASK-030 / ADR-014), and has been built and
+    headless-smoke-tested locally; Windows/Linux specs are config-only and untested (TD-003 in
     memory/known-issues.md)
 ```
 
@@ -111,6 +112,7 @@ at any point.
 | M3 analysis modes | Combined means independent first- and second-digit results shown together; shared generic internals with public compatibility wrappers (ADR-009) | 2026-08-06 |
 | Responsive desktop layout | Bounded vertical scrolling; combined charts stack below 1100 px and sit side by side on wide viewports (ADR-012) | 2026-08-07 |
 | macOS bundle metadata | Numeric app-bundle version derives from the package version; public builds require Developer ID signing and notarization (ADR-013) | 2026-08-07 |
+| Application icon | Concept A (lens + descending distribution) is applied to macOS first; Windows/Linux remain unchanged (ADR-014) | 2026-08-07 |
 
 ## Architecture Constraints
 

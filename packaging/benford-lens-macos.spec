@@ -47,7 +47,7 @@ coll = COLLECT(
 app = BUNDLE(
     coll,
     name="Benford Lens.app",
-    icon=None,
+    icon=str(project_root / "resources" / "icons" / "macos" / "benford-lens.icns"),
     bundle_identifier="dev.benfordlens.app",
     version=bundle_version,
     info_plist={"CFBundleVersion": bundle_version},
