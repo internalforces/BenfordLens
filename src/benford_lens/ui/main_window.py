@@ -205,12 +205,19 @@ class MainWindow(QMainWindow):
         # the current responsive direction.
         self.results_layout = self.results_widget.results_layout
 
-        top_bar = QHBoxLayout()
-        top_bar.addWidget(self.open_button)
-        top_bar.addWidget(self.mode_combo)
-        top_bar.addWidget(self.analyze_button)
-        top_bar.addWidget(self.export_report_button)
-        top_bar.addWidget(self.language_combo)
+        primary_toolbar = QHBoxLayout()
+        primary_toolbar.addWidget(self.open_button)
+        primary_toolbar.addWidget(self.mode_combo, 1)
+        primary_toolbar.addWidget(self.analyze_button)
+
+        secondary_toolbar = QHBoxLayout()
+        secondary_toolbar.addWidget(self.export_report_button)
+        secondary_toolbar.addStretch(1)
+        secondary_toolbar.addWidget(self.language_combo)
+
+        top_bar = QVBoxLayout()
+        top_bar.addLayout(primary_toolbar)
+        top_bar.addLayout(secondary_toolbar)
 
         workflow_layout = QVBoxLayout()
         workflow_layout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)

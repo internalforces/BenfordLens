@@ -225,6 +225,16 @@ def test_compact_translated_layout_remains_inside_the_viewport(window, app, tmp_
     assert window.results_layout.direction() is QBoxLayout.Direction.TopToBottom
     assert window.scroll_area.verticalScrollBar().maximum() > 0
     assert window.scroll_area.horizontalScrollBar().maximum() == 0
+    for control in (
+        window.open_button,
+        window.mode_combo,
+        window.analyze_button,
+        window.export_report_button,
+        window.language_combo,
+    ):
+        control_position = control.mapTo(window, QPoint(0, 0))
+        assert control_position.x() >= 0
+        assert control_position.x() + control.width() <= window.width()
 
 
 def test_second_digit_chart_click_shows_matching_original_rows_and_heading(window, tmp_path):
