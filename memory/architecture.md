@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Architecture — Benford Lens
 
-_Last updated: 2026-08-06_
+_Last updated: 2026-08-07_
 
 ## System Overview
 
@@ -22,6 +22,8 @@ be unit tested independently of the PySide6 UI.
 
 ```
 UI Layer (PySide6)
+├── Bounded workflow viewport — implemented TASK-027: the toolbar remains fixed while the
+│   vertically growing workflow scrolls within the requested window size
 ├── File Open (file picker; CSV encoding auto-detected via fixed fallback list — see TD-001 in
 │   memory/known-issues.md; Excel sheet is always an explicit user choice, never auto-picked)
 ├── Sheet & Column Selector (user picks the sheet and the column to analyze — never automatic)
@@ -34,7 +36,8 @@ UI Layer (PySide6)
 │   ├── Analysis mode selector — implemented M3 (first digit / second digit / first + second;
 │   │   always user-triggered)
 │   ├── Reusable digit-result panel (position title, chart, summary, click signal)
-│   │   └── Combined mode places first and second panels side by side in the same view
+│   │   └── Combined mode keeps both panels in one view: stacked at compact widths and side by
+│   │       side when the result viewport is at least 1100 px wide (TASK-027 / ADR-012)
 │   ├── Expert statistics — implemented by TASK-011: hidden by default in
 │   │   src/benford_lens/ui/expert_statistics_panel.py; M3 separates per-position MAD and
 │   │   Chi-square from the shared log-mantissa KS result — implemented TASK-022
@@ -106,6 +109,7 @@ at any point.
 | Data suitability thresholds | Heuristic defaults per ADR-006 | 2026-08-05 |
 | Expert-statistics methodology | MAD/Chi-square on first digits; KS on log mantissas; no automated verdict (ADR-008) | 2026-08-05 |
 | M3 analysis modes | Combined means independent first- and second-digit results shown together; shared generic internals with public compatibility wrappers (ADR-009) | 2026-08-06 |
+| Responsive desktop layout | Bounded vertical scrolling; combined charts stack below 1100 px and sit side by side on wide viewports (ADR-012) | 2026-08-07 |
 
 ## Architecture Constraints
 

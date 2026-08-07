@@ -11,62 +11,50 @@ Harness Version: 1.1
 
 ## Session Info
 
-- **Date**: 2026-08-06
-- **Agent Role**: Planner / Implementer / Tester / Performance Engineer / Documenter
-- **Session Goal**: Execute the accepted M3 analysis-mode design through the core merge gate.
+- **Date**: 2026-08-07
+- **Agent Role**: Refactorer / Implementer / Tester / Reviewer
+- **Session Goal**: Diagnose and resolve the clipped, overly narrow desktop UI.
 
 ## Previous Session Summary
 
-PR #5 merged the accepted ADR-009 design as `a62d9dc`. The prior architecture/review session is
-archived at `memory/sessions/2026-08-06-M3-Architecture.md`.
+M3 functionality and local merge-gate review were complete on `codex/m3-core`. A focused UI
+diagnosis identified ISS-003: the single-page layout exceeded common screen heights and compressed
+combined charts below a readable size.
 
 ## Completed This Session
 
-- [x] Fast-forwarded local `main` to PR #5 and created `codex/m3-core`; no direct `main` edits.
-- [x] Added `docs/superpowers/plans/2026-08-06-m3-v1.md` and decomposed TASK-018–025.
-- [x] Completed TASK-018: resolved ISS-002 with neutral UI/report copy and regenerated all
-  KO/ZH/JA `.qm` catalogs.
-- [x] Completed TASK-019: added shared first/second extraction, reference second-digit
-  probabilities, second-digit analysis, and one-pass combined analysis while preserving every
-  existing first-digit entry point.
-- [x] Completed TASK-020: generalized MAD/Chi-square across positions and exposed per-position
-  statistics with one shared log-mantissa KS result.
-- [x] Completed TASK-021: added explicit analysis modes and one frozen snapshot containing the
-  exact preprocessing, suitability, results, statistics, and position-aware row mappings.
-- [x] Completed TASK-022: added reusable digit-result panels, a user-driven mode selector,
-  simultaneous combined layout, position-aware chart clicks, and combined expert details.
-- [x] Completed TASK-023: made HTML reports mode-aware and completed 93-entry KO/ZH/JA
-  translation catalogs for the new UI.
-- [x] Completed TASK-024: removed repeated digit extraction; 100k-row local synthetic benchmark
-  medians improved 30.0–31.8%.
-- [x] Completed TASK-025: added selectable Spanish and French with complete 93-message source
-  catalogs, compiled resources, and catalog/UI state-preservation regression tests.
-- [x] Completed TASK-026: added selectable Russian with a complete 93-message source catalog,
-  compiled resource, and catalog/UI state-preservation regression tests.
-- [x] Completed focused M3 review with no blocking findings.
-- [x] Passed Ruff lint/format, mypy, all 229 tests, and 95.00% stdlib-trace line coverage.
+- [x] Reproduced ISS-003 at compact and laptop viewports with local synthetic data.
+- [x] Added a fixed-toolbar, scroll-bounded workflow so the requested window size is respected.
+- [x] Added a responsive combined-result container: stacked below 1100 px and side by side above
+  it, with hysteresis around the breakpoint.
+- [x] Enforced a 300 px minimum chart height and expanding canvas policy.
+- [x] Made successful analysis reveal the new result within the scroll viewport.
+- [x] Added compact, wide, and Russian translated geometry regression tests.
+- [x] Completed a focused implementation review with no blocking findings.
+- [x] Resolved ISS-003 and recorded the layout boundary as ADR-012.
 
 ## Verification
 
-- Ruff: pass
-- Ruff format check: pass
-- mypy (`src/`): pass
-- pytest: 229 passed
-- Line coverage: 95.00% (1,578 / 1,661 executable lines via Python stdlib `trace`)
-- Performance report: `reports/performance-2026-08-06-m3.md`
-- Review report: `reports/review-2026-08-06-m3-core.md`
-- New dependency: none
+- 900x700 combined: actual 900x700, stacked, first chart 828x400, vertical scroll available,
+  no horizontal scroll
+- 1280x900 combined: actual 1280x900, side by side, each chart approximately 592x400,
+  no horizontal scroll
+- Suitability panel height remains at or above its minimum size hint
+- Russian combined layout remains bounded at 900x700
+- Ruff check: pass
+- Ruff format check: pass (46 files)
+- mypy: pass (22 source files)
+- pytest: 232 passed
+- No new dependency, network path, public analysis API change, or source-data mutation
 
 ## Remaining Work
 
-1. Review the draft M3 PR and its CI result, then merge after approval.
-2. After merge, synchronize version/README/release notes for the v1.0 release path.
+1. Synchronize v1.0 release metadata after the TASK-027 delivery gate.
 
 ## Important Context
 
-- Current branch: `codex/m3-core`.
-- `main` was synchronized to PR #5 merge commit `a62d9dc` before branching.
-- No source file is ever modified by analysis, no data leaves the machine, and no new network
-  path or dependency was introduced.
-- M3 functionality, Spanish/French/Russian expansion, verification, and local merge-gate
-  review are complete; only remote PR review/merge and subsequent release metadata work remain.
+- M3 was merged to `main` through PR #6.
+- TASK-027 is isolated on `codex/task-027-responsive-layout`; no direct `main` edits.
+- Application changes are limited to PySide6 presentation/layout code and UI tests.
+- Analysis calculations, explicit column selection, local-only processing, reports, and source
+  file protections are unchanged.

@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Project: Benford Lens
 
-_Last updated: 2026-08-06_
+_Last updated: 2026-08-07_
 
 ## Summary
 
@@ -18,9 +18,9 @@ external server.
 ## Current State
 
 - **Version**: v0.2.0.dev0
-- **Phase**: M3 feature scope and local merge gate complete on `codex/m3-core`; PR #6 review
-  and merge remain
-- **Next milestone**: Review CI and merge M3, then synchronize v1.0 release metadata
+- **Phase**: M3 merged to `main` through PR #6; TASK-027 responsive desktop layout follow-up
+  complete
+- **Next milestone**: Synchronize v1.0 release metadata after the TASK-027 delivery gate
 - **Overall health**: 🟢 Good
 
 ## Tech Summary
@@ -71,6 +71,7 @@ BenfordLens/
 | 2026-08-06 | M3 TASK-018–024 implemented on `codex/m3-core`: neutral copy cleanup, second/combined analysis, generic statistics, immutable snapshots, reusable UI, mode-aware reports, complete EN/KO/ZH/JA additions, and 30.0–31.8% faster 100k-row analysis |
 | 2026-08-06 | TASK-025 added complete 93-message Spanish and French UI catalogs with compiled `.qm` files and catalog completeness tests; M3 feature scope complete |
 | 2026-08-06 | TASK-026 added a complete 93-message Russian UI catalog, compiled resource, selector entry, and state-preserving UI coverage to M3 PR #6 |
+| 2026-08-07 | TASK-027 resolved the clipped M3 desktop UI with a scroll-bounded workflow, responsive combined charts, readable chart minimums, automatic result reveal, and geometry regression coverage; all 232 tests pass |
 
 ## Constraints
 

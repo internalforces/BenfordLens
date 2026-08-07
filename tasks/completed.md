@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Completed Tasks — Benford Lens
 
-_Last updated: 2026-08-06_
+_Last updated: 2026-08-07_
 
 | ID | Task | Completed | Owner | Notes |
 |----|------|-----------|-------|-------|
@@ -38,3 +38,4 @@ _Last updated: 2026-08-06_
 | TASK-024 | Large-dataset performance verification | 2026-08-06 | Performance Engineer / Tester | Removed repeated digit extraction by reusing aligned digit pairs from the engine pass; 100k-row medians improved 30.0–31.8%. Ruff/mypy pass, all 211 tests pass, and stdlib trace measured 95.00% line coverage. |
 | TASK-025 | Spanish and French UI languages | 2026-08-06 | Implementer / Documenter / Tester | Added selectable Spanish and French, complete 93-message `.ts` catalogs and compiled `.qm` resources, catalog parity/placeholder checks, live UI translation coverage, and state-preserving language-switch tests. All 225 tests pass with 95.00% traced line coverage. |
 | TASK-026 | Russian UI language | 2026-08-06 | Implementer / Documenter / Tester | Added selectable Russian, a complete 93-message `.ts` catalog and compiled `.qm` resource, catalog parity/placeholder coverage, and state-preserving combined-view language-switch tests. All 229 tests pass with 95.00% traced line coverage. |
+| TASK-027 | Responsive and scroll-safe desktop layout | 2026-08-07 | Refactorer / Implementer / Tester | Resolved ISS-003 with a bounded scrolling workflow, width-responsive combined charts, a 300 px minimum chart height, automatic result reveal, and compact/wide/Russian geometry regression tests. Ruff, formatting, mypy, and all 232 tests pass. |

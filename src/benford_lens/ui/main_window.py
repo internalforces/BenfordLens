@@ -10,16 +10,20 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QEvent, QTranslator
+from PySide6.QtCore import QEvent, Qt, QTimer, QTranslator
 from PySide6.QtWidgets import (
     QApplication,
+    QBoxLayout,
     QComboBox,
     QFileDialog,
+    QFrame,
     QHBoxLayout,
     QInputDialog,
+    QLayout,
     QMainWindow,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -63,6 +67,31 @@ _LANGUAGES = [
     ("fr", "Français"),
     ("ru", "Русский"),
 ]
+
+
+class _ResponsiveResultsWidget(QWidget):
+    """Keep combined charts readable across compact and wide viewports."""
+
+    _WIDE_LAYOUT_MINIMUM = 1100
+    _COMPACT_LAYOUT_MAXIMUM = 1000
+
+    def __init__(self, first_panel: QWidget, second_panel: QWidget) -> None:
+        super().__init__()
+        self.results_layout = QBoxLayout(QBoxLayout.Direction.TopToBottom)
+        self.results_layout.setContentsMargins(0, 0, 0, 0)
+        self.results_layout.addWidget(first_panel)
+        self.results_layout.addWidget(second_panel)
+        self.setLayout(self.results_layout)
+
+    def resizeEvent(self, event) -> None:
+        """Switch orientation with hysteresis so scrollbars cannot cause oscillation."""
+        width = event.size().width()
+        direction = self.results_layout.direction()
+        if direction is QBoxLayout.Direction.TopToBottom and width >= self._WIDE_LAYOUT_MINIMUM:
+            self.results_layout.setDirection(QBoxLayout.Direction.LeftToRight)
+        elif direction is QBoxLayout.Direction.LeftToRight and width < self._COMPACT_LAYOUT_MAXIMUM:
+            self.results_layout.setDirection(QBoxLayout.Direction.TopToBottom)
+        super().resizeEvent(event)
 
 
 class MainWindow(QMainWindow):
@@ -129,9 +158,12 @@ class MainWindow(QMainWindow):
         self.first_result_panel.set_prompt(self.tr("Open a CSV or Excel file to begin."))
         self.second_result_panel.hide()
 
-        self.results_layout = QHBoxLayout()
-        self.results_layout.addWidget(self.first_result_panel)
-        self.results_layout.addWidget(self.second_result_panel)
+        self.results_widget = _ResponsiveResultsWidget(
+            self.first_result_panel, self.second_result_panel
+        )
+        # Kept as a direct view for UI tests and callers that need to inspect
+        # the current responsive direction.
+        self.results_layout = self.results_widget.results_layout
 
         top_bar = QHBoxLayout()
         top_bar.addWidget(self.open_button)
@@ -140,14 +172,28 @@ class MainWindow(QMainWindow):
         top_bar.addWidget(self.export_report_button)
         top_bar.addWidget(self.language_combo)
 
+        workflow_layout = QVBoxLayout()
+        workflow_layout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
+        workflow_layout.addWidget(self.column_table)
+        workflow_layout.addWidget(self.preprocessing_panel)
+        workflow_layout.addWidget(self.suitability_panel)
+        workflow_layout.addWidget(self.results_widget)
+        workflow_layout.addWidget(self.expert_statistics_panel)
+        workflow_layout.addWidget(self.drill_down_panel)
+
+        self.workflow_widget = QWidget()
+        self.workflow_widget.setLayout(workflow_layout)
+
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.scroll_area.setWidget(self.workflow_widget)
+
         layout = QVBoxLayout()
         layout.addLayout(top_bar)
-        layout.addWidget(self.column_table)
-        layout.addWidget(self.preprocessing_panel)
-        layout.addWidget(self.suitability_panel)
-        layout.addLayout(self.results_layout)
-        layout.addWidget(self.expert_statistics_panel)
-        layout.addWidget(self.drill_down_panel)
+        layout.addWidget(self.scroll_area, 1)
 
         central = QWidget()
         central.setLayout(layout)
@@ -297,6 +343,11 @@ class MainWindow(QMainWindow):
         # for this analysis, with no room for the two to diverge.
         self._update_suitability(self.controller.state.last_suitability)
         self.export_report_button.setEnabled(True)
+        QTimer.singleShot(0, self._scroll_to_results)
+
+    def _scroll_to_results(self) -> None:
+        """Bring the newly rendered result into view without hiding overflow."""
+        self.scroll_area.ensureWidgetVisible(self.results_widget, 0, 20)
 
     def _render_snapshot(self, snapshot: AnalysisSnapshot) -> None:
         """Render every result and statistic from one controller snapshot."""
