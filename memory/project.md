@@ -18,8 +18,8 @@ external server.
 ## Current State
 
 - **Version**: v1.0.0
-- **Phase**: M3, TASK-027, and macOS packaging preparation merged to `main` through PR #8;
-  v1.0 release preparation in progress
+- **Phase**: v1.0.0 metadata merged to `main` through PR #9; signed release preparation blocked
+  on Developer ID and notarization credentials
 - **Next milestone**: Developer ID signing, Apple notarization, v1.0.0 tag, and GitHub Release
 - **Overall health**: 🟡 Release signing credentials required
 
@@ -73,7 +73,7 @@ BenfordLens/
 | 2026-08-06 | TASK-026 added a complete 93-message Russian UI catalog, compiled resource, selector entry, and state-preserving UI coverage to M3 PR #6 |
 | 2026-08-07 | TASK-027 resolved the clipped M3 desktop UI with a scroll-bounded workflow, responsive combined charts, readable chart minimums, automatic result reveal, and geometry regression coverage; all 232 tests pass |
 | 2026-08-07 | TASK-028 built and verified a macOS arm64 PyInstaller distribution candidate, synchronized bundle version metadata with the project version, and produced a checksum-recorded ZIP; Developer ID signing/notarization remains required for public macOS distribution |
-| 2026-08-07 | TASK-029 synchronized the package, lockfile, README, roadmap, and project metadata to v1.0.0 and added the v1.0 changelog; release signing remains gated on a Developer ID Application identity and Apple notarization credentials |
+| 2026-08-07 | TASK-029 synchronized the package, lockfile, README, roadmap, and project metadata to v1.0.0, added the v1.0 changelog, and merged PR #9 after CI passed; release signing remains gated on a Developer ID Application identity and Apple notarization credentials |
 
 ## Constraints
 
