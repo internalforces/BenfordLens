@@ -28,5 +28,6 @@ exe = EXE(
     strip=False,
     upx=True,
     console=False,
+    icon=str(project_root / "resources" / "icons" / "windows" / "benford-lens.ico"),
 )
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=True, name="benford-lens")

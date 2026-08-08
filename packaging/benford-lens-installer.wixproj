@@ -1,0 +1,15 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <!-- Per-user file harvesting uses file key paths and nested profile directories. -->
+    <!-- Install/uninstall smoke tests verify the behavior these legacy ICE rules flag. -->
+    <SuppressIces>ICE38;ICE60;ICE64;ICE91</SuppressIces>
+    <OutputName>Benford-Lens-$(AppVersion)-windows-x64</OutputName>
+    <DefineConstants>
+      AppVersion=$(AppVersion);
+      AppSource=$(AppSource);
+      AppIcon=$(AppIcon)
+    </DefineConstants>
+  </PropertyGroup>
+</Project>

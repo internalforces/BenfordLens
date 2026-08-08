@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # dependencies.md — Benford Lens Dependencies
 
-_Last updated: 2026-08-05_
+_Last updated: 2026-08-08_
 
 ## Core Dependencies
 
@@ -28,6 +28,8 @@ _Last updated: 2026-08-05_
 | ruff | latest stable (TBD) | Linting and formatting |
 | mypy | latest stable (TBD) | Static type checking |
 | pyinstaller | latest stable (TBD) | Packaging into a standalone executable |
+| .NET SDK | 8.0 | Build host for the Windows installer project only |
+| WixToolset.Sdk | 5.0.2 | Build the Windows x64 MSI; pinned MS-RL release |
 
 ## External Services / APIs
 
@@ -40,6 +42,10 @@ _Last updated: 2026-08-05_
 - **2026-08-05 — SciPy**: Explicitly approved by the user for TASK-011. SciPy runs entirely
   in-process on the locally preprocessed values; no dataset content or derived value leaves
   the machine.
+
+- **2026-08-08 — WiX MSI packaging**: Explicitly approved by the user for TASK-035. WiX and
+  the .NET SDK are build-time dependencies only; the installed application has no .NET runtime
+  dependency and no network or update-check behavior was added.
 
 ## Version Policy
 

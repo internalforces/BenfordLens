@@ -398,3 +398,64 @@ not a resolution-independent master.
 
 **Consequences**: The macOS `.app` bundle will embed `benford-lens.icns`. The source PNG has
 transparent outer corners, and the ICNS contains all standard 16–1024 px representations.
+
+---
+
+### ADR-015: Reuse the Approved Icon for the Windows x64 Package
+
+- **Date**: 2026-08-08
+- **Status**: Accepted
+- **Decided by**: User / Release Manager / Implementer
+
+**Context**: The Windows package still used PyInstaller's default icon after concept A was
+approved and applied to macOS. The user requested a native Windows build using the same image.
+
+**Decision**: Derive a Windows `.ico` containing 16, 20, 24, 32, 40, 48, 64, 96, 128, and
+256 px representations from the approved 1024 px macOS PNG, reference it from the Windows
+PyInstaller specification, and produce an x64 one-folder package and ZIP. Treat the output as
+an unsigned build candidate, not a broadly trusted public release.
+
+**Rationale**: A platform-native multi-resolution ICO keeps the approved visual identity while
+remaining crisp in Explorer and taskbar contexts. The existing one-folder specification is the
+smallest packaging change and keeps verification aligned with the established configuration.
+
+**Trade-offs**: The Windows asset is derived from a raster source, and the unsigned executable
+may trigger SmartScreen on another machine.
+
+**Consequences**: `resources/icons/windows/benford-lens.ico` is embedded in the Windows x64
+executable. The local build folder and a fresh extraction of the ZIP both pass startup smoke
+tests; public distribution still needs approved Authenticode signing and clean-machine testing.
+
+---
+
+### ADR-016: Add a User-Scoped WiX MSI for Windows
+
+- **Date**: 2026-08-08
+- **Status**: Accepted
+- **Decided by**: User / Release Manager / Architect / Implementer
+
+**Context**: The verified Windows x64 deliverable was a portable PyInstaller one-folder ZIP.
+The user approved an MSI so Windows users can use standard installation, Start menu, upgrade,
+repair, and uninstall behavior while retaining the ZIP as a portable alternative.
+
+**Decision**: Pin `WixToolset.Sdk` 5.0.2 and wrap the PyInstaller one-folder output in an
+embedded-CAB, x64, per-user MSI installed under `%LOCALAPPDATA%\Programs\Benford Lens`. Keep a
+stable UpgradeCode, derive the product version from `pyproject.toml`, create only a Start menu
+shortcut, and add no file associations, services, auto-updater, or network behavior. The build
+script disables .NET CLI telemetry and can explicitly run install/startup/uninstall smoke tests.
+
+**Rationale**: Per-user installation avoids an administrator prompt while providing native
+Windows lifecycle behavior. WiX 5.0.2 supplies built-in recursive file harvesting without the
+separate maintenance EULA acceptance required by WiX 7, and its version is reproducibly pinned.
+
+**Trade-offs**: Windows Installer's legacy ICE38/ICE64/ICE91 profile rules do not accept
+automatically harvested per-user file trees, and ICE60 flags language metadata in third-party
+PyInstaller binaries. Only those four ICE checks are suppressed; actual file-count, install,
+startup, shortcut, uninstall, and residue checks compensate for the profile-specific warnings.
+The MSI is larger and more complex than the portable ZIP.
+
+**Consequences**: `packaging/benford-lens-installer.wixproj`,
+`packaging/benford-lens-installer.wxs`, and `packaging/build-windows-msi.ps1` define a repeatable
+MSI build and verification path. The current unsigned candidate passes local non-elevated
+installation and complete removal, but Authenticode signing and clean-machine verification
+remain required before broad public distribution.

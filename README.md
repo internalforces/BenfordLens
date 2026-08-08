@@ -55,9 +55,18 @@ file flag as documented in `memory/known-issues.md` before rerunning the checks.
 
 PyInstaller specifications live in `packaging/`. The macOS specification has been built and
 headless-smoke-tested on Apple Silicon, and its bundle version is derived from the project
-version. Public macOS distribution still requires Developer ID signing and notarization. The
-Windows and Linux specifications require verification on their target platforms before a
-distribution release.
+version. The Windows x64 specification and WiX 5.0.2 MSI have been built and smoke-tested on
+Windows. Build the Windows application and user-scoped installer with .NET 8 SDK available:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File packaging/build-windows-msi.ps1
+```
+
+Add `-InstallSmokeTest` to verify installation, startup, and removal; add `-SkipPyInstaller`
+only when reusing an already verified `dist/benford-lens` folder. Public macOS distribution
+still requires Developer ID signing and notarization. Public Windows distribution requires
+Authenticode signing and clean-machine verification. Linux remains unverified on its target
+platform.
 
 ## Project status
 
