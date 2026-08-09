@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" RequiredVersion="5.0.2">
+  <Package
+    Name="Benford Lens"
+    Manufacturer="Benford Lens"
+    Version="$(var.AppVersion)"
+    UpgradeCode="A256B439-D3D1-4538-B385-7DFAA4F5E283"
+    Scope="perUser"
+    Compressed="yes">
+
+    <SummaryInformation Description="Benford Lens Windows Installer" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Benford Lens is already installed." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="BenfordLens.exe" SourceFile="$(var.AppIcon)" />
+    <Property Id="ARPPRODUCTICON" Value="BenfordLens.exe" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/internalforces/BenfordLens" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="PerUserProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="Benford Lens" />
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Benford Lens">
+        <Component Id="ApplicationShortcut" Guid="*">
+          <Shortcut
+            Id="ApplicationStartMenuShortcut"
+            Name="Benford Lens"
+            Description="Analyze numeric distributions using Benford's Law"
+            Target="[INSTALLFOLDER]benford-lens.exe"
+            WorkingDirectory="INSTALLFOLDER"
+            Icon="BenfordLens.exe" />
+          <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+          <RegistryValue
+            Root="HKCU"
+            Key="Software\BenfordLens"
+            Name="installed"
+            Type="integer"
+            Value="1"
+            KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <ComponentGroup Id="ApplicationFiles">
+      <Files Directory="INSTALLFOLDER" Include="$(var.AppSource)\**" />
+    </ComponentGroup>
+
+    <Feature Id="MainFeature" Title="Benford Lens" Level="1">
+      <ComponentGroupRef Id="ApplicationFiles" />
+      <ComponentRef Id="ApplicationShortcut" />
+    </Feature>
+  </Package>
+</Wix>

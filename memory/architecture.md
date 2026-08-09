@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Architecture — Benford Lens
 
-_Last updated: 2026-08-07_
+_Last updated: 2026-08-08_
 
 ## System Overview
 
@@ -77,8 +77,13 @@ Report Generator — implemented M2, mode-aware M3: src/benford_lens/report/html
 Packaging — implemented M2: packaging/*.spec (PyInstaller)
 └── Standalone executable, no separate runtime install required. macOS uses the approved
     concept A icon from resources/icons/macos/ (TASK-033 / ADR-014), and has been built and
-    headless-smoke-tested locally; Windows/Linux specs are config-only and untested (TD-003 in
-    memory/known-issues.md)
+    headless-smoke-tested locally. Windows derives a multi-resolution ICO from the same image,
+    embeds it in the x64 executable, and has passed native folder and extracted-ZIP startup
+    smoke tests (TASK-034 / ADR-015). A WiX 5.0.2 project wraps that one-folder output in a
+    per-user MSI under LocalAppData, with a Start menu shortcut, standard major upgrades, and
+    uninstall behavior; its metadata, 1,194 packaged files, non-elevated install, startup, and
+    complete removal are verified by `packaging/build-windows-msi.ps1` (TASK-035 / ADR-016).
+    Linux remains config-only and untested (TD-003).
 ```
 
 ## Data Flow
@@ -119,6 +124,7 @@ at any point.
 | Responsive desktop layout | Bounded vertical scrolling; combined charts stack below 1100 px and sit side by side on wide viewports (ADR-012) | 2026-08-07 |
 | macOS bundle metadata | Numeric app-bundle version derives from the package version; public builds require Developer ID signing and notarization (ADR-013) | 2026-08-07 |
 | Application icon | Concept A (lens + descending distribution) is applied to macOS first; Windows/Linux remain unchanged (ADR-014) | 2026-08-07 |
+| Windows installer | WiX 5.0.2 per-user MSI wrapping the PyInstaller one-folder build (ADR-016) | 2026-08-08 |
 
 ## Architecture Constraints
 

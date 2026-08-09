@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Known Issues — Benford Lens
 
-_Last updated: 2026-08-07_
+_Last updated: 2026-08-08_
 
 ## Active Bugs
 
@@ -20,9 +20,10 @@ _Last updated: 2026-08-07_
 | ID | Description | Impact | Target Resolution |
 |----|-------------|--------|-------------------|
 | TD-001 | CSV encoding detection uses fixed try-in-order fallback (utf-8-sig → utf-8 → cp949 → euc-kr → latin-1), not real content-based detection | A CP949-encoded file with byte sequences that are also valid UTF-8 could silently mis-decode | Revisit if real user reports occur; consider adding chardet/charset-normalizer if this becomes a problem |
-| TD-003 | `packaging/benford-lens-windows.spec` and `packaging/benford-lens-linux.spec` are written but unbuilt and untested — this dev environment is macOS-only with no Windows/Linux build target. The macOS build itself was only smoke-tested headlessly (`QT_QPA_PLATFORM=offscreen`, process starts and survives 5s), not verified interactively (no display in this environment). | Windows/Linux packaging correctness is unverified; macOS interactive behavior of the frozen bundle is unverified | Verify on an actual Windows/Linux machine or add cross-platform PyInstaller build+smoke-test jobs to CI |
+| TD-003 | `packaging/benford-lens-linux.spec` is written but remains unbuilt and untested. The macOS build was only smoke-tested headlessly (`QT_QPA_PLATFORM=offscreen`, process starts and survives 5s), not verified interactively. | Linux packaging correctness and macOS interactive behavior remain unverified | Verify on an actual Linux machine and an interactive macOS session, or add platform build-and-smoke-test jobs to CI |
 | TD-005 | CI does not collect or enforce the 80% coverage standard | Local merge-gate review measured 91% total line coverage, so the standard is currently met, but future regressions are not automatically blocked | Consider approved CI coverage tooling in a later developer-infrastructure task |
 | TD-007 | The macOS PyInstaller candidate is Apple Silicon-only and ad-hoc signed; no Developer ID certificate or Apple notarization credentials are configured | The local ZIP passes structural, signature-integrity, and headless startup checks, but Gatekeeper may warn or block it on another Mac and Intel Macs cannot run the arm64 binary | Before public distribution, build the approved target architectures, sign with Developer ID, notarize with Apple, staple the ticket, and verify on a clean Mac |
+| TD-008 | The Windows x64 PyInstaller ZIP and WiX MSI candidates are not Authenticode-signed and have only been verified on the build machine | Windows SmartScreen may warn on another PC even though ZIP startup and MSI install/startup/uninstall smoke tests pass locally | Sign the application executable and MSI with an approved code-signing certificate, then verify both assets on a clean supported Windows machine before treating them as broadly trusted public releases |
 
 ## Resolved
 

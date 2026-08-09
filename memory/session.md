@@ -11,7 +11,7 @@ Harness Version: 1.1
 
 ## Session Info
 
-- **Date**: 2026-08-07
+- **Date**: 2026-08-08
 - **Agent Role**: Release Manager / Implementer / Tester
 - **Session Goal**: Prepare, sign, notarize, tag, and publish Benford Lens v1.0.0; apply the
   approved application icon to the macOS package first.
@@ -34,6 +34,8 @@ distribution-candidate workflow to `main`.
   `main` as `e81ebe0`.
 - [x] Selected icon concept A and applied it to the macOS PyInstaller bundle on
   `codex/macos-app-icon` without changing the Windows or Linux packages.
+- [x] Completed TASK-034 on `codex/windows-build`: reused the approved icon image, built the
+  Windows x64 package, and verified both the build folder and extracted ZIP start successfully.
 
 ## Verification
 
@@ -54,6 +56,14 @@ distribution-candidate workflow to `main`.
 - macOS ICNS: complete 16, 32, 64, 128, 256, 512, and 1024 px representations
 - macOS spec syntax and icon path: pass
 - TASK-033 regression test: 232 passed after applying the documented ENV-001 workaround
+- Windows quality gate: Ruff pass; 46 code files formatted; mypy pass; 241 tests pass
+- Windows PyInstaller: 6.21.0; Python 3.11.15; PE32+ x64
+- Windows ICO: 10 representations from 16 through 256 px, derived from the approved PNG
+- Windows packaged translation catalogs: 6 plus built-in English
+- Windows folder startup smoke test: pass
+- Windows extracted-ZIP startup smoke test and executable hash comparison: pass
+- Windows ZIP SHA-256: `EEB9AD9785745D0D3AA81551CA6D0B1EA15E3C276F24085C4FAAA417C70AA8FF`
+- Windows Authenticode status: not signed
 - Current bundle signature: ad-hoc; Developer ID signing not yet possible
 - No new dependency, network analysis path, public analysis API change, or source-data mutation
 
@@ -63,6 +73,15 @@ distribution-candidate workflow to `main`.
 2. Provide a configured `notarytool` keychain profile name, or configure approved Apple
    notarization credentials without committing them to the repository.
 3. Sign, notarize, staple, package, tag `v1.0.0`, and publish the GitHub Release asset.
+
+## Release Process Guidance
+
+- Confirmed from current Apple and Microsoft documentation that direct macOS distribution is
+  generally more prescriptive than direct Windows distribution: macOS requires the correct
+  Developer ID identity, hardened-runtime-compatible signing, notarization, ticket stapling, and
+  Gatekeeper verification; Windows direct distribution centers on trusted code signing,
+  timestamping, and SmartScreen / Smart App Control verification.
+- No build, signing, release, dependency, or source-code change was performed for this guidance.
 
 ## Important Context
 
@@ -74,6 +93,9 @@ distribution-candidate workflow to `main`.
 - Build outputs under `dist/` and `build/` are ignored by Git.
 - The approved concept A macOS icon change is on `codex/macos-app-icon`; no distribution build
   was run for this change because release builds require explicit approval.
+- The approved Windows build is on `codex/windows-build`; outputs under `dist/` and `build/`
+  are ignored by Git. Public Windows distribution still requires code signing and clean-machine
+  verification (TD-008).
 
 ## Windows Development Environment Follow-up
 
@@ -130,3 +152,24 @@ distribution-candidate workflow to `main`.
 - Strengthened the Russian compact-layout regression test to verify the 900 x 700 window size and
   the horizontal bounds of all five toolbar controls; the focused test passes on Windows.
 - Ruff, formatting, and mypy pass; all 241 tests now pass on Windows and ENV-002 is resolved.
+
+## Windows MSI Packaging
+
+- The user explicitly approved MSI adoption and the new WiX build dependency.
+- Added a pinned `WixToolset.Sdk` 5.0.2 project and PowerShell build/verification script around
+  the existing PyInstaller Windows x64 one-folder output. WiX 7 was not adopted because it
+  requires separate OSMF EULA acceptance; no legal agreement was accepted on the user's behalf.
+- The MSI is current-user scoped and installs under
+  `%LOCALAPPDATA%\Programs\Benford Lens` without elevation. It includes a Start menu shortcut,
+  stable UpgradeCode, major-upgrade behavior, embedded CAB, and standard uninstall behavior.
+- The build script disables .NET CLI telemetry and adds no runtime network behavior, service,
+  updater, desktop shortcut, or file association.
+- End-to-end verification passed with Python 3.11.15, PyInstaller 6.21.0, .NET SDK 8.0.423, and
+  WixToolset.Sdk 5.0.2: 1,194 source files packaged, non-elevated silent install, shortcut check,
+  8-second offscreen startup, silent uninstall, and no remaining app directory, shortcut, or
+  installer marker.
+- MSI size: 91,573,116 bytes; SHA-256:
+  `85B7FB0702583B715FBD4D612564EFDF701F53B021B0C4205708AB63B48EF355`.
+- Authenticode status remains `NotSigned`; public distribution still requires code signing and
+  clean-machine installation, upgrade, startup, and uninstall verification.
+- Ruff, Ruff format-check, mypy, and all 241 tests pass after the packaging work.

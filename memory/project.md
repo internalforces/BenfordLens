@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Project: Benford Lens
 
-_Last updated: 2026-08-07_
+_Last updated: 2026-08-08_
 
 ## Summary
 
@@ -29,7 +29,7 @@ external server.
 |-------|-------|
 | Language | Python 3.11 (pinned via `.python-version`) |
 | Framework | PySide6 (UI); Pandas/NumPy/SciPy (analysis); Matplotlib (charts) |
-| Infrastructure | None — local desktop app, packaged via PyInstaller (`packaging/*.spec`; macOS arm64 candidate built + headless-smoke-tested, Windows/Linux config-only per TD-003) |
+| Infrastructure | None — local desktop app, packaged via PyInstaller plus a WiX MSI on Windows; macOS arm64, Windows x64 ZIP, and Windows x64 MSI candidates built + smoke-tested; Linux remains config-only per TD-003 |
 | Repo Structure | Single Repo |
 
 ## Key Paths
@@ -49,7 +49,8 @@ BenfordLens/
 │                                expert_statistics_panel.py; drill_down_panel.py;
 │                                __main__.py entry point)
 ├── resources/i18n/           (benford_lens_{ko,zh,ja,es,fr,ru}.ts/.qm — QTranslator translations)
-├── packaging/                 (benford-lens-{macos,windows,linux}.spec — PyInstaller)
+├── resources/icons/          (approved macOS PNG/ICNS plus derived Windows multi-size ICO)
+├── packaging/                 (PyInstaller specs plus WiX MSI source/build script)
 ├── tests/                    (mirrors src/ layout; tests/conftest.py sets QT_QPA_PLATFORM=offscreen)
 ├── .github/workflows/ci.yml  (lint, format-check, type-check, test on push/PR to main)
 └── docs/superpowers/plans/    (M1, M2, and 2026-08-06-m3-v1.md implementation plans)
@@ -73,6 +74,8 @@ BenfordLens/
 | 2026-08-06 | TASK-026 added a complete 93-message Russian UI catalog, compiled resource, selector entry, and state-preserving UI coverage to M3 PR #6 |
 | 2026-08-07 | TASK-027 resolved the clipped M3 desktop UI with a scroll-bounded workflow, responsive combined charts, readable chart minimums, automatic result reveal, and geometry regression coverage; all 232 tests pass |
 | 2026-08-07 | TASK-028 built and verified a macOS arm64 PyInstaller distribution candidate, synchronized bundle version metadata with the project version, and produced a checksum-recorded ZIP; Developer ID signing/notarization remains required for public macOS distribution |
+| 2026-08-08 | TASK-034 built and verified the Windows x64 PyInstaller package with a multi-resolution ICO derived from the approved macOS image; all 241 tests and both folder/ZIP startup smoke tests passed, and an unsigned checksum-recorded ZIP was produced |
+| 2026-08-08 | TASK-035 added a pinned WiX 5.0.2 user-scoped MSI around the Windows x64 one-folder build; metadata, all 1,194 files, non-elevated install, startup, complete uninstall, and SHA-256 generation were verified |
 | 2026-08-07 | TASK-029 synchronized the package, lockfile, README, roadmap, and project metadata to v1.0.0, added the v1.0 changelog, and merged PR #9 after CI passed; release signing remains gated on a Developer ID Application identity and Apple notarization credentials |
 | 2026-08-07 | TASK-033 adopted icon concept A and applied transparent PNG/ICNS assets to the macOS PyInstaller bundle; Windows/Linux icons remain unchanged and no new distribution build was produced |
 
