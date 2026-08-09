@@ -11,165 +11,85 @@ Harness Version: 1.1
 
 ## Session Info
 
-- **Date**: 2026-08-08
-- **Agent Role**: Release Manager / Implementer / Tester
-- **Session Goal**: Prepare, sign, notarize, tag, and publish Benford Lens v1.0.0; apply the
-  approved application icon to the macOS package first.
+- **Date**: 2026-08-09
+- **Agent Role**: Planner / Documenter / Tester
+- **Session Goal**: Revalidate the current implementation baseline, decide the portfolio
+  documentation structure, and implement the user-approved Korean/English public documentation,
+  synthetic visuals, and MIT license.
 
 ## Previous Session Summary
 
-PR #8 merged the version-aware macOS packaging configuration and locally verified arm64
-distribution-candidate workflow to `main`.
+The v1.0.0 source and release-candidate hardening were merged through PR #13. macOS arm64 and
+Windows x64 distribution candidates were built and smoke-tested; Windows compatibility issues
+were resolved; public signing and clean-machine verification remain. The detailed handoff is
+archived in `memory/sessions/2026-08-08-Release-Packaging.md`.
 
 ## Completed This Session
 
-- [x] Confirmed PR #8 is merged and synchronized local `main`.
-- [x] Confirmed no pre-existing `v1.0.0` tag or GitHub Release.
-- [x] Started TASK-029 on `codex/v1-release` without committing directly to `main`.
-- [x] Synchronized package and project metadata to v1.0.0 and added `CHANGELOG.md`.
-- [x] Audited local signing prerequisites without exposing credential values.
-- [x] Passed Ruff, format, mypy, and all 232 tests.
-- [x] Built and headless-smoke-tested the v1.0.0 macOS arm64 app bundle.
-- [x] Pushed release metadata commit `27bd8a6`, passed GitHub Actions, and merged PR #9 to
-  `main` as `e81ebe0`.
-- [x] Selected icon concept A and applied it to the macOS PyInstaller bundle on
-  `codex/macos-app-icon` without changing the Windows or Linux packages.
-- [x] Completed TASK-034 on `codex/windows-build`: reused the approved icon image, built the
-  Windows x64 package, and verified both the build folder and extracted ZIP start successfully.
+- [x] Read the project constitution and required context files in the prescribed order.
+- [x] Fetched the latest remote state and created `codex/portfolio-docs-audit` from
+  `origin/main` (`b1d63df`, PR #13) without committing to `main`.
+- [x] Confirmed the source version is 1.0.0 and that no v1.0.0 tag is present.
+- [x] Confirmed the GitHub Release list is empty and CI succeeded on the PR #13 merge commit.
+- [x] Revalidated Ruff lint, Ruff formatting, mypy, and the full pytest suite.
+- [x] Synchronized `memory/project.md`, `README.md`, `roadmap.md`, `CHANGELOG.md`, and
+  `tasks/active.md` with the implemented and unpublished release-candidate state.
+- [x] Audited portfolio-documentation readiness and recorded the recommended structure in
+  `reports/portfolio-documentation-audit-2026-08-09.md`.
+- [x] Received user approval for ADR-017 and implemented the audience-separated documentation
+  structure.
+- [x] Recorded missing open-source license metadata and portfolio-documentation gaps as TD-009
+  and TD-010, then resolved both through TASK-037.
+- [x] Completed TASK-036 and archived the previous release-packaging session summary.
+- [x] Rewrote `README.md` as the English recruiter landing page and added the matching Korean
+  `README.ko.md` entry point.
+- [x] Added four bilingual public documents only: portfolio case study, architecture,
+  verification, and user guide.
+- [x] Preserved internal evidence and moved previous `docs/superpowers/` plans/specs into
+  `reports/development/` so they no longer appear in the public documentation path.
+- [x] Added a reproducible asset generator and visually checked three PNG screenshots plus a
+  five-frame workflow GIF captured from the real app with deterministic synthetic data.
+- [x] Added the user-selected MIT License and marked ADR-017 accepted.
+- [x] Completed TASK-037.
 
 ## Verification
 
-- GitHub CLI authentication: pass
-- Existing v1.0.0 tag: absent
-- Existing v1.0.0 GitHub Release: absent
-- Available signing identity: Apple Development only
-- Required Developer ID Application identity: not available
-- Notarization environment/profile configuration: not detected
+- Remote baseline: `origin/main` at `b1d63df` (PR #13)
+- GitHub Actions CI on `b1d63df`: pass
+- GitHub Release list: empty
 - Ruff check: pass
-- Ruff format check: pass (46 files)
+- Ruff format check: pass (47 files across `src/`, `tests/`, and `scripts/`)
 - mypy: pass (22 source files)
-- pytest: 232 passed
-- PyInstaller: 6.21.0; Python 3.11.15; macOS arm64
-- App bundle versions: `1.0.0`
-- Packaged translation catalogs: 6 plus built-in English
-- macOS icon source: 1024x1024 RGBA PNG with transparent corners
-- macOS ICNS: complete 16, 32, 64, 128, 256, 512, and 1024 px representations
-- macOS spec syntax and icon path: pass
-- TASK-033 regression test: 232 passed after applying the documented ENV-001 workaround
-- Windows quality gate: Ruff pass; 46 code files formatted; mypy pass; 241 tests pass
-- Windows PyInstaller: 6.21.0; Python 3.11.15; PE32+ x64
-- Windows ICO: 10 representations from 16 through 256 px, derived from the approved PNG
-- Windows packaged translation catalogs: 6 plus built-in English
-- Windows folder startup smoke test: pass
-- Windows extracted-ZIP startup smoke test and executable hash comparison: pass
-- Windows ZIP SHA-256: `EEB9AD9785745D0D3AA81551CA6D0B1EA15E3C276F24085C4FAAA417C70AA8FF`
-- Windows Authenticode status: not signed
-- Current bundle signature: ad-hoc; Developer ID signing not yet possible
-- No new dependency, network analysis path, public analysis API change, or source-data mutation
+- pytest: 241 passed on macOS with `QT_QPA_PLATFORM=offscreen`
+- Source version: 1.0.0
+- v1.0.0 tag: absent
+- Product source or public analysis API changes: none
+- New dependency, network analysis path, or source-data mutation: none
+- Public documentation: 2 README entry points + 4 bilingual detail guides
+- Local markdown links/images: validated, no missing targets
+- Visual assets: three 1440×960 PNGs plus one five-frame 960×640 GIF (8.2 seconds)
+- Asset provenance: real application, deterministic synthetic data only
+- Public-copy restricted-term scan: no findings
+- License: standard MIT text, 2026 Benford Lens contributors
+
+## Current Implementation Status
+
+- v1.0 product scope is feature-complete and merged to `main`.
+- macOS arm64 and Windows x64 ZIP/MSI candidates have been built and smoke-tested.
+- macOS Developer ID signing/notarization and Windows Authenticode/clean-machine verification
+  remain before public distribution.
+- Linux has a PyInstaller specification but no target-platform build verification.
+- No public v1.0.0 tag or GitHub Release exists.
+
+## Portfolio Documentation State
+
+Accepted ADR-017 retains internal harness evidence while exposing a small public portfolio layer:
+English and Korean README entry points, four bilingual guides, and synthetic-data visuals. The
+public README navigation does not expose session/task history, while evidence remains available
+under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT License.
 
 ## Remaining Work
 
-1. Install or provide access to a valid Developer ID Application certificate and private key.
-2. Provide a configured `notarytool` keychain profile name, or configure approved Apple
-   notarization credentials without committing them to the repository.
-3. Sign, notarize, staple, package, tag `v1.0.0`, and publish the GitHub Release asset.
-
-## Release Process Guidance
-
-- Confirmed from current Apple and Microsoft documentation that direct macOS distribution is
-  generally more prescriptive than direct Windows distribution: macOS requires the correct
-  Developer ID identity, hardened-runtime-compatible signing, notarization, ticket stapling, and
-  Gatekeeper verification; Windows direct distribution centers on trusted code signing,
-  timestamping, and SmartScreen / Smart App Control verification.
-- No build, signing, release, dependency, or source-code change was performed for this guidance.
-
-## Important Context
-
-- Release-gate record updates are on `codex/v1-release-gate`; direct commits to `main` remain
-  prohibited.
-- v1.0 metadata is present on `main` at merge commit `e81ebe0`.
-- Tagging and GitHub Release publication must not proceed before successful notarization.
-- The build host is Apple Silicon (`arm64`).
-- Build outputs under `dist/` and `build/` are ignored by Git.
-- The approved concept A macOS icon change is on `codex/macos-app-icon`; no distribution build
-  was run for this change because release builds require explicit approval.
-- The approved Windows build is on `codex/windows-build`; outputs under `dist/` and `build/`
-  are ignored by Git. Public Windows distribution still requires code signing and clean-machine
-  verification (TD-008).
-
-## Windows Development Environment Follow-up
-
-- Installed `uv` 0.12.1 through WinGet.
-- Installed uv-managed CPython 3.11.15 and created the repository-local `.venv` from
-  `uv.lock` with the `dev` dependency group; no dependency was added or upgraded outside the
-  lockfile.
-- Verified all runtime imports and an offscreen `MainWindow` startup smoke test.
-- Ruff, Ruff format-check, and mypy pass.
-- Pytest result on Windows: 231 passed, 1 failed. The failure is the Russian compact-layout
-  width assertion recorded as ENV-002 in `memory/known-issues.md`.
-- Git is installed at `C:\Program Files\Git\cmd\git.exe`, but the current Codex process did not
-  inherit its PATH entry; a new terminal should resolve both `git` and the newly installed
-  `uv` aliases normally.
-
-## Windows CJK Chart Font Fix
-
-- Updated the Matplotlib chart renderer to choose installed fonts by label script: Malgun
-  Gothic for Korean, Microsoft YaHei/JhengHei for Chinese, and Yu Gothic/Meiryo for Japanese,
-  with the existing macOS, Noto, and DejaVu fallbacks retained.
-- Added regression tests for Windows CJK font selection and the minimal-install fallback.
-- Verified Korean, Chinese, and Japanese chart rendering on Windows with missing-glyph warnings
-  treated as errors.
-- Ruff and mypy pass; pytest reports 233 passed and only the pre-existing ENV-002 Windows
-  offscreen layout failure.
-
-## Windows CJK UI Font Follow-up
-
-- Confirmed the Chinese and Japanese translation catalogs contain valid Unicode text; the
-  remaining display issue was Qt's reliance on the generic Windows UI font.
-- Language switching now applies Microsoft YaHei UI fallbacks for Chinese and Yu Gothic UI
-  fallbacks for Japanese; each CJK entry in the language selector also receives its own font.
-- Verified both requested families are installed and resolved by the native Windows Qt
-  platform plugin.
-- Ruff and mypy pass; the full suite reports 238 passed and only the pre-existing ENV-002
-  Windows offscreen layout failure.
-
-## Chart Wheel Scrolling Fix
-
-- Replaced the result chart canvas with a small FigureCanvas subclass that ignores wheel events
-  so Qt propagates them to the enclosing workflow scroll area.
-- Preserved Matplotlib button events used for digit drill-down.
-- Added both a canvas event-handling unit test and a MainWindow integration test that sends a
-  real wheel event over the chart and verifies the workflow scrollbar moves.
-- Ruff and mypy pass; the full suite reports 240 passed and only the pre-existing ENV-002
-  Windows offscreen layout failure.
-
-## Russian Compact-Window Fix
-
-- Traced ENV-002 to the single-row toolbar's translated minimum width rather than a test-only
-  platform discrepancy.
-- Split the fixed toolbar into primary and secondary rows, preserving every existing control and
-  keeping the results workflow scrollable below it.
-- Strengthened the Russian compact-layout regression test to verify the 900 x 700 window size and
-  the horizontal bounds of all five toolbar controls; the focused test passes on Windows.
-- Ruff, formatting, and mypy pass; all 241 tests now pass on Windows and ENV-002 is resolved.
-
-## Windows MSI Packaging
-
-- The user explicitly approved MSI adoption and the new WiX build dependency.
-- Added a pinned `WixToolset.Sdk` 5.0.2 project and PowerShell build/verification script around
-  the existing PyInstaller Windows x64 one-folder output. WiX 7 was not adopted because it
-  requires separate OSMF EULA acceptance; no legal agreement was accepted on the user's behalf.
-- The MSI is current-user scoped and installs under
-  `%LOCALAPPDATA%\Programs\Benford Lens` without elevation. It includes a Start menu shortcut,
-  stable UpgradeCode, major-upgrade behavior, embedded CAB, and standard uninstall behavior.
-- The build script disables .NET CLI telemetry and adds no runtime network behavior, service,
-  updater, desktop shortcut, or file association.
-- End-to-end verification passed with Python 3.11.15, PyInstaller 6.21.0, .NET SDK 8.0.423, and
-  WixToolset.Sdk 5.0.2: 1,194 source files packaged, non-elevated silent install, shortcut check,
-  8-second offscreen startup, silent uninstall, and no remaining app directory, shortcut, or
-  installer marker.
-- MSI size: 91,573,116 bytes; SHA-256:
-  `85B7FB0702583B715FBD4D612564EFDF701F53B021B0C4205708AB63B48EF355`.
-- Authenticode status remains `NotSigned`; public distribution still requires code signing and
-  clean-machine installation, upgrade, startup, and uninstall verification.
-- Ruff, Ruff format-check, mypy, and all 241 tests pass after the packaging work.
+1. Keep public README metrics and release status synchronized with verified evidence.
+2. Complete TASK-029 when approved signing credentials and release-verification environments
+   are available.

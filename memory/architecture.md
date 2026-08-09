@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Architecture — Benford Lens
 
-_Last updated: 2026-08-08_
+_Last updated: 2026-08-09_
 
 ## System Overview
 
@@ -125,6 +125,7 @@ at any point.
 | macOS bundle metadata | Numeric app-bundle version derives from the package version; public builds require Developer ID signing and notarization (ADR-013) | 2026-08-07 |
 | Application icon | Concept A (lens + descending distribution) is applied to macOS first; Windows/Linux remain unchanged (ADR-014) | 2026-08-07 |
 | Windows installer | WiX 5.0.2 per-user MSI wrapping the PyInstaller one-folder build (ADR-016) | 2026-08-08 |
+| Portfolio documentation | Korean/English landing pages and four bilingual public guides; internal evidence preserved separately (ADR-017) | 2026-08-09 |
 
 ## Architecture Constraints
 
@@ -139,7 +140,7 @@ review boundary for the merge gate.
 
 M3 must generalize the fixed first-digit behavior without copying the current pipeline. The
 accepted design is detailed in
-`docs/superpowers/specs/2026-08-06-m3-analysis-modes-design.md`:
+`reports/development/specs/2026-08-06-m3-analysis-modes-design.md`:
 
 - keep the existing first-digit public functions unchanged;
 - add second-digit and combined entry points;
@@ -148,3 +149,13 @@ accepted design is detailed in
 - pass digit position through chart clicks and drill-down;
 - render one shared KS result alongside per-position MAD/Chi-square values;
 - make HTML reports mode-aware from the same immutable snapshot.
+
+## Documentation Topology
+
+- Public entry points: `README.md` (English) and `README.ko.md` (Korean).
+- Public detail path: `docs/portfolio-case-study.md`, `docs/architecture.md`,
+  `docs/verification.md`, and `docs/user-guide.md`, plus synthetic assets under `docs/assets/`.
+- Internal evidence: `memory/`, `tasks/`, and `reports/`. Historical implementation plans and
+  design specs are archived under `reports/development/` rather than exposed in `docs/`.
+- Reproducibility: `scripts/generate_portfolio_assets.py` drives the real application with
+  deterministic synthetic data and regenerates the public PNG/GIF assets without user data.

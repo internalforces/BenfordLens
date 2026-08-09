@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Decision Log — Benford Lens
 
-_Last updated: 2026-08-07_
+_Last updated: 2026-08-09_
 
 ## Template
 
@@ -259,7 +259,7 @@ mode needs more horizontal space. Compatibility wrappers remain until a separate
 public API cleanup is warranted.
 
 **Consequences**: M3 implementation follows
-`docs/superpowers/specs/2026-08-06-m3-analysis-modes-design.md`. No new dependency is required,
+`reports/development/specs/2026-08-06-m3-analysis-modes-design.md`. No new dependency is required,
 and the local-only, explicit-selection, and neutral-interpretation constraints remain intact.
 
 ---
@@ -459,3 +459,36 @@ The MSI is larger and more complex than the portable ZIP.
 MSI build and verification path. The current unsigned candidate passes local non-elevated
 installation and complete removal, but Authenticode signing and clean-machine verification
 remain required before broad public distribution.
+
+---
+
+### ADR-017: Separate Public Portfolio Documentation from Internal Development Records
+
+- **Date**: 2026-08-09
+- **Status**: Accepted
+- **Decided by**: User / Planner / Documenter
+
+**Context**: The repository contains strong implementation evidence across `memory/`, `tasks/`,
+`reports/`, and detailed plans, but the README does not yet give a recruiter or first-time user
+a short path through the problem, design choices, visual proof, and verified outcomes. Rewriting
+or deleting the internal records would discard useful engineering evidence.
+
+**Decision**: Keep the internal harness records intact and introduce a deliberately small public
+documentation layer: an English README and matching Korean entry point, one portfolio case study,
+one architecture summary, one verification summary, and one user guide. Public pages should link
+selectively to existing evidence instead of exposing every internal session and task record in the
+primary navigation. Screenshots and demo data must be synthetic.
+
+**Rationale**: This separates audiences without duplicating the full development history. It lets
+the README lead with user value and measurable engineering outcomes while retaining traceable ADR,
+test, performance, and release evidence for deeper review.
+
+**Trade-offs**: The public summaries can drift from internal records unless status claims are
+checked during releases. A bilingual entry point also adds maintenance work.
+
+**Consequences**: The English `README.md` and matching Korean `README.ko.md` now lead to four
+bilingual public documents: case study, architecture, verification, and user guide. Synthetic
+screenshots/GIFs are reproducibly generated from the real application, and previous implementation
+plans/specs moved from `docs/superpowers/` to `reports/development/` so they remain evidence without
+appearing in the public documentation path. The user selected the MIT license. The original audit
+and execution rationale remain in `reports/portfolio-documentation-audit-2026-08-09.md`.

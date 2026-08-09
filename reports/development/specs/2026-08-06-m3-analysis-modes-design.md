@@ -1,3 +1,5 @@
+<!-- Archived development evidence; not part of the public documentation path. -->
+
 # M3 Analysis Modes Design
 
 **Date:** 2026-08-06

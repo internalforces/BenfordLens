@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Active Tasks — Benford Lens
 
-_Last updated: 2026-08-08_
+_Last updated: 2026-08-09_
 
 ## In Progress
 
@@ -19,6 +19,8 @@ _Last updated: 2026-08-08_
 - **Owner**: Release Manager / Tester
 - **Priority**: High
 - **Milestone**: M3 / v1.0
+- **Status**: Feature and packaging candidates are complete; publication remains blocked on
+  approved signing credentials and clean-machine release verification
 - **Description**: Synchronize v1.0 metadata, build the macOS arm64 app, sign and notarize it,
   then tag and publish the verified ZIP through GitHub Releases.
 - **Definition of Done**:

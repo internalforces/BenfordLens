@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # roadmap.md — Benford Lens Roadmap
 
-_Last updated: 2026-08-07_
+_Last updated: 2026-08-09_
 
 ## Goal
 
@@ -40,6 +40,28 @@ external server.
   100k-row controller benchmark improved 30.0–31.8% (TASK-024)
 - [x] Expand language support beyond the initial EN/KO/ZH/JA set added in M2 — Spanish,
   French, and Russian added in M3 (ADR-010, ADR-011)
+
+### v1.0 release hardening — implementation complete; public release pending (PRs #9–#13)
+
+- [x] Synchronize source, package, and changelog metadata to 1.0.0
+- [x] Build and headless-smoke-test a macOS arm64 PyInstaller candidate
+- [x] Apply the approved application icon to macOS and Windows packages
+- [x] Build and smoke-test a Windows x64 PyInstaller ZIP
+- [x] Build and verify a user-scoped Windows x64 MSI, including install/startup/uninstall
+- [ ] Sign, notarize, staple, and clean-machine-verify the macOS distribution
+- [ ] Authenticode-sign and clean-machine-verify the Windows ZIP/MSI distributions
+- [ ] Create the annotated v1.0.0 tag and publish verified GitHub Release assets
+- [ ] Build and verify the Linux package on a Linux target (post-v1.0 distribution follow-up)
+
+### Portfolio documentation — implemented on 2026-08-09
+
+- [x] Create matching Korean and English recruiter-oriented README landing pages
+- [x] Limit the public documentation path to a bilingual case study, architecture, verification,
+  and user guide
+- [x] Preserve internal memory/tasks/reports and archive previous plans/specs under
+  `reports/development/`
+- [x] Capture real application PNG/GIF assets with deterministic synthetic data
+- [x] Add the user-approved MIT license
 
 ## Backlog Ideas
 

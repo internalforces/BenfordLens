@@ -1,3 +1,5 @@
+<!-- Archived development evidence; not part of the public documentation path. -->
+
 # M2 (Phase 2) — Design Spec
 
 _Date: 2026-08-05_
