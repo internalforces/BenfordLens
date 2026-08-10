@@ -37,6 +37,20 @@ report export.
 
 All visuals above were captured from the real application using deterministic synthetic data.
 
+## Download
+
+Download the current Windows x64 and macOS Apple Silicon packages from
+[GitHub Releases](https://github.com/internalforces/BenfordLens/releases/latest).
+
+- **Windows:** choose the per-user MSI for a standard installation or the ZIP for a portable
+  folder.
+- **macOS:** choose the arm64 ZIP for Apple Silicon Macs.
+
+The downloadable packages are currently unsigned. Windows may show a SmartScreen warning or
+block the app under Smart App Control, and macOS may require **Privacy & Security → Open Anyway**.
+Review the security notice and verify the matching SHA-256 checksum on the Release page before
+running a package.
+
 ## Engineering outcomes
 
 | Area | Result |
@@ -99,13 +113,13 @@ checks, and explicit verification boundaries.
 
 ## Packaging and release status
 
-- **macOS:** an Apple Silicon PyInstaller candidate was built and headless-smoke-tested. Developer
+- **macOS:** the release workflow builds and verifies an Apple Silicon PyInstaller ZIP. Developer
   ID signing, notarization, and clean-machine verification remain.
-- **Windows:** an x64 PyInstaller ZIP and a WiX 5.0.2 per-user MSI passed local startup and
-  install/startup/uninstall checks. Authenticode signing and clean-machine verification remain.
+- **Windows:** the release workflow builds and verifies an x64 PyInstaller ZIP and a WiX 5.0.2
+  per-user MSI. Authenticode signing and clean-machine verification remain.
 - **Linux:** a PyInstaller specification exists but has not been built on a Linux target.
-- **Public release:** source metadata is 1.0.0, but no public `v1.0.0` tag or GitHub Release has
-  been published.
+- **Distribution:** version tags publish the verified unsigned packages and matching SHA-256
+  files through GitHub Releases only after both platform jobs pass.
 
 ## Documentation
 

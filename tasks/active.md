@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Active Tasks — Benford Lens
 
-_Last updated: 2026-08-09_
+_Last updated: 2026-08-10_
 
 ## In Progress
 
@@ -19,18 +19,19 @@ _Last updated: 2026-08-09_
 - **Owner**: Release Manager / Tester
 - **Priority**: High
 - **Milestone**: M3 / v1.0
-- **Status**: Feature and packaging candidates are complete; publication remains blocked on
-  approved signing credentials and clean-machine release verification
-- **Description**: Synchronize v1.0 metadata, build the macOS arm64 app, sign and notarize it,
-  then tag and publish the verified ZIP through GitHub Releases.
+- **Status**: User approved GitHub Releases as the unsigned distribution path; native tag builds,
+  package checks, PR review, tag creation, and asset publication remain
+- **Description**: Synchronize v1.0 metadata, build and smoke-test the Windows x64 ZIP/MSI and
+  macOS arm64 ZIP on native GitHub runners, publish checksums and transparent security guidance,
+  then tag and publish the verified assets through GitHub Releases.
 - **Definition of Done**:
   - [x] Package, lockfile, README, roadmap, changelog, and project metadata use v1.0.0
   - [x] All quality checks and the v1.0 PyInstaller build pass
-  - [ ] The app is signed with Developer ID Application and accepted by Apple notarization
-  - [ ] The notarization ticket is stapled and the final ZIP passes clean extraction checks
+  - [ ] The Windows ZIP/MSI and macOS ZIP pass native release-workflow verification
+  - [ ] Release notes clearly disclose the unsigned/notarized status and expected OS behavior
   - [x] The release metadata PR is merged to `main`
   - [ ] Annotated `v1.0.0` tag points to the approved `main` commit
-  - [ ] GitHub Release contains the notarized ZIP and checksum
+  - [ ] GitHub Release contains Windows ZIP/MSI, macOS ZIP, and matching SHA-256 files
 
 ## Task Detail Template
 
