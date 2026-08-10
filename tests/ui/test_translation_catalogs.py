@@ -27,7 +27,7 @@ def test_translation_catalog_is_complete_and_preserves_placeholders(language_cod
     reference = _catalog_messages("ko")
     catalog = _catalog_messages(language_code)
 
-    assert len(reference) == 93
+    assert len(reference) == 95
     assert catalog.keys() == reference.keys()
     assert all(translation.strip() for translation in catalog.values())
     for (_context, source), translation in catalog.items():

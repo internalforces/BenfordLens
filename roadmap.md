@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # roadmap.md — Benford Lens Roadmap
 
-_Last updated: 2026-08-09_
+_Last updated: 2026-08-11_
 
 ## Goal
 
@@ -41,7 +41,7 @@ external server.
 - [x] Expand language support beyond the initial EN/KO/ZH/JA set added in M2 — Spanish,
   French, and Russian added in M3 (ADR-010, ADR-011)
 
-### v1.0 release hardening — implementation complete; public release pending (PRs #9–#13)
+### v1.0 release hardening — implementation complete inside private repository (PRs #9–#16)
 
 - [x] Synchronize source, package, and changelog metadata to 1.0.0
 - [x] Build and headless-smoke-test a macOS arm64 PyInstaller candidate
@@ -50,8 +50,20 @@ external server.
 - [x] Build and verify a user-scoped Windows x64 MSI, including install/startup/uninstall
 - [ ] Sign, notarize, staple, and clean-machine-verify the macOS distribution
 - [ ] Authenticode-sign and clean-machine-verify the Windows ZIP/MSI distributions
-- [ ] Create the annotated v1.0.0 tag and publish verified GitHub Release assets
+- [x] Create the annotated v1.0.0 tag and publish verified GitHub Release assets inside the
+  private repository
 - [ ] Build and verify the Linux package on a Linux target (post-v1.0 distribution follow-up)
+
+### Public repository launch — planned on 2026-08-11
+
+- [x] Approve the public repository surface after reviewing history, branches, PRs, Actions logs,
+  and tracked internal records (TASK-039)
+- [ ] Add and package complete third-party license/attribution notices (TASK-040)
+- [x] Add contributor/security guidance and public repository metadata (TASK-041)
+- [ ] Harden Actions references and protect `main` / release tags (TASK-042)
+- [ ] Revalidate the release assets that will become anonymously downloadable (TASK-043)
+- [ ] Change visibility with explicit human approval and pass anonymous post-launch checks
+  (TASK-044)
 
 ### Portfolio documentation — implemented on 2026-08-09
 

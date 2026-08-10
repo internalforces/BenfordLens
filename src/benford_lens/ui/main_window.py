@@ -16,6 +16,8 @@ from PySide6.QtWidgets import (
     QApplication,
     QBoxLayout,
     QComboBox,
+    QDialog,
+    QDialogButtonBox,
     QFileDialog,
     QFrame,
     QHBoxLayout,
@@ -27,6 +29,7 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QTableWidget,
     QTableWidgetItem,
+    QTextBrowser,
     QVBoxLayout,
     QWidget,
 )
@@ -57,6 +60,13 @@ def _i18n_dir() -> Path:
     if getattr(sys, "frozen", False):
         return Path(sys._MEIPASS) / "resources" / "i18n"  # type: ignore[attr-defined]
     return Path(__file__).resolve().parents[3] / "resources" / "i18n"
+
+
+def _third_party_notices_path() -> Path:
+    """Return the bundled, local-only third-party notices document."""
+    if getattr(sys, "frozen", False):
+        return Path(sys._MEIPASS) / "THIRD_PARTY_NOTICES.md"  # type: ignore[attr-defined]
+    return Path(__file__).resolve().parents[3] / "THIRD_PARTY_NOTICES.md"
 
 
 _LANGUAGES = [
@@ -167,6 +177,9 @@ class MainWindow(QMainWindow):
         self.export_report_button.setEnabled(False)
         self.export_report_button.clicked.connect(self._on_export_report_clicked)
 
+        self.notices_button = QPushButton(self.tr("Third-party notices"))
+        self.notices_button.clicked.connect(self._show_third_party_notices)
+
         self._translator: QTranslator | None = None
         self.language_combo = QComboBox()
         for code, label in _LANGUAGES:
@@ -212,6 +225,7 @@ class MainWindow(QMainWindow):
 
         secondary_toolbar = QHBoxLayout()
         secondary_toolbar.addWidget(self.export_report_button)
+        secondary_toolbar.addWidget(self.notices_button)
         secondary_toolbar.addStretch(1)
         secondary_toolbar.addWidget(self.language_combo)
 
@@ -561,6 +575,33 @@ class MainWindow(QMainWindow):
         except Exception as exc:
             QMessageBox.critical(self, self.tr("Could not export report"), str(exc))
 
+    def _show_third_party_notices(self) -> None:
+        """Show bundled notices without opening a browser or using the network."""
+        try:
+            notice_text = _third_party_notices_path().read_text(encoding="utf-8")
+        except OSError:
+            QMessageBox.warning(
+                self,
+                self.tr("Third-party notices"),
+                self.tr("The third-party notices file is unavailable."),
+            )
+            return
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self.tr("Third-party notices"))
+        dialog.resize(800, 600)
+
+        browser = QTextBrowser(dialog)
+        browser.setPlainText(notice_text)
+
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close, parent=dialog)
+        buttons.rejected.connect(dialog.reject)
+
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(browser)
+        layout.addWidget(buttons)
+        dialog.exec()
+
     def _on_preprocessing_preview_requested(self, options) -> None:
         preview = self.controller.configure_preprocessing(options)
         self.preprocessing_panel.show_preview(preview)
@@ -674,6 +715,7 @@ class MainWindow(QMainWindow):
         self.open_button.setText(self.tr("Open File…"))
         self.analyze_button.setText(self.tr("Analyze"))
         self.export_report_button.setText(self.tr("Export Report…"))
+        self.notices_button.setText(self.tr("Third-party notices"))
         self._populate_mode_combo()
         self.suitability_panel.retranslate_ui()
         self.expert_statistics_panel.retranslate_ui()

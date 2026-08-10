@@ -9,6 +9,8 @@
     <message><source>Open File…</source><translation>Abrir archivo…</translation></message>
     <message><source>Analyze</source><translation>Analizar</translation></message>
     <message><source>Export Report…</source><translation>Exportar informe…</translation></message>
+    <message><source>Third-party notices</source><translation>Avisos de terceros</translation></message>
+    <message><source>The third-party notices file is unavailable.</source><translation>El archivo de avisos de terceros no está disponible.</translation></message>
     <message><source>Open a CSV or Excel file to begin.</source><translation>Abra un archivo CSV o Excel para comenzar.</translation></message>
     <message><source>Open data file</source><translation>Abrir archivo de datos</translation></message>
     <message><source>Select sheet</source><translation>Seleccionar hoja</translation></message>

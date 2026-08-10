@@ -45,6 +45,9 @@ $OutputDirectory = [System.IO.Path]::GetFullPath($OutputDirectory)
 $iconPath = Join-Path $projectRoot "resources\icons\windows\benford-lens.ico"
 $wixProject = Join-Path $packagingDirectory "benford-lens-installer.wixproj"
 $pyInstaller = Join-Path $projectRoot ".venv\Scripts\pyinstaller.exe"
+$noticeSource = Join-Path $projectRoot "THIRD_PARTY_NOTICES.md"
+$licenseSource = Join-Path $projectRoot "third_party_licenses"
+$relinkingSource = Join-Path $projectRoot "docs\qt-relinking.md"
 
 if (-not $SkipPyInstaller) {
     if (-not (Test-Path -LiteralPath $pyInstaller -PathType Leaf)) {
@@ -66,6 +69,43 @@ if (-not (Test-Path -LiteralPath $mainExecutable -PathType Leaf)) {
 }
 if (-not (Test-Path -LiteralPath $iconPath -PathType Leaf)) {
     throw "The Windows application icon was not found at $iconPath."
+}
+
+$noticeDestination = Join-Path $AppSource "THIRD_PARTY_NOTICES.md"
+$licenseDestination = Join-Path $AppSource "third_party_licenses"
+$docsDestination = Join-Path $AppSource "docs"
+if (Test-Path -LiteralPath $licenseDestination) {
+    Remove-Item -LiteralPath $licenseDestination -Recurse -Force
+}
+New-Item -ItemType Directory -Path $docsDestination -Force | Out-Null
+Copy-Item -LiteralPath $noticeSource -Destination $noticeDestination -Force
+Copy-Item -LiteralPath $licenseSource -Destination $licenseDestination -Recurse -Force
+Copy-Item -LiteralPath $relinkingSource -Destination $docsDestination -Force
+
+$requiredNotices = @(
+    $noticeDestination,
+    (Join-Path $docsDestination "qt-relinking.md"),
+    (Join-Path $licenseDestination "GPL-3.0.txt"),
+    (Join-Path $licenseDestination "LGPL-3.0.txt"),
+    (Join-Path $licenseDestination "PYTHON_DISTRIBUTIONS.txt"),
+    (Join-Path $licenseDestination "QT_ATTRIBUTIONS.md"),
+    (Join-Path $licenseDestination "QT_LICENSE_TEXTS.txt")
+)
+foreach ($requiredNotice in $requiredNotices) {
+    if (
+        -not (Test-Path -LiteralPath $requiredNotice -PathType Leaf) -or
+        (Get-Item -LiteralPath $requiredNotice).Length -eq 0
+    ) {
+        throw "A required notice file is missing or empty: $requiredNotice"
+    }
+}
+
+$forbiddenQtPattern = 'qt(canvaspainter|coap|graphs|grpc|httpserver|lottie|mqtt|networkauth|qmlcompiler|quick3d|quicktimeline|virtualkeyboard|waylandcompositor)'
+$forbiddenQtFiles = Get-ChildItem -LiteralPath $AppSource -File -Recurse |
+    Where-Object { $_.FullName -match $forbiddenQtPattern }
+if ($forbiddenQtFiles) {
+    $forbiddenNames = ($forbiddenQtFiles | ForEach-Object FullName) -join ", "
+    throw "Unused GPL-only Qt module files were packaged: $forbiddenNames"
 }
 
 $dotnetCommand = Get-Command dotnet -ErrorAction SilentlyContinue
@@ -205,6 +245,10 @@ if ($InstallSmokeTest) {
         }
         if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
             throw "The installed Start menu shortcut is missing: $shortcut"
+        }
+        $installedNotice = Join-Path $installRoot "THIRD_PARTY_NOTICES.md"
+        if (-not (Test-Path -LiteralPath $installedNotice -PathType Leaf)) {
+            throw "The installed third-party notice is missing: $installedNotice"
         }
         $installedFileCount = @(Get-ChildItem -LiteralPath $installRoot -File -Recurse).Count
         if ($installedFileCount -ne $sourceFileCount) {

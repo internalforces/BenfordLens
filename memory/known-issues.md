@@ -7,13 +7,14 @@ Harness Version: 1.1
 
 # Known Issues — Benford Lens
 
-_Last updated: 2026-08-10_
+_Last updated: 2026-08-11_
 
 ## Active Bugs
 
 | ID | Severity | Description | Found | Owner |
 |----|----------|-------------|-------|-------|
 | ENV-001 | Medium | macOS local env: Recent `.venv`-affecting edits can set macOS hidden flag on native extensions (numpy, pandas, PySide6), causing pytest crashes with faulthandler dump during dynamic library loading. Workaround: `chflags -R nohidden .venv` before running tests. Does not affect Linux CI (ubuntu-latest). | 2026-08-04 | DevEnv |
+| ISS-006 | Medium | Project records describe v1.0.0 as publicly available, but GitHub reports `internalforces/BenfordLens` as private. The Release exists and is published inside the private repository, so unauthenticated users cannot access the source or packages. | 2026-08-11 | Release Manager |
 
 ## Technical Debt
 
@@ -24,6 +25,8 @@ _Last updated: 2026-08-10_
 | TD-005 | CI does not collect or enforce the 80% coverage standard | Local merge-gate review measured 91% total line coverage, so the standard is currently met, but future regressions are not automatically blocked | Consider approved CI coverage tooling in a later developer-infrastructure task |
 | TD-007 | The macOS PyInstaller candidate is Apple Silicon-only and ad-hoc signed; no Developer ID certificate or Apple notarization credentials are configured | The local ZIP passes structural, signature-integrity, and headless startup checks, but Gatekeeper may warn or block it on another Mac and Intel Macs cannot run the arm64 binary | Before public distribution, build the approved target architectures, sign with Developer ID, notarize with Apple, staple the ticket, and verify on a clean Mac |
 | TD-008 | The Windows x64 PyInstaller ZIP and WiX MSI candidates are not Authenticode-signed and have only been verified on the build machine | Windows SmartScreen may warn on another PC, and Smart App Control can block unknown unsigned code on supported clean Windows 11 installations, even though ZIP startup and MSI install/startup/uninstall smoke tests pass locally | Prefer a Microsoft Store MSIX submission for complimentary Store signing, or sign the application executable and MSI with a trusted code-signing certificate; then verify the selected path on a clean supported Windows machine before treating it as a broadly trusted public release |
+| TD-011 | The preparation branch pins Actions, narrows release permissions, and defines main/tag rulesets, but `main` still has mutable Action tags and the server still allows all Actions without SHA enforcement or ref protection | A public contribution or upstream Action compromise would have a larger supply-chain and release-governance impact until the branch is merged and the server settings are enforced | Finish TASK-042 after the approved native PR checks; enable server settings after merge and public-only rulesets/security features at launch |
+| TD-012 | A complete checked-in notice/source/relinking set and package inclusion policy now exist, but the replacement Windows ZIP/MSI and macOS ZIP have not been built to prove notice presence and GPL-only Qt-module absence | Exposing the older v1.0.0 package would retain an unverified redistribution boundary and an unused Qt Virtual Keyboard module | Finish TASK-040 with approved native builds, then publish and revalidate the separate notice-complete patch release through TASK-043 |
 
 ## Resolved
 

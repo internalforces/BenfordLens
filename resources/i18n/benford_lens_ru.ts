@@ -9,6 +9,8 @@
     <message><source>Open File…</source><translation>Открыть файл…</translation></message>
     <message><source>Analyze</source><translation>Анализировать</translation></message>
     <message><source>Export Report…</source><translation>Экспортировать отчёт…</translation></message>
+    <message><source>Third-party notices</source><translation>Уведомления о стороннем ПО</translation></message>
+    <message><source>The third-party notices file is unavailable.</source><translation>Файл уведомлений о стороннем ПО недоступен.</translation></message>
     <message><source>Open a CSV or Excel file to begin.</source><translation>Откройте файл CSV или Excel, чтобы начать.</translation></message>
     <message><source>Open data file</source><translation>Открыть файл данных</translation></message>
     <message><source>Select sheet</source><translation>Выберите лист</translation></message>

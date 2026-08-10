@@ -1,0 +1,38 @@
+name: Feature request
+description: Propose an improvement within the local-first analysis boundary
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Benford Lens keeps data local and important analysis choices explicit. Please do not
+        include a real dataset or personal information.
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: What task is difficult today, and who experiences it?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe the result rather than prescribing an implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Local-data and user-choice impact
+      description: Explain any effect on file formats, dependencies, networking, or automatic decisions.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: This request does not include real user data or confidential information.
+          required: true

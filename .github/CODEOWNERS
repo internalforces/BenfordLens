@@ -1,0 +1,11 @@
+# Default review owner
+* @internalforces
+
+# Release and supply-chain boundaries
+/.github/workflows/ @internalforces
+/.github/release-notes/ @internalforces
+/.github/dependabot.yml @internalforces
+/.github/rulesets/ @internalforces
+/packaging/ @internalforces
+/third_party_licenses/ @internalforces
+/THIRD_PARTY_NOTICES.md @internalforces

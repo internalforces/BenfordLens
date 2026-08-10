@@ -2,10 +2,41 @@
 
 All notable changes to Benford Lens are documented in this file.
 
+## 1.0.1 — 2026-08-11
+
+This public-readiness patch supersedes the private v1.0.0 desktop packages with a reduced,
+notice-complete runtime and adds open-source project governance. It does not change the analysis
+method or local-data boundary.
+
+### Added
+
+- Complete checked-in third-party license, attribution, source, and hash inventories.
+- Qt/PySide source availability and dynamic-library replacement guidance.
+- A translated local in-app view for third-party notices.
+- Contribution, security, support, conduct, issue, and pull-request guidance.
+- Dependabot coverage for uv and GitHub Actions, CODEOWNERS, public-only CodeQL, and tested
+  repository ruleset definitions.
+
+### Changed
+
+- Replaced the broad PySide6 metapackage with PySide6 Essentials and removed Addons.
+- Excluded every Qt 6.11 GPL-only module from native package collection and made completed
+  package checks fail if one is present.
+- Included the complete notice set in macOS app, Windows portable ZIP, and Windows MSI paths.
+- Pinned every GitHub Action to a full commit SHA and uv to an exact version.
+- Restricted release writes to one tag-only publisher after the complete verified asset set is
+  available.
+
+### Security and privacy
+
+- Audited reachable Git history, branches, pull requests, Actions logs, and private v1.0.0 assets
+  before public exposure; no critical/high-risk exposure remained.
+- The application still performs all user-data processing locally and adds no network behavior.
+
 ## 1.0.0 — 2026-08-10
 
-The first public release distributes verified but unsigned Windows x64 ZIP/MSI and macOS arm64
-ZIP packages through GitHub Releases, with matching SHA-256 files and explicit platform-security
+The initial release inside the private repository contains verified but unsigned Windows x64
+ZIP/MSI and macOS arm64 ZIP packages, matching SHA-256 files, and explicit platform-security
 notices.
 
 ### Added

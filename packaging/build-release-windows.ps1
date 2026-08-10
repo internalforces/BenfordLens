@@ -57,8 +57,12 @@ try {
     Expand-Archive -LiteralPath $archivePath -DestinationPath $extractDirectory
     $sourceExecutable = Join-Path $appSource "benford-lens.exe"
     $extractedExecutable = Join-Path $extractDirectory "benford-lens\benford-lens.exe"
+    $extractedNotice = Join-Path $extractDirectory "benford-lens\THIRD_PARTY_NOTICES.md"
     if (-not (Test-Path -LiteralPath $extractedExecutable -PathType Leaf)) {
         throw "The extracted Windows executable is missing: $extractedExecutable"
+    }
+    if (-not (Test-Path -LiteralPath $extractedNotice -PathType Leaf)) {
+        throw "The extracted third-party notice is missing: $extractedNotice"
     }
 
     $sourceHash = (Get-FileHash -LiteralPath $sourceExecutable -Algorithm SHA256).Hash
