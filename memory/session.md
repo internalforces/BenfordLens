@@ -88,6 +88,25 @@ English and Korean README entry points, four bilingual guides, and synthetic-dat
 public README navigation does not expose session/task history, while evidence remains available
 under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT License.
 
+## Follow-up Research — 2026-08-10
+
+- Investigated free and approval-free Windows/macOS distribution paths using current Apple,
+  Microsoft, GitHub, and SignPath documentation.
+- Confirmed that new individual Microsoft Store registration is now free and that Store-submitted
+  MSIX packages receive complimentary signing and hosting, while identity verification and app
+  certification remain.
+- Confirmed that trusted public macOS distribution still requires Apple Developer Program
+  membership and an Apple-issued Developer ID certificate; the fee waiver is limited to eligible
+  nonprofit, accredited educational, and government legal entities.
+- Documented GitHub Releases as a free no-platform-approval hosting path whose unsigned artifacts
+  retain Gatekeeper, SmartScreen, and possible Smart App Control friction.
+- Recommended the minimum-cost production combination: Windows Store MSIX plus paid macOS
+  Developer ID/notarization, with GitHub Releases for release artifacts and checksums.
+- Refined TD-008 to include the newly confirmed Windows Smart App Control blocking risk and the
+  Microsoft Store MSIX resolution path.
+- Added `reports/research-2026-08-10-free-desktop-distribution.md`; no architecture decision,
+  dependency, product code, release artifact, task status, or public-release state changed.
+
 ## Remaining Work
 
 1. Keep public README metrics and release status synchronized with verified evidence.
