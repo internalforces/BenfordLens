@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Completed Tasks — Benford Lens
 
-_Last updated: 2026-08-09_
+_Last updated: 2026-08-10_
 
 | ID | Task | Completed | Owner | Notes |
 |----|------|-----------|-------|-------|
@@ -48,3 +48,4 @@ _Last updated: 2026-08-09_
 | TASK-035 | Windows MSI packaging and verification | 2026-08-08 | Release Manager / Architect / Implementer / Tester | Added a pinned WiX 5.0.2 per-user MSI and repeatable build script; verified metadata, 1,194 embedded files, non-elevated install, Start menu shortcut, 8-second startup, complete uninstall, and checksum generation. See ADR-016 and `reports/release-2026-08-08-windows-msi.md`. |
 | TASK-036 | Current implementation baseline and portfolio-documentation readiness audit | 2026-08-09 | Planner / Documenter / Tester | Revalidated `origin/main` through PR #13 with Ruff, formatting, mypy, and all 241 tests; synchronized project/README/roadmap/changelog status; identified public-documentation gaps; and recorded a proposed audience-separated documentation structure in ADR-017 and `reports/portfolio-documentation-audit-2026-08-09.md`. |
 | TASK-037 | Employment portfolio documentation implementation | 2026-08-09 | Documenter / Implementer / Tester | Accepted ADR-017; rewrote Korean and English README landing pages, added four bilingual public guides, generated and visually checked synthetic-data PNG/GIF assets through a reproducible script, moved historical plans/specs to `reports/development/`, and added the user-selected MIT license. |
+| TASK-029 | v1.0 release preparation and publication | 2026-08-10 | Release Manager / Tester | PR #15 passed native Windows/macOS packaging checks and was reviewed and merged; annotated tag `v1.0.0` targets merge commit `a59aa6f`; GitHub Release v1.0.0 publicly contains the verified Windows x64 ZIP/MSI, macOS arm64 ZIP, and all three matching SHA-256 files. |

@@ -153,8 +153,11 @@ if ($msiFileCount -ne $sourceFileCount) {
 $signature = Get-AuthenticodeSignature -LiteralPath $msiPath
 $hash = Get-FileHash -LiteralPath $msiPath -Algorithm SHA256
 $checksumPath = "$msiPath.sha256"
-"$($hash.Hash)  $([System.IO.Path]::GetFileName($msiPath))" |
-    Set-Content -LiteralPath $checksumPath -Encoding ascii
+[System.IO.File]::WriteAllText(
+    $checksumPath,
+    "$($hash.Hash)  $([System.IO.Path]::GetFileName($msiPath))`n",
+    [System.Text.Encoding]::ASCII
+)
 
 Write-Output "MSI: $msiPath"
 Write-Output "SHA-256: $($hash.Hash)"
