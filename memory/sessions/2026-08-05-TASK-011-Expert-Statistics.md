@@ -35,7 +35,7 @@ remained the next candidate only until the user approved SciPy in this session.
 ## Retained M2 Implementation History
 
 - [x] Create `feature/m2-phase2` from `main` in an isolated worktree
-- [x] Write `docs/superpowers/plans/2026-08-05-m2-phase2.md`
+- [x] Write `reports/development/plans/2026-08-05-m2-phase2.md`
 - [x] Execute all 11 implementation-plan tasks
 - [x] Complete the final whole-branch sanity pass and coverage-gap fixes
 - [x] Confirm 150 tests plus Ruff and mypy during the implementation-status audit

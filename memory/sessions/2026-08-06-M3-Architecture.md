@@ -27,4 +27,4 @@ once into an immutable snapshot; reuse result panels; make drill-down position-a
 MAD/Chi-square per position with one shared log-mantissa KS result; and render reports from the
 same mode-aware snapshot.
 
-See ADR-009 and `docs/superpowers/specs/2026-08-06-m3-analysis-modes-design.md`.
+See ADR-009 and `reports/development/specs/2026-08-06-m3-analysis-modes-design.md`.

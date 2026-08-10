@@ -1,76 +1,131 @@
 # Benford Lens
 
-Benford Lens is a local desktop application for exploring first- and second-digit distributions
-in CSV and Excel data. It compares the user-selected column with the expected Benford
-distributions and provides neutral, reference-oriented context for further review.
+[한국어](README.ko.md) · **English**
 
-All file reading, preprocessing, analysis, charts, and report generation happen on your own
-machine. The application has no account system, telemetry, or network-based analysis.
+![CI](https://github.com/internalforces/BenfordLens/actions/workflows/ci.yml/badge.svg)
 
-## v1.0 feature set
+Benford Lens is a local-first desktop application that helps non-experts explore first- and
+second-digit distributions in CSV and Excel data. Files remain on the user's machine, and every
+important choice—from the worksheet and column to preprocessing and analysis mode—stays explicit.
 
-- CSV and XLSX loading, with explicit column selection
-- User-controlled handling of negative, zero, decimal, blank, duplicate, and text-formatted
-  values, including a before/after preview
-- First-digit, second-digit, and combined expected-versus-observed charts
-- Advisory data-characteristics panel with the underlying metrics
-- Optional expert details with MAD, Chi-square, KS, and sample-size references
-- Raw-row drill-down from chart digits, substring search, and local CSV export
-- Local HTML report export
-- English, Korean, Chinese, Japanese, Spanish, French, and Russian UI selection
-- Scroll-safe desktop workflow with responsive combined charts
-- PyInstaller specifications for macOS, Windows, and Linux
+![Benford Lens combined analysis](docs/assets/benford-lens-overview-en.png)
 
-Benford Lens does not decide whether Benford's Law applies to a dataset. The suitability
-panel describes characteristics of the selected data so that the user can make that judgment.
+## Why this project
 
-## Requirements
+Benford analysis is easy to present as a formula and much harder to turn into a responsible,
+usable product. A practical tool must help people inspect data characteristics without making an
+automatic applicability decision, preserve the original rows behind every chart, and keep
+sensitive datasets out of remote services.
 
-- Python 3.11
-- [uv](https://docs.astral.sh/uv/)
+Benford Lens addresses that product problem as a complete desktop workflow: local file loading,
+user-controlled preprocessing, position-aware analysis, explanatory statistics, drill-down, and
+report export.
+
+## Product highlights
+
+- Load CSV and XLSX files locally, with explicit worksheet and column selection.
+- Preview user-controlled handling of blanks, zeroes, negatives, duplicates, decimals, and
+  text-formatted numbers.
+- Compare observed and expected first-digit, second-digit, or combined distributions.
+- Review advisory data characteristics without an automatic applicability verdict.
+- Reveal optional MAD, Chi-square, KS, and sample-size reference statistics.
+- Click a chart digit to inspect, search, and export matching original rows.
+- Export a self-contained local HTML report.
+- Switch among English, Korean, Chinese, Japanese, Spanish, French, and Russian.
+
+![Benford Lens workflow](docs/assets/benford-lens-workflow.gif)
+
+All visuals above were captured from the real application using deterministic synthetic data.
+
+## Engineering outcomes
+
+| Area | Result |
+|------|--------|
+| Automated quality | Ruff, formatting, mypy across 22 source files, and all 241 tests pass on the current baseline |
+| Performance | The recorded 100,000-row controller benchmark improved by 30.0–31.8% after repeated digit extraction was removed |
+| State consistency | Combined analysis preprocesses once and stores results, statistics, suitability, and row mappings in one immutable snapshot |
+| Internationalization | Six complete Qt translation catalogs plus built-in English, including catalog-parity and live UI regression tests |
+| Desktop resilience | Regression coverage for compact/wide layouts, CJK fonts, long Russian labels, and wheel scrolling over charts |
+| Packaging | Verified macOS arm64 app candidate plus Windows x64 ZIP and user-scoped MSI candidates |
+
+Performance figures are comparative development measurements, not guarantees for every machine.
+The previous 95.00% coverage measurement belongs to the recorded M3 baseline; this README does
+not present it as current coverage.
+
+## Architecture at a glance
+
+```mermaid
+flowchart LR
+    A["Local CSV / XLSX"] --> B["Explicit sheet and column choice"]
+    B --> C["User-configured preprocessing"]
+    C --> D["Immutable analysis snapshot"]
+    D --> E["Suitability context"]
+    D --> F["First / second digit results"]
+    D --> G["Reference statistics"]
+    F --> H["Original-row drill-down"]
+    D --> I["Local HTML report"]
+```
+
+The PySide6 UI delegates workflow state to a framework-agnostic controller. The analysis layer
+uses Pandas, NumPy, and SciPy without importing PySide6, so statistical behavior can be tested
+independently from the desktop interface. No component requires a database or application server.
+
+Read the [architecture guide](docs/architecture.md) for component boundaries and design choices.
 
 ## Run from source
+
+Requirements: Python 3.11 and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync --locked --group dev
 uv run benford-lens
 ```
 
-The application reads the selected source file without modifying it. Report and drill-down
-exports are written only when the user chooses a separate destination.
+The selected source file is opened read-only. Benford Lens writes a CSV or HTML file only when
+the user explicitly chooses a separate export destination.
 
-## Development checks
+## Verify the project
 
 ```bash
 uv run ruff check .
-uv run ruff format --check src/ tests/
+uv run ruff format --check src/ tests/ scripts/
 uv run mypy src/
 QT_QPA_PLATFORM=offscreen uv run pytest
 ```
 
-On macOS, if Qt or a native package fails to load after environment changes, clear the hidden
-file flag as documented in `memory/known-issues.md` before rerunning the checks.
+The current verified result is 241 passing tests. See the
+[verification guide](docs/verification.md) for the test matrix, performance method, packaging
+checks, and explicit verification boundaries.
 
-## Packaging status
+## Packaging and release status
 
-PyInstaller specifications live in `packaging/`. The macOS specification has been built and
-headless-smoke-tested on Apple Silicon, and its bundle version is derived from the project
-version. The Windows x64 specification and WiX 5.0.2 MSI have been built and smoke-tested on
-Windows. Build the Windows application and user-scoped installer with .NET 8 SDK available:
+- **macOS:** an Apple Silicon PyInstaller candidate was built and headless-smoke-tested. Developer
+  ID signing, notarization, and clean-machine verification remain.
+- **Windows:** an x64 PyInstaller ZIP and a WiX 5.0.2 per-user MSI passed local startup and
+  install/startup/uninstall checks. Authenticode signing and clean-machine verification remain.
+- **Linux:** a PyInstaller specification exists but has not been built on a Linux target.
+- **Public release:** source metadata is 1.0.0, but no public `v1.0.0` tag or GitHub Release has
+  been published.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File packaging/build-windows-msi.ps1
-```
+## Documentation
 
-Add `-InstallSmokeTest` to verify installation, startup, and removal; add `-SkipPyInstaller`
-only when reusing an already verified `dist/benford-lens` folder. Public macOS distribution
-still requires Developer ID signing and notarization. Public Windows distribution requires
-Authenticode signing and clean-machine verification. Linux remains unverified on its target
-platform.
+- [Portfolio case study](docs/portfolio-case-study.md) — product constraints, key engineering
+  decisions, measured outcomes, and retrospective
+- [Architecture](docs/architecture.md) — layers, data flow, state model, and privacy boundary
+- [Verification](docs/verification.md) — automated tests, performance evidence, and release checks
+- [User guide](docs/user-guide.md) — file loading, preprocessing, analysis, drill-down, and export
 
-## Project status
+Detailed development evidence remains preserved in `memory/`, `tasks/`, and `reports/`; the four
+documents above are the intentionally small public reading path.
 
-The current source version is `1.0.0`. M3/v1.0 is implemented and includes first-, second-, and
-combined-digit analysis, responsive results, seven UI languages, expert reference statistics,
-drill-down, HTML reporting, and local-only packaging configuration. See `roadmap.md` for milestone
-history and post-v1.0 ideas.
+## Privacy and interpretation boundary
+
+- Data processing is local and in memory; there is no login, telemetry, cloud analysis, or online
+  upload path.
+- The application never modifies the original CSV/XLSX file.
+- Benford Lens describes distributions and data characteristics. It does not decide whether
+  Benford's Law applies to a dataset; that judgment remains with the user.
+
+## License
+
+Benford Lens is available under the [MIT License](LICENSE).

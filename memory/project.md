@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Project: Benford Lens
 
-_Last updated: 2026-08-08_
+_Last updated: 2026-08-09_
 
 ## Summary
 
@@ -18,10 +18,11 @@ external server.
 ## Current State
 
 - **Version**: v1.0.0
-- **Phase**: v1.0.0 metadata merged to `main` through PR #9; signed release preparation blocked
-  on Developer ID and notarization credentials
-- **Next milestone**: Developer ID signing, Apple notarization, v1.0.0 tag, and GitHub Release
-- **Overall health**: 🟡 Release signing credentials required
+- **Phase**: v1.0 implementation and cross-platform release-candidate hardening are merged to
+  `main` through PR #13; no public v1.0.0 tag or GitHub Release has been published
+- **Next milestone**: Sign and clean-machine-verify the approved macOS/Windows release assets,
+  then create the v1.0.0 tag and GitHub Release; Linux remains a later verification target
+- **Overall health**: 🟡 Feature-complete; public distribution trust and verification remain
 
 ## Tech Summary
 
@@ -51,9 +52,12 @@ BenfordLens/
 ├── resources/i18n/           (benford_lens_{ko,zh,ja,es,fr,ru}.ts/.qm — QTranslator translations)
 ├── resources/icons/          (approved macOS PNG/ICNS plus derived Windows multi-size ICO)
 ├── packaging/                 (PyInstaller specs plus WiX MSI source/build script)
+├── docs/                      (public case study, architecture, verification, user guide,
+│                                and synthetic-data visual assets)
+├── reports/development/       (archived implementation plans and design specs)
+├── scripts/                   (reproducible synthetic portfolio asset generator)
 ├── tests/                    (mirrors src/ layout; tests/conftest.py sets QT_QPA_PLATFORM=offscreen)
-├── .github/workflows/ci.yml  (lint, format-check, type-check, test on push/PR to main)
-└── docs/superpowers/plans/    (M1, M2, and 2026-08-06-m3-v1.md implementation plans)
+└── .github/workflows/ci.yml  (lint, format-check, type-check, test on push/PR to main)
 ```
 
 ## Recent Changes
@@ -74,10 +78,25 @@ BenfordLens/
 | 2026-08-06 | TASK-026 added a complete 93-message Russian UI catalog, compiled resource, selector entry, and state-preserving UI coverage to M3 PR #6 |
 | 2026-08-07 | TASK-027 resolved the clipped M3 desktop UI with a scroll-bounded workflow, responsive combined charts, readable chart minimums, automatic result reveal, and geometry regression coverage; all 232 tests pass |
 | 2026-08-07 | TASK-028 built and verified a macOS arm64 PyInstaller distribution candidate, synchronized bundle version metadata with the project version, and produced a checksum-recorded ZIP; Developer ID signing/notarization remains required for public macOS distribution |
+| 2026-08-07 | TASK-029 synchronized the package, lockfile, README, roadmap, and project metadata to v1.0.0, added the v1.0 changelog, and merged PR #9 after CI passed; release signing remains gated on a Developer ID Application identity and Apple notarization credentials |
+| 2026-08-07 | TASK-033 adopted icon concept A and applied transparent PNG/ICNS assets to the macOS PyInstaller bundle; Windows/Linux icons remained unchanged in that task and no new distribution build was produced |
 | 2026-08-08 | TASK-034 built and verified the Windows x64 PyInstaller package with a multi-resolution ICO derived from the approved macOS image; all 241 tests and both folder/ZIP startup smoke tests passed, and an unsigned checksum-recorded ZIP was produced |
 | 2026-08-08 | TASK-035 added a pinned WiX 5.0.2 user-scoped MSI around the Windows x64 one-folder build; metadata, all 1,194 files, non-elevated install, startup, complete uninstall, and SHA-256 generation were verified |
-| 2026-08-07 | TASK-029 synchronized the package, lockfile, README, roadmap, and project metadata to v1.0.0, added the v1.0 changelog, and merged PR #9 after CI passed; release signing remains gated on a Developer ID Application identity and Apple notarization credentials |
-| 2026-08-07 | TASK-033 adopted icon concept A and applied transparent PNG/ICNS assets to the macOS PyInstaller bundle; Windows/Linux icons remain unchanged and no new distribution build was produced |
+| 2026-08-09 | Revalidated the latest `origin/main` baseline: Ruff lint and format checks pass, mypy reports no issues across 22 source files, and all 241 tests pass on macOS with Qt offscreen; portfolio-documentation readiness was audited without changing product scope |
+| 2026-08-09 | TASK-037 implemented the approved portfolio documentation layer: Korean/English README entry points, four bilingual public guides, reproducible synthetic PNG/GIF assets, archived development plans under `reports/development/`, and an MIT license |
+
+## Verified Implementation Baseline
+
+| Area | Status | Evidence / Boundary |
+|------|--------|---------------------|
+| Core analysis | Complete | First-, second-, and combined-digit analysis; user-controlled preprocessing; advisory suitability metrics; optional MAD/Chi-square/KS references |
+| Desktop workflow | Complete | Explicit file/sheet/column/mode choices, responsive results, position-aware drill-down, local CSV export, and local HTML reports |
+| Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs; Windows CJK font handling verified |
+| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 241 pytest tests passed locally; GitHub Actions passed on PR #13 merge commit `b1d63df` |
+| macOS packaging | Candidate verified | Apple Silicon app/ZIP built and headless-smoke-tested; Developer ID signing, notarization, and clean-machine verification remain |
+| Windows packaging | Candidate verified | x64 ZIP and per-user MSI built; install/startup/uninstall smoke tests passed; Authenticode signing and clean-machine verification remain |
+| Linux packaging | Configuration only | PyInstaller spec exists but has not been built or verified on Linux |
+| Public release | Not published | Source version is 1.0.0, but no v1.0.0 tag or GitHub Release exists yet |
 
 ## Constraints
 
