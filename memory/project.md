@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Project: Benford Lens
 
-_Last updated: 2026-08-09_
+_Last updated: 2026-08-10_
 
 ## Summary
 
@@ -18,11 +18,12 @@ external server.
 ## Current State
 
 - **Version**: v1.0.0
-- **Phase**: v1.0 implementation and cross-platform release-candidate hardening are merged to
-  `main` through PR #13; no public v1.0.0 tag or GitHub Release has been published
-- **Next milestone**: Sign and clean-machine-verify the approved macOS/Windows release assets,
-  then create the v1.0.0 tag and GitHub Release; Linux remains a later verification target
-- **Overall health**: 🟡 Feature-complete; public distribution trust and verification remain
+- **Phase**: v1.0 implementation is complete; PR #15 adds the approved unsigned GitHub Releases
+  path and passes native Windows/macOS package checks, but no public v1.0.0 tag or Release exists
+- **Next milestone**: Review and merge PR #15, create the annotated v1.0.0 tag, then verify all six
+  published package/checksum assets; Linux remains a later target
+- **Overall health**: 🟡 Feature-complete; release automation verified, publication and platform
+  trust remain
 
 ## Tech Summary
 
@@ -84,6 +85,7 @@ BenfordLens/
 | 2026-08-08 | TASK-035 added a pinned WiX 5.0.2 user-scoped MSI around the Windows x64 one-folder build; metadata, all 1,194 files, non-elevated install, startup, complete uninstall, and SHA-256 generation were verified |
 | 2026-08-09 | Revalidated the latest `origin/main` baseline: Ruff lint and format checks pass, mypy reports no issues across 22 source files, and all 241 tests pass on macOS with Qt offscreen; portfolio-documentation readiness was audited without changing product scope |
 | 2026-08-09 | TASK-037 implemented the approved portfolio documentation layer: Korean/English README entry points, four bilingual public guides, reproducible synthetic PNG/GIF assets, archived development plans under `reports/development/`, and an MIT license |
+| 2026-08-10 | ADR-018 adopted GitHub Releases for verified unsigned Windows ZIP/MSI and macOS arm64 ZIP assets; PR #15's native package workflow passed metadata, extracted-app startup, MSI install/startup/uninstall, ad-hoc integrity, and checksum checks |
 
 ## Verified Implementation Baseline
 
@@ -92,9 +94,9 @@ BenfordLens/
 | Core analysis | Complete | First-, second-, and combined-digit analysis; user-controlled preprocessing; advisory suitability metrics; optional MAD/Chi-square/KS references |
 | Desktop workflow | Complete | Explicit file/sheet/column/mode choices, responsive results, position-aware drill-down, local CSV export, and local HTML reports |
 | Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs; Windows CJK font handling verified |
-| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 241 pytest tests passed locally; GitHub Actions passed on PR #13 merge commit `b1d63df` |
-| macOS packaging | Candidate verified | Apple Silicon app/ZIP built and headless-smoke-tested; Developer ID signing, notarization, and clean-machine verification remain |
-| Windows packaging | Candidate verified | x64 ZIP and per-user MSI built; install/startup/uninstall smoke tests passed; Authenticode signing and clean-machine verification remain |
+| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 241 pytest tests passed locally and on PR #15 |
+| macOS packaging | Native workflow verified | PR #15 rebuilt the Apple Silicon ZIP, checked metadata/architecture/translations, verified ad-hoc integrity, and smoke-tested original/extracted apps; Developer ID/notarization remain absent |
+| Windows packaging | Native workflow verified | PR #15 rebuilt the x64 ZIP/MSI and passed extraction/startup plus MSI install/startup/uninstall checks; Authenticode remains absent |
 | Linux packaging | Configuration only | PyInstaller spec exists but has not been built or verified on Linux |
 | Public release | Not published | Source version is 1.0.0, but no v1.0.0 tag or GitHub Release exists yet |
 

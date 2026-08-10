@@ -109,6 +109,27 @@ under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT Licen
 
 ## Remaining Work
 
-1. Keep public README metrics and release status synchronized with verified evidence.
-2. Complete TASK-029 when approved signing credentials and release-verification environments
-   are available.
+1. Obtain reviewer/user sign-off and merge PR #15; the authoring agent must not self-merge.
+2. Create annotated tag `v1.0.0` on the approved `main` commit, wait for the tag workflow, and
+   verify the public Release contains all six expected assets and valid checksums.
+
+## Release Distribution Implementation — 2026-08-10
+
+- Received explicit human approval to distribute Windows ZIP/MSI packages through GitHub Releases
+  and adopted the same transparent unsigned path for the existing macOS arm64 target.
+- Created `codex/github-releases-distribution` from the latest merged documentation baseline while
+  preserving the unrelated untracked `README 2.md` file.
+- Added native release scripts for Windows and macOS plus a tag-only, draft-first GitHub Release
+  workflow; no application network path or dependency was added.
+- Added v1.0.0 release notes and Korean/English download guidance that disclose SmartScreen,
+  Smart App Control, Gatekeeper, Authenticode, Developer ID, and notarization boundaries.
+- Recorded ADR-018 and updated TASK-029 from the earlier paid-signing publication gate to verified
+  unsigned assets plus checksums and explicit warnings.
+- Local verification: Ruff, formatting, mypy, 241 tests, workflow YAML, shell syntax, macOS arm64
+  package metadata, six translations, ad-hoc signature integrity, original/extracted startup, and
+  checksum verification all passed.
+- Pushed commits `0b2da02` and `38040b2`, then opened draft PR #15.
+- PR #15 verification: standard CI passed; release metadata passed; macOS arm64 passed in 1m35s;
+  Windows x64 passed in 7m1s with 1,238 MSI files, ZIP startup, and MSI install/startup/uninstall.
+- Publication correctly remained skipped because the event was a pull request rather than a tag.
+- Added `reports/release-2026-08-10-github-release-automation.md` with the verification evidence.
