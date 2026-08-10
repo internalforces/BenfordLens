@@ -11,11 +11,10 @@ Harness Version: 1.1
 
 ## Session Info
 
-- **Date**: 2026-08-09
-- **Agent Role**: Planner / Documenter / Tester
-- **Session Goal**: Revalidate the current implementation baseline, decide the portfolio
-  documentation structure, and implement the user-approved Korean/English public documentation,
-  synthetic visuals, and MIT license.
+- **Date**: 2026-08-10
+- **Agent Role**: Release Manager / Tester / Implementer
+- **Session Goal**: Publish the approved v1.0.0 Windows/macOS packages through GitHub Releases,
+  independently verify every asset, and close the release task.
 
 ## Previous Session Summary
 
@@ -75,11 +74,12 @@ archived in `memory/sessions/2026-08-08-Release-Packaging.md`.
 ## Current Implementation Status
 
 - v1.0 product scope is feature-complete and merged to `main`.
-- macOS arm64 and Windows x64 ZIP/MSI candidates have been built and smoke-tested.
-- macOS Developer ID signing/notarization and Windows Authenticode/clean-machine verification
-  remain before public distribution.
+- Public v1.0.0 macOS arm64 and Windows x64 ZIP/MSI packages are available through GitHub Releases
+  and have been independently downloaded and checksum-verified.
+- macOS Developer ID signing/notarization and Windows Authenticode remain future trust
+  improvements; the public notes disclose the current unsigned status.
 - Linux has a PyInstaller specification but no target-platform build verification.
-- No public v1.0.0 tag or GitHub Release exists.
+- Annotated tag `v1.0.0` targets approved `main` merge commit `a59aa6f`.
 
 ## Portfolio Documentation State
 
@@ -109,9 +109,8 @@ under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT Licen
 
 ## Remaining Work
 
-1. Obtain reviewer/user sign-off and merge PR #15; the authoring agent must not self-merge.
-2. Create annotated tag `v1.0.0` on the approved `main` commit, wait for the tag workflow, and
-   verify the public Release contains all six expected assets and valid checksums.
+1. Review and merge the post-release records and workflow-hardening PR; this does not block the
+   already public v1.0.0 packages.
 
 ## Release Distribution Implementation — 2026-08-10
 
@@ -133,3 +132,21 @@ under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT Licen
   Windows x64 passed in 7m1s with 1,238 MSI files, ZIP startup, and MSI install/startup/uninstall.
 - Publication correctly remained skipped because the event was a pull request rather than a tag.
 - Added `reports/release-2026-08-10-github-release-automation.md` with the verification evidence.
+
+## v1.0.0 Publication — 2026-08-10
+
+- Confirmed PR #15 was human-reviewed and merged to `main` as `a59aa6f`.
+- Created and pushed annotated tag `v1.0.0` on that exact merge commit.
+- Tag workflow `31386790097` passed release metadata, macOS arm64 build/smoke/upload, and Windows
+  x64 ZIP/MSI build/install/startup/uninstall/upload jobs.
+- Diagnosed the final publication failure: the no-checkout job did not provide repository context
+  to `gh release edit`; package outputs were not affected.
+- Downloaded all six assets from the draft, verified the three package SHA-256 values, tested both
+  ZIP archives, and confirmed the MSI is a WiX 5.0.2 x64 installation database.
+- Published the verified draft as public Release v1.0.0 with explicit repository context.
+- Fixed future publication commands to pass `--repo "$GITHUB_REPOSITORY"` and changed Windows
+  checksum writers to emit LF endings for cross-platform verification.
+- Follow-up validation passed workflow YAML parsing, Ruff lint/format, mypy across 22 source
+  files, and all 241 tests after applying the recorded ENV-001 macOS workaround.
+- Completed TASK-029 and retained TD-007/TD-008 as transparent platform-trust limitations.
+- Preserved the unrelated untracked `README 2.md` file without modification.

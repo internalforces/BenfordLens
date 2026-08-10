@@ -95,8 +95,11 @@ try {
 }
 
 $archiveHash = Get-FileHash -LiteralPath $archivePath -Algorithm SHA256
-"$($archiveHash.Hash)  $([System.IO.Path]::GetFileName($archivePath))" |
-    Set-Content -LiteralPath $archiveChecksumPath -Encoding ascii
+[System.IO.File]::WriteAllText(
+    $archiveChecksumPath,
+    "$($archiveHash.Hash)  $([System.IO.Path]::GetFileName($archivePath))`n",
+    [System.Text.Encoding]::ASCII
+)
 
 foreach ($requiredPath in @($archivePath, $archiveChecksumPath, $msiPath, $msiChecksumPath)) {
     if (-not (Test-Path -LiteralPath $requiredPath -PathType Leaf)) {

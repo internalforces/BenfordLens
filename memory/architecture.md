@@ -84,8 +84,10 @@ Packaging — implemented M2: packaging/*.spec (PyInstaller)
     uninstall behavior; its metadata, 1,194 packaged files, non-elevated install, startup, and
     complete removal are verified by `packaging/build-windows-msi.ps1` (TASK-035 / ADR-016).
     Exact version tags rebuild the Windows ZIP/MSI and macOS arm64 ZIP on native GitHub runners,
-    verify their lifecycle behavior, generate SHA-256 files, and publish a draft Release only after
-    every platform succeeds (ADR-018). Linux remains config-only and untested (TD-003).
+    verify their lifecycle behavior, generate SHA-256 files, upload them to a draft Release, and
+    make it public only after every platform succeeds (ADR-018). The first public run produced
+    v1.0.0; release CLI calls now carry explicit repository context, and Windows checksum files use
+    LF endings for portable verification. Linux remains config-only and untested (TD-003).
 ```
 
 ## Data Flow

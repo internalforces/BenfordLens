@@ -38,6 +38,8 @@ _Last updated: 2026-08-10_
 | ISS-003 | The single-page UI exceeded common screen heights and compressed suitability metrics and combined charts below a readable size | 2026-08-07 | Added a scroll-bounded workflow, responsive stacked/side-by-side result layout, 300 px minimum chart height, result auto-reveal, and geometry regression tests; 900x700 now remains 900x700 with 828x400 compact charts |
 | TD-009 | The repository described Benford Lens as open source but had no root `LICENSE` file | 2026-08-09 | The user selected MIT; added the standard MIT license with 2026 Benford Lens contributors copyright notice |
 | TD-010 | Public documentation lacked representative visuals, a concise case study, and a short architecture/verification path | 2026-08-09 | Accepted ADR-017; added Korean/English landing pages, four bilingual public guides, and reproducible synthetic-data screenshots/GIF while preserving internal evidence |
+| ISS-004 | The tag workflow's final publication job had no checkout and did not pass repository context to `gh release edit`, so package jobs succeeded but draft publication failed | 2026-08-10 | Published the already verified v1.0.0 draft with explicit repository context, then added `--repo "$GITHUB_REPOSITORY"` to both publication commands for future releases |
+| ISS-005 | Windows-generated SHA-256 files used CRLF endings, which made macOS `shasum -c` interpret the carriage return as part of the package filename | 2026-08-10 | Verified the v1.0.0 hashes after CRLF normalization and changed both Windows checksum writers to emit an explicit LF ending |
 
 ## Issue Template
 

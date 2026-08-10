@@ -528,4 +528,5 @@ and macOS signing can be added later without replacing this reproducible build b
 integrity and platform trust, but signing is no longer a prerequisite for initial publication.
 GitHub Actions becomes release infrastructure only; no application code or user data is sent to
 GitHub. TASK-029 completes only after reviewer approval, an annotated `v1.0.0` tag, successful
-native jobs, and verification of all six published asset files.
+native jobs, and verification of all six published asset files. Those gates were satisfied on
+2026-08-10 for the public v1.0.0 Release.
