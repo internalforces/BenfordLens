@@ -55,7 +55,7 @@ running a package.
 
 | Area | Result |
 |------|--------|
-| Automated quality | Ruff, formatting, mypy across 22 source files, and all 256 tests pass on the current baseline |
+| Automated quality | Ruff, formatting, mypy across 22 source files, and all 257 tests pass on the current baseline |
 | Performance | The recorded 100,000-row controller benchmark improved by 30.0–31.8% after repeated digit extraction was removed |
 | State consistency | Combined analysis preprocesses once and stores results, statistics, suitability, and row mappings in one immutable snapshot |
 | Internationalization | Six complete Qt translation catalogs plus built-in English, including catalog-parity and live UI regression tests |
@@ -107,7 +107,7 @@ uv run mypy src/
 QT_QPA_PLATFORM=offscreen uv run pytest
 ```
 
-The current verified result is 256 passing tests. See the
+The current verified result is 257 passing tests. See the
 [verification guide](docs/verification.md) for the test matrix, performance method, packaging
 checks, and explicit verification boundaries.
 

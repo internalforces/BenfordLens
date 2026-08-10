@@ -47,9 +47,10 @@ _Last updated: 2026-08-11_
   - [x] Dependabot covers uv and Actions; CODEOWNERS covers release/supply-chain paths.
   - [x] Public-only CodeQL and importable tested `main`/release-tag rulesets exist.
   - [ ] The preparation PR passes standard and explicitly approved native checks and is merged.
-  - [ ] GitHub allows only the selected Actions and requires full SHA pinning.
-  - [ ] Active server-side rules protect `main` and semantic release tags; public security
-        features are enabled and verified.
+  - [x] GitHub allows only GitHub-owned Actions and `astral-sh/setup-uv`.
+  - [x] Active server-side rules protect `main` and semantic release tags without bypass.
+  - [ ] Full SHA pinning is enforced after the pinned workflow reaches `main`.
+  - [ ] Public-only security features are enabled and verified after visibility changes.
 
 ## Task Detail Template
 

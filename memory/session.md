@@ -38,8 +38,13 @@ Harness Version: 1.1
 - [x] Prepared TASK-042 under ADR-021: pinned every Action to a full SHA and uv to 0.11.30,
   restricted Release writes to one tag-only publisher, added uv/Actions Dependabot, CODEOWNERS,
   public-only CodeQL, and importable tested `main`/release-tag rulesets.
+- [x] Enforced the selected-Action allowlist and active no-bypass `main`/release-tag rulesets on
+  GitHub; enabled the dependency graph, alerts, and security updates; confirmed zero initial open
+  Dependabot alerts. Full-SHA enforcement waits for the pinned workflow merge, and public-only
+  secret scanning/reporting/CodeQL remain unavailable while private.
 - [x] Local gate passes: uv lock check, Ruff, formatting, mypy across 22 source files, workflow/
-  issue-form YAML parsing, translation compilation, and all 256 tests.
+  issue-form YAML parsing, tracked Markdown link/image validation, translation compilation, and
+  all 257 tests.
 - [x] No native distribution build, Release mutation, history rewrite, material record deletion,
   or visibility change was performed.
 

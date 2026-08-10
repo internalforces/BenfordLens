@@ -36,31 +36,36 @@ _점검일: 2026-08-11_
 따라서 플랫폼 job 실패 시 공개 또는 부분 draft Release가 생성되지 않고, PR 빌드는
 Release 쓰기 권한을 받지 않는다.
 
-## GitHub 설정 적용 순서
+## 적용한 GitHub 설정
 
-workflow가 merge되기 전 전체 SHA 강제 설정을 켜면 현재 `main`의 mutable tag workflow가
-즉시 실패하므로 다음 순서를 지킨다.
+비공개 상태에서도 제공되는 기능은 준비 PR 전에 실제 서버에 적용하고 다시 읽어 확인했다.
 
-1. 준비 PR의 표준 CI와 명시적으로 승인된 네이티브 패키지 checks를 통과시킨다.
-2. PR을 `main`에 merge한다.
-3. Actions 허용 범위를 GitHub 소유 Actions와 `astral-sh/setup-uv`로 제한하고
-   `sha_pinning_required=true`를 설정한다.
-4. 공개 GitHub Free에서 사용할 수 있는 repository ruleset 두 개를 import 또는 API로
-   적용한다.
-5. dependency graph/alerts, Dependabot security updates, private vulnerability reporting,
-   secret scanning, push protection, CodeQL을 활성화하고 실제 상태를 다시 읽어 확인한다.
+- Actions는 GitHub 소유 Action과 `astral-sh/setup-uv@*`만 허용한다.
+- `Protect main` ruleset ID `20656284`가 active다. PR, 최신 `lint-type-test`,
+  conversation resolution을 요구하고 삭제와 non-fast-forward update를 차단하며 bypass가
+  없다.
+- `Protect release tags` ruleset ID `20656289`가 active다. `v[0-9]*.[0-9]*.[0-9]*`
+  태그 삭제와 이동을 차단하며 bypass가 없다.
+- dependency graph가 SPDX SBOM 45개 구성 요소를 반환한다.
+- Dependabot alerts와 security updates가 활성화되어 있고 초기 open alert는 0개다.
 
-3단계는 merge 직후 수행할 수 있다. Ruleset 및 GitHub Advanced Security의 공개 무료
-기능은 최종 공개 전환 직후 적용·검증한다. 저장소가 비공개인 동안 해당 기능이 계정 플랜에
-제공되지 않는 것은 설정 누락과 구분해 기록한다.
+전체 SHA 강제 설정만 의도적으로 아직 끄었다. 현재 `main`의 기존 workflow가 mutable major
+tag를 사용하므로 준비 branch가 merge되기 전에 `sha_pinning_required=true`로 바꾸면 기존
+workflow 실행이 중단된다. Merge 직후 이 설정을 켜고 API로 다시 확인한다.
+
+Secret scanning은 비공개 상태에서 enable 요청이 HTTP 422
+(`Secret scanning is not available for this repository`)로 거절됐다. Private vulnerability
+reporting endpoint는 HTTP 404, code-scanning alerts endpoint는 아직 활성화되지 않았다는
+HTTP 403을 반환했다. 이 세 기능과 push protection, 첫 CodeQL 실행은 공개 전환 직후
+활성화·검증하고 ruleset도 visibility 변경 후 다시 확인한다.
 
 ## 남은 검증 게이트
 
 - 이 변경은 release workflow의 path에 해당하므로 PR 생성 시 Windows/macOS 배포 빌드가
   실행된다. 프로젝트 헌법에 따라 그 직전에 사람 승인을 받아야 한다.
 - 새 Action 주요 버전과 uv 버전은 PR의 실제 hosted runner에서 검증한다.
-- Ruleset JSON은 정적 테스트로 대상·규칙·status context를 확인하지만, GitHub에 적용한
-  뒤 API 응답과 보호 동작을 다시 확인해야 한다.
+- Ruleset JSON과 실제 GitHub API 응답은 대상·규칙·status context·active 상태·bypass
+  부재가 일치한다. 실제 PR merge gate와 visibility 변경 후 상태를 다시 확인해야 한다.
 - CodeQL upload, secret scanning, private vulnerability reporting은 공개 전환 뒤에만
   최종 검증할 수 있다.
 

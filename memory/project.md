@@ -92,7 +92,7 @@ BenfordLens/
 | 2026-08-11 | TASK-039 audited all reachable Git history, seven remote branches, 16 PRs, 42 Actions logs, six release assets, and tracked engineering records; no critical/high-risk exposure remained, no history rewrite was needed, and ADR-017 evidence was retained |
 | 2026-08-11 | TASK-040 preparation replaced the broad PySide6 metapackage with Essentials, added deterministic Python/Qt/native license and source inventories, bundled relinking guidance and a local in-app notice view, and added package-policy checks; native artifact validation remains explicitly gated |
 | 2026-08-11 | TASK-041 added contributor, support, security, conduct, issue/PR guidance, package project URLs, and complete GitHub description/homepage/topics while keeping the repository private |
-| 2026-08-11 | TASK-042 source preparation pinned all Actions and uv, narrowed release write permission to one tag-only publisher, added uv/Actions Dependabot, CODEOWNERS, public-only CodeQL, and tested main/tag ruleset definitions; merge and server-side enforcement remain |
+| 2026-08-11 | TASK-042 preparation pinned all Actions and uv, narrowed release writes, added uv/Actions Dependabot, CODEOWNERS, and public-only CodeQL; GitHub now enforces a selected-Action allowlist, dependency alerts/updates, and active no-bypass main/release-tag rulesets, while full-SHA and public-only scans remain gated |
 
 ## Verified Implementation Baseline
 
@@ -101,7 +101,7 @@ BenfordLens/
 | Core analysis | Complete | First-, second-, and combined-digit analysis; user-controlled preprocessing; advisory suitability metrics; optional MAD/Chi-square/KS references |
 | Desktop workflow | Complete | Explicit file/sheet/column/mode choices, responsive results, position-aware drill-down, local CSV export, and local HTML reports |
 | Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs; Windows CJK font handling verified |
-| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 256 pytest tests pass locally; hosted-runner and native checks await the preparation PR |
+| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 257 pytest tests pass locally; hosted-runner and native checks await the preparation PR |
 | macOS packaging | Native workflow verified | PR #15 rebuilt the Apple Silicon ZIP, checked metadata/architecture/translations, verified ad-hoc integrity, and smoke-tested original/extracted apps; Developer ID/notarization remain absent |
 | Windows packaging | Native workflow verified | PR #15 rebuilt the x64 ZIP/MSI and passed extraction/startup plus MSI install/startup/uninstall checks; Authenticode remains absent |
 | Linux packaging | Configuration only | PyInstaller spec exists but has not been built or verified on Linux |

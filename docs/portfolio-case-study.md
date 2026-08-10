@@ -78,7 +78,7 @@ UI, 드릴다운, HTML 보고서는 모두 이 스냅샷을 읽습니다. 그 �
 
 - CSV/XLSX 입력부터 전처리, 분석, 드릴다운, HTML 보고서까지 한 제품 흐름으로 완성했습니다.
 - 첫째·둘째·결합 분석을 동일한 상태 모델과 재사용 가능한 UI로 구현했습니다.
-- 현재 기준선에서 Ruff·형식 검사·mypy와 256개 테스트가 통과합니다.
+- 현재 기준선에서 Ruff·형식 검사·mypy와 257개 테스트가 통과합니다.
 - macOS arm64 앱 후보와 Windows x64 ZIP/MSI 후보를 빌드하고 실행·설치·제거를 검증했습니다.
 - 모든 데이터 처리는 로컬에 남으며 원본 입력 파일은 수정하지 않습니다.
 
@@ -167,7 +167,7 @@ problems:
 
 - A complete CSV/XLSX → preprocessing → analysis → drill-down → HTML report workflow.
 - First, second, and combined modes share one state model and reusable result UI.
-- Ruff, formatting, mypy, and all 256 tests pass on the current baseline.
+- Ruff, formatting, mypy, and all 257 tests pass on the current baseline.
 - macOS arm64 and Windows x64 ZIP/MSI candidates were built and smoke-tested.
 - Processing remains local, and the original input file is never modified.
 
