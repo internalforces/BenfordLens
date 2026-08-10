@@ -88,8 +88,48 @@ English and Korean README entry points, four bilingual guides, and synthetic-dat
 public README navigation does not expose session/task history, while evidence remains available
 under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT License.
 
+## Follow-up Research — 2026-08-10
+
+- Investigated free and approval-free Windows/macOS distribution paths using current Apple,
+  Microsoft, GitHub, and SignPath documentation.
+- Confirmed that new individual Microsoft Store registration is now free and that Store-submitted
+  MSIX packages receive complimentary signing and hosting, while identity verification and app
+  certification remain.
+- Confirmed that trusted public macOS distribution still requires Apple Developer Program
+  membership and an Apple-issued Developer ID certificate; the fee waiver is limited to eligible
+  nonprofit, accredited educational, and government legal entities.
+- Documented GitHub Releases as a free no-platform-approval hosting path whose unsigned artifacts
+  retain Gatekeeper, SmartScreen, and possible Smart App Control friction.
+- Recommended the minimum-cost production combination: Windows Store MSIX plus paid macOS
+  Developer ID/notarization, with GitHub Releases for release artifacts and checksums.
+- Refined TD-008 to include the newly confirmed Windows Smart App Control blocking risk and the
+  Microsoft Store MSIX resolution path.
+- Added `reports/research-2026-08-10-free-desktop-distribution.md`; no architecture decision,
+  dependency, product code, release artifact, task status, or public-release state changed.
+
 ## Remaining Work
 
-1. Keep public README metrics and release status synchronized with verified evidence.
-2. Complete TASK-029 when approved signing credentials and release-verification environments
-   are available.
+1. Obtain reviewer/user sign-off and merge PR #15; the authoring agent must not self-merge.
+2. Create annotated tag `v1.0.0` on the approved `main` commit, wait for the tag workflow, and
+   verify the public Release contains all six expected assets and valid checksums.
+
+## Release Distribution Implementation — 2026-08-10
+
+- Received explicit human approval to distribute Windows ZIP/MSI packages through GitHub Releases
+  and adopted the same transparent unsigned path for the existing macOS arm64 target.
+- Created `codex/github-releases-distribution` from the latest merged documentation baseline while
+  preserving the unrelated untracked `README 2.md` file.
+- Added native release scripts for Windows and macOS plus a tag-only, draft-first GitHub Release
+  workflow; no application network path or dependency was added.
+- Added v1.0.0 release notes and Korean/English download guidance that disclose SmartScreen,
+  Smart App Control, Gatekeeper, Authenticode, Developer ID, and notarization boundaries.
+- Recorded ADR-018 and updated TASK-029 from the earlier paid-signing publication gate to verified
+  unsigned assets plus checksums and explicit warnings.
+- Local verification: Ruff, formatting, mypy, 241 tests, workflow YAML, shell syntax, macOS arm64
+  package metadata, six translations, ad-hoc signature integrity, original/extracted startup, and
+  checksum verification all passed.
+- Pushed commits `0b2da02` and `38040b2`, then opened draft PR #15.
+- PR #15 verification: standard CI passed; release metadata passed; macOS arm64 passed in 1m35s;
+  Windows x64 passed in 7m1s with 1,238 MSI files, ZIP startup, and MSI install/startup/uninstall.
+- Publication correctly remained skipped because the event was a pull request rather than a tag.
+- Added `reports/release-2026-08-10-github-release-automation.md` with the verification evidence.

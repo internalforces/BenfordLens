@@ -35,6 +35,19 @@ Benford Lens는 이 문제를 로컬 파일 불러오기, 사용자 주도 전�
 
 위 시각 자료는 모두 결정론적 합성 데이터로 실제 애플리케이션을 구동해 캡처했습니다.
 
+## 다운로드
+
+현재 Windows x64 및 macOS Apple Silicon 패키지는
+[GitHub Releases](https://github.com/internalforces/BenfordLens/releases/latest)에서 받습니다.
+
+- **Windows:** 일반 설치는 사용자 범위 MSI, 포터블 사용은 ZIP을 선택합니다.
+- **macOS:** Apple Silicon Mac용 arm64 ZIP을 선택합니다.
+
+현재 다운로드 패키지는 유료 플랫폼 인증서로 서명하지 않았습니다. Windows에서는 SmartScreen
+경고가 표시되거나 Smart App Control이 실행을 막을 수 있고, macOS에서는 **개인정보 보호 및
+보안 → 그래도 열기**가 필요할 수 있습니다. 실행하기 전에 Release 페이지의 보안 안내를 읽고
+대응하는 SHA-256 체크섬을 확인하세요.
+
 ## 엔지니어링 성과
 
 | 영역 | 결과 |
@@ -95,13 +108,13 @@ QT_QPA_PLATFORM=offscreen uv run pytest
 
 ## 패키징과 공개 상태
 
-- **macOS:** Apple Silicon PyInstaller 후보를 빌드하고 헤드리스 실행을 확인했습니다.
-  Developer ID 서명·공증·클린 머신 검증이 남아 있습니다.
-- **Windows:** x64 PyInstaller ZIP과 WiX 5.0.2 사용자 범위 MSI가 로컬 실행 및
-  설치·실행·제거 검사를 통과했습니다. Authenticode 서명과 클린 머신 검증이 남아 있습니다.
+- **macOS:** 릴리스 워크플로가 Apple Silicon PyInstaller ZIP을 빌드하고 검증합니다.
+  Developer ID 서명·공증·클린 머신 검증은 남아 있습니다.
+- **Windows:** 릴리스 워크플로가 x64 PyInstaller ZIP과 WiX 5.0.2 사용자 범위 MSI를 빌드하고
+  검증합니다. Authenticode 서명과 클린 머신 검증은 남아 있습니다.
 - **Linux:** PyInstaller 설정은 있으나 Linux 대상 환경에서 빌드하지 않았습니다.
-- **공개 릴리스:** 소스 메타데이터는 1.0.0이지만 공개 `v1.0.0` 태그와 GitHub Release는
-  아직 없습니다.
+- **배포:** 버전 태그가 생성되면 두 플랫폼 작업이 모두 통과한 뒤 검증된 미서명 패키지와
+  SHA-256 파일을 GitHub Releases에 게시합니다.
 
 ## 공개 문서
 

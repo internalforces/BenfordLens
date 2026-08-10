@@ -1,0 +1,177 @@
+name: Release packages
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/release.yml"
+      - ".github/release-notes/**"
+      - "packaging/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - "src/**"
+      - "resources/**"
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-metadata:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate release version and notes
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          project_version="$(sed -n 's/^version = "\([^"]*\)"$/\1/p' pyproject.toml | head -n 1)"
+          if [[ ! "$project_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid project version: $project_version" >&2
+            exit 1
+          fi
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            tag_version="${GITHUB_REF_NAME#v}"
+            if [[ "$tag_version" != "$project_version" ]]; then
+              echo "Tag $GITHUB_REF_NAME does not match project version $project_version." >&2
+              exit 1
+            fi
+          fi
+          notes_path=".github/release-notes/$project_version.md"
+          if [[ ! -f "$notes_path" ]]; then
+            echo "Missing release notes: $notes_path" >&2
+            exit 1
+          fi
+          echo "version=$project_version" >>"$GITHUB_OUTPUT"
+
+      - name: Create draft GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="$GITHUB_REF_NAME"
+          notes_path=".github/release-notes/$RELEASE_VERSION.md"
+          if gh release view "$tag" --json isDraft --jq '.isDraft' >/tmp/release-draft; then
+            if [[ "$(cat /tmp/release-draft)" != "true" ]]; then
+              echo "Release $tag is already public; refusing to replace it." >&2
+              exit 1
+            fi
+            gh release edit "$tag" \
+              --title "Benford Lens $tag" \
+              --notes-file "$notes_path"
+          else
+            gh release create "$tag" \
+              --draft \
+              --verify-tag \
+              --title "Benford Lens $tag" \
+              --notes-file "$notes_path"
+          fi
+
+  windows-x64:
+    needs: release-metadata
+    runs-on: windows-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    env:
+      RELEASE_VERSION: ${{ needs.release-metadata.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+
+      - name: Build and verify Windows ZIP and MSI
+        shell: pwsh
+        run: ./packaging/build-release-windows.ps1 -Version $env:RELEASE_VERSION
+
+      - name: Upload Windows assets to draft Release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          gh release upload $env:GITHUB_REF_NAME `
+            "dist/Benford-Lens-$env:RELEASE_VERSION-windows-x64.zip" `
+            "dist/Benford-Lens-$env:RELEASE_VERSION-windows-x64.zip.sha256" `
+            "dist/msi/Benford-Lens-$env:RELEASE_VERSION-windows-x64.msi" `
+            "dist/msi/Benford-Lens-$env:RELEASE_VERSION-windows-x64.msi.sha256" `
+            --clobber
+
+  macos-arm64:
+    needs: release-metadata
+    runs-on: macos-14
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    env:
+      RELEASE_VERSION: ${{ needs.release-metadata.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+
+      - name: Build and verify macOS ZIP
+        run: ./packaging/build-release-macos.sh "$RELEASE_VERSION"
+
+      - name: Upload macOS assets to draft Release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload "$GITHUB_REF_NAME" \
+            "dist/Benford-Lens-$RELEASE_VERSION-macOS-arm64.zip" \
+            "dist/Benford-Lens-$RELEASE_VERSION-macOS-arm64.zip.sha256" \
+            --clobber
+
+  publish-release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [release-metadata, windows-x64, macos-arm64]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Publish verified Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release edit "$GITHUB_REF_NAME" --draft=false --latest
+          gh release view "$GITHUB_REF_NAME" \
+            --json url,isDraft,assets \
+            --jq '{url, isDraft, assets: [.assets[].name]}'

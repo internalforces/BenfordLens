@@ -492,3 +492,40 @@ screenshots/GIFs are reproducibly generated from the real application, and previ
 plans/specs moved from `docs/superpowers/` to `reports/development/` so they remain evidence without
 appearing in the public documentation path. The user selected the MIT license. The original audit
 and execution rationale remain in `reports/portfolio-documentation-audit-2026-08-09.md`.
+
+---
+
+### ADR-018: Publish Verified Unsigned Packages through GitHub Releases
+
+- **Date**: 2026-08-10
+- **Status**: Accepted
+- **Decided by**: User / Release Manager / Architect
+
+**Context**: Developer ID/notarization and Authenticode identities add recurring cost and identity
+approval gates. The user selected GitHub Releases as the initial distribution path and accepted
+that operating-system trust warnings remain. Previously verified package files were not retained
+on the current build host, so publishing old checksums without reproducible assets is not viable.
+
+**Decision**: Build every public asset again from an exact semantic-version tag on native GitHub
+Actions runners. Produce a Windows x64 portable ZIP, a Windows x64 per-user MSI, and a macOS arm64
+ZIP. Verify extracted startup on both platforms, MSI install/startup/uninstall on Windows, macOS
+bundle metadata/architecture/ad-hoc signature integrity, and all matching SHA-256 files. Upload to
+a draft GitHub Release and make it public only after every platform job passes. Release notes and
+README download guidance must disclose that Windows packages lack Authenticode and the macOS app
+lacks Developer ID signing/notarization.
+
+**Rationale**: Native tag builds remove reliance on missing workstation artifacts, checksums tie
+downloads to one verified workflow run, and draft-first publication prevents a partially populated
+Release. Transparent warnings let testers make an informed choice without presenting unsigned
+packages as broadly trusted by either operating system.
+
+**Trade-offs**: SmartScreen may warn, Smart App Control or managed Windows policies may block the
+app, and Gatekeeper may require a manual Open Anyway exception. GitHub availability is required to
+download packages, although the installed application remains fully local and offline. Windows
+and macOS signing can be added later without replacing this reproducible build boundary.
+
+**Consequences**: ADR-013, ADR-015, and ADR-016 still define the distinction between package
+integrity and platform trust, but signing is no longer a prerequisite for initial publication.
+GitHub Actions becomes release infrastructure only; no application code or user data is sent to
+GitHub. TASK-029 completes only after reviewer approval, an annotated `v1.0.0` tag, successful
+native jobs, and verification of all six published asset files.

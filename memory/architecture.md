@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Architecture — Benford Lens
 
-_Last updated: 2026-08-09_
+_Last updated: 2026-08-10_
 
 ## System Overview
 
@@ -83,7 +83,9 @@ Packaging — implemented M2: packaging/*.spec (PyInstaller)
     per-user MSI under LocalAppData, with a Start menu shortcut, standard major upgrades, and
     uninstall behavior; its metadata, 1,194 packaged files, non-elevated install, startup, and
     complete removal are verified by `packaging/build-windows-msi.ps1` (TASK-035 / ADR-016).
-    Linux remains config-only and untested (TD-003).
+    Exact version tags rebuild the Windows ZIP/MSI and macOS arm64 ZIP on native GitHub runners,
+    verify their lifecycle behavior, generate SHA-256 files, and publish a draft Release only after
+    every platform succeeds (ADR-018). Linux remains config-only and untested (TD-003).
 ```
 
 ## Data Flow
@@ -126,6 +128,7 @@ at any point.
 | Application icon | Concept A (lens + descending distribution) is applied to macOS first; Windows/Linux remain unchanged (ADR-014) | 2026-08-07 |
 | Windows installer | WiX 5.0.2 per-user MSI wrapping the PyInstaller one-folder build (ADR-016) | 2026-08-08 |
 | Portfolio documentation | Korean/English landing pages and four bilingual public guides; internal evidence preserved separately (ADR-017) | 2026-08-09 |
+| Public distribution | Native tag builds publish verified unsigned Windows ZIP/MSI and macOS arm64 ZIP assets with checksums and explicit trust warnings (ADR-018) | 2026-08-10 |
 
 ## Architecture Constraints
 

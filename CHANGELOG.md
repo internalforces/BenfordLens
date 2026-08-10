@@ -2,10 +2,11 @@
 
 All notable changes to Benford Lens are documented in this file.
 
-## 1.0.0 — release candidate (unpublished)
+## 1.0.0 — 2026-08-10
 
-The source and package metadata use version 1.0.0, but no public `v1.0.0` tag or GitHub Release
-has been published. The entries below describe the current release-candidate baseline.
+The first public release distributes verified but unsigned Windows x64 ZIP/MSI and macOS arm64
+ZIP packages through GitHub Releases, with matching SHA-256 files and explicit platform-security
+notices.
 
 ### Added
 
@@ -20,6 +21,8 @@ has been published. The entries below describe the current release-candidate bas
 - Matching Korean and English portfolio landing pages plus four bilingual public guides.
 - Reproducible real-application screenshots and a workflow GIF generated with synthetic data.
 - The MIT License.
+- A tag-driven native Windows/macOS release workflow with package smoke tests, checksums, and
+  atomic draft-to-public GitHub Release publication.
 
 ### Changed
 
