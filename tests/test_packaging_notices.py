@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess
@@ -102,6 +103,12 @@ def test_notice_files_are_present_and_nonempty() -> None:
         assert (LICENSE_DIR / filename).stat().st_size > 0
 
 
+def _assert_bundle_matches_recorded_hash(directory: Path) -> None:
+    inventory = json.loads((directory / "PYTHON_DISTRIBUTIONS.json").read_text())
+    bundle = (directory / "PYTHON_DISTRIBUTIONS.txt").read_bytes()
+    assert hashlib.sha256(bundle).hexdigest() == inventory["license_bundle_sha256"]
+
+
 def test_python_license_bundle_is_reproducible(tmp_path: Path) -> None:
     subprocess.run(
         [
@@ -112,8 +119,30 @@ def test_python_license_bundle_is_reproducible(tmp_path: Path) -> None:
         ],
         check=True,
     )
-    for filename in ("PYTHON_DISTRIBUTIONS.txt", "PYTHON_DISTRIBUTIONS.json"):
-        assert (tmp_path / filename).read_bytes() == (LICENSE_DIR / filename).read_bytes()
+    generated = json.loads((tmp_path / "PYTHON_DISTRIBUTIONS.json").read_text())
+    checked_in = json.loads((LICENSE_DIR / "PYTHON_DISTRIBUTIONS.json").read_text())
+    for key in ("schema_version", "python", "platform_specific_locked_distributions"):
+        assert generated[key] == checked_in[key]
+
+    generated_versions = {
+        distribution["name"].lower().replace("_", "-"): distribution["version"]
+        for distribution in generated["distributions"]
+    }
+    checked_in_versions = {
+        distribution["name"].lower().replace("_", "-"): distribution["version"]
+        for distribution in checked_in["distributions"]
+    }
+    assert generated_versions == checked_in_versions
+    for distribution in generated["distributions"]:
+        assert all(len(document["sha256"]) == 64 for document in distribution["license_documents"])
+    _assert_bundle_matches_recorded_hash(tmp_path)
+    _assert_bundle_matches_recorded_hash(LICENSE_DIR)
+
+    # The checked-in canonical bundle was generated on macOS arm64. Native-wheel license files
+    # can name platform-specific library directories, so exact bytes are meaningful only there.
+    if sys.platform == "darwin":
+        for filename in ("PYTHON_DISTRIBUTIONS.txt", "PYTHON_DISTRIBUTIONS.json"):
+            assert (tmp_path / filename).read_bytes() == (LICENSE_DIR / filename).read_bytes()
 
 
 def test_python_inventory_contains_source_hashes() -> None:

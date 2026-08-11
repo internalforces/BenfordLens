@@ -50,6 +50,10 @@ Harness Version: 1.1
   required in Linux CI. Its exact MIT notice now lives with the other platform-specific notices,
   the platform-neutral bundle regenerates on every target, and regression coverage preserves the
   boundary without adding a dependency or weakening notice coverage.
+- [x] The follow-up CI run proved that native NumPy wheels embed platform-specific library paths
+  in otherwise equivalent license files. Bundle verification now checks the exact locked
+  distribution/version set and a recorded full-bundle SHA-256 on every platform, while retaining
+  byte-for-byte canonical reproduction on the macOS arm64 audit platform.
 - [x] No native distribution build, Release mutation, history rewrite, material record deletion,
   or visibility change was performed.
 

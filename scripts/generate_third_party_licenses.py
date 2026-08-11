@@ -45,8 +45,9 @@ EXPECTED_DISTRIBUTIONS = {
     "setuptools": "83.0.0",
 }
 
-# Installed only on one packaged target. Their notices are maintained separately because this
-# script must be reproducible from macOS, Windows, or Linux CI without cross-installing wheels.
+# Installed only on one packaged target. Their notices are maintained separately so the inventory
+# can be generated on macOS, Windows, or Linux CI without cross-installing wheels. License files
+# embedded in native wheels may still contain platform-specific library paths.
 PLATFORM_SPECIFIC_DISTRIBUTIONS = {
     "macholib": "1.16.4",
     "pefile": "2024.8.26",
@@ -139,7 +140,9 @@ def generate(output_dir: Path = OUTPUT_DIR) -> None:
             }
         )
 
-    license_bundle.write_text("".join(bundle_parts), encoding="utf-8", newline="\n")
+    bundle = "".join(bundle_parts)
+    inventory["license_bundle_sha256"] = hashlib.sha256(bundle.encode()).hexdigest()
+    license_bundle.write_text(bundle, encoding="utf-8", newline="\n")
     inventory_path.write_text(
         json.dumps(inventory, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
     )

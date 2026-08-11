@@ -384,6 +384,7 @@
       "version": "1.17.0"
     }
   ],
+  "license_bundle_sha256": "a790d972b7f2a66db8dede762a3771777ed8fce42089a3abdf0da9b22f200418",
   "platform_specific_locked_distributions": {
     "macholib": "1.16.4",
     "pefile": "2024.8.26",
