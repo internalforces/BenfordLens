@@ -31,7 +31,8 @@ Harness Version: 1.1
   notice/source/hash inventory plus Qt relinking guidance.
 - [x] Added GPL-only Qt module deny rules and completed-package checks for both native platforms,
   embedded the notice set in source/specs/ZIP/MSI paths, and exposed it through a local-only
-  translated in-app dialog. The approved native package proof remains.
+  translated in-app dialog. Approved PR #17 run `31447586711` passed the resulting macOS arm64
+  ZIP and Windows x64 ZIP/MSI package checks, completing TASK-040.
 - [x] Completed TASK-041: added contribution, security, support, conduct, issue/PR guidance;
   package project URLs; README notice/community links; and verified GitHub description,
   homepage, and eight topics while keeping visibility private.
@@ -40,8 +41,8 @@ Harness Version: 1.1
   public-only CodeQL, and importable tested `main`/release-tag rulesets.
 - [x] Enforced the selected-Action allowlist and active no-bypass `main`/release-tag rulesets on
   GitHub; enabled the dependency graph, alerts, and security updates; confirmed zero initial open
-  Dependabot alerts. Full-SHA enforcement waits for the pinned workflow merge, and public-only
-  secret scanning/reporting/CodeQL remain unavailable while private.
+  Dependabot alerts. Full-SHA enforcement is now enabled after the pinned workflow merge;
+  public-only secret scanning/reporting/CodeQL remain unavailable while private.
 - [x] Local gate passes: uv lock check, Ruff, formatting, mypy across 22 source files, workflow/
   issue-form YAML parsing, tracked Markdown link/image validation, translation compilation, and
   all 258 tests.
@@ -54,16 +55,19 @@ Harness Version: 1.1
   in otherwise equivalent license files. Bundle verification now checks the exact locked
   distribution/version set and a recorded full-bundle SHA-256 on every platform, while retaining
   byte-for-byte canonical reproduction on the macOS arm64 audit platform.
-- [x] No native distribution build, Release mutation, history rewrite, material record deletion,
-  or visibility change was performed.
+- [x] PR #17 passed Linux CI plus explicitly approved macOS and Windows native verification at
+  `665793a`, then merged through the protected branch as `49edb74`. The full-SHA repository policy
+  was enabled and re-read as true immediately afterward; post-merge `main` CI run `31447921264`
+  also passed.
+- [x] No Release mutation, history rewrite, material record deletion, or visibility change was
+  performed. Native outputs remain expiring Actions artifacts rather than published Releases.
 
 ## Current Recommendation
 
-Keep the repository private. PR #17 is open and its explicitly approved native Windows/macOS
-distribution checks are running. After the focused CI fix and both native checks pass, merge the
-PR, enforce immutable/selected Actions, finish TASK-040/TASK-042, publish a separately versioned
-notice-complete patch release under the release approval gate, and only then request the final
-visibility approval for TASK-044.
+Keep the repository private. TASK-040 is complete and TASK-042 is complete for every feature
+available while private. Merge the follow-up project-record PR, then request the explicit release
+approval for the v1.0.1 tag/publication and v1.0.0 draft transition. Independently re-download and
+verify v1.0.1 under TASK-043 before presenting the final TASK-044 visibility approval.
 
 ## Previous Session Summary
 

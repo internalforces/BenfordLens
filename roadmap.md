@@ -58,7 +58,7 @@ external server.
 
 - [x] Approve the public repository surface after reviewing history, branches, PRs, Actions logs,
   and tracked internal records (TASK-039)
-- [ ] Add and package complete third-party license/attribution notices (TASK-040)
+- [x] Add and package complete third-party license/attribution notices (TASK-040)
 - [x] Add contributor/security guidance and public repository metadata (TASK-041)
 - [ ] Harden Actions references and protect `main` / release tags (TASK-042)
 - [ ] Revalidate the release assets that will become anonymously downloadable (TASK-043)

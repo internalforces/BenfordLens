@@ -602,6 +602,9 @@ TASK-040 remains open until explicit human approval is received and native Windo
 prove that the complete notice set is present and every denied Qt module is absent. See
 `reports/research-2026-08-11-third-party-licensing.md`.
 
+**Fulfilled**: The user-approved PR #17 native run `31447586711` passed those macOS arm64 ZIP and
+Windows x64 ZIP/MSI checks at commit `665793a`; TASK-040 was completed on 2026-08-11.
+
 ---
 
 ### ADR-021: Gate Public Contributions and Releases with Immutable Automation
@@ -633,6 +636,8 @@ major-version changes need real CI verification. A ruleset with zero required ap
 direct pushes but cannot provide independent human review by itself. Public-only security
 features must be enabled immediately after visibility changes rather than proven while private.
 
-**Consequences**: `.github/rulesets/` stores importable, tested policy definitions, but their
-server-side enforcement remains a launch operation. See
+**Consequences**: `.github/rulesets/` stores importable, tested policy definitions. Active
+no-bypass server rulesets, the selected-Action allowlist, and dependency protections were applied
+before PR #17; repository-wide full-SHA enforcement was enabled immediately after its merge.
+Public-only security features remain the final TASK-042 launch operation. See
 `reports/security-2026-08-11-github-hardening.md`.
