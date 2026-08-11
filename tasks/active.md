@@ -11,28 +11,6 @@ _Last updated: 2026-08-11_
 
 ## In Progress
 
-### TASK-040: Add third-party license and attribution coverage to source and binary distributions
-
-- **Owner**: Researcher / Implementer / Release Manager
-- **Priority**: High
-- **Milestone**: M3 / Public launch
-- **Description**: Audit the exact locked runtime and packaged dependency set; add complete
-  project-level third-party notices, applicable license texts and attributions; include the notice
-  set in source, macOS app, Windows ZIP, and Windows MSI; and document the Qt/PySide6 LGPL/GPL/
-  commercial boundary without unsupported legal conclusions.
-- **Definition of Done**:
-  - [x] The exact locked runtime, packaged dependencies, bundled fonts, native libraries, and
-        packaging tools have a verified license/source inventory.
-  - [x] Source-level notices contain applicable license texts, copyright notices, source/relinking
-        information, and attributions.
-  - [x] Packaging configuration includes the notice set in the macOS app, Windows ZIP, and MSI.
-  - [x] Automated checks verify notice presence and content without relying on incidental
-        PyInstaller license collection.
-  - [x] Project metadata, public documentation, and harness records accurately describe the
-        redistribution boundary.
-  - [ ] After explicit human approval, native Windows/macOS builds verify notice presence and
-        GPL-only Qt-module absence in every package.
-
 ### TASK-042: Harden GitHub Actions and default-branch governance
 
 - **Owner**: Security Reviewer / Release Manager
@@ -46,11 +24,31 @@ _Last updated: 2026-08-11_
   - [x] Native build jobs are read-only; only the successful tag publisher can write Releases.
   - [x] Dependabot covers uv and Actions; CODEOWNERS covers release/supply-chain paths.
   - [x] Public-only CodeQL and importable tested `main`/release-tag rulesets exist.
-  - [ ] The preparation PR passes standard and explicitly approved native checks and is merged.
+  - [x] The preparation PR passes standard and explicitly approved native checks and is merged.
   - [x] GitHub allows only GitHub-owned Actions and `astral-sh/setup-uv`.
   - [x] Active server-side rules protect `main` and semantic release tags without bypass.
-  - [ ] Full SHA pinning is enforced after the pinned workflow reaches `main`.
+  - [x] Full SHA pinning is enforced after the pinned workflow reaches `main`.
   - [ ] Public-only security features are enabled and verified after visibility changes.
+
+### TASK-043: Revalidate the release that will become publicly downloadable
+
+- **Owner**: Release Manager / Security Reviewer / Tester
+- **Priority**: High
+- **Milestone**: M3 / Public launch
+- **Description**: Publish a separately versioned v1.0.1 from an exact reviewed `main` tag so the
+  notice-complete package set, rather than the older v1.0.0 package set, becomes the public
+  download. Preserve immutable provenance and verify every release artifact independently.
+- **Definition of Done**:
+  - [x] v1.0.1 is selected instead of silently replacing established v1.0.0 assets.
+  - [ ] Explicit human approval is obtained immediately before the tag-triggered native builds,
+        Release publication, and v1.0.0 draft transition.
+  - [ ] An annotated v1.0.1 tag targets the exact reviewed `main` merge commit.
+  - [ ] Native GitHub-hosted macOS and Windows jobs pass metadata, architecture, notice,
+        denylist, extraction/startup, and MSI install/startup/uninstall checks.
+  - [ ] The v1.0.1 Release contains exactly three packages plus their three SHA-256 files and
+        retains complete platform trust and support disclosures.
+  - [ ] v1.0.0 is returned to draft without deleting or overwriting its tag or assets.
+  - [ ] Every v1.0.1 asset is re-downloaded and independently verified before TASK-044 approval.
 
 ## Task Detail Template
 

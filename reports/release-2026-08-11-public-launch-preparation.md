@@ -4,8 +4,9 @@ _Prepared: 2026-08-11_
 
 ## Scope
 
-This record covers the source, governance, license, automation, and local verification prepared
-before any native distribution build or public visibility change. The repository remains private.
+This record covers the source, governance, license, automation, local checks, explicitly approved
+native verification, and PR #17 merge completed before any Release or public visibility change.
+The repository remains private.
 
 ## Prepared release
 
@@ -52,23 +53,35 @@ desktop Release.
 | User-owned `README 2.md` | Untracked, unread, unmodified, unstaged |
 
 PowerShell is not installed on the macOS preparation host, so Windows script parsing and package
-behavior remain part of the native Windows job. No PyInstaller distribution, ZIP, MSI, tag,
-Release asset, or visibility mutation was produced during this local gate.
+behavior were verified by the native Windows job. No local PyInstaller distribution, tag, Release
+asset, or visibility mutation was produced during the local gate.
 
-## Required next gates
+## Hosted and native verification
 
-1. Commit and push the preparation branch without `README 2.md`.
-2. Obtain explicit human approval immediately before opening the PR, because its path filters run
-   the native Windows/macOS distribution jobs.
-3. Require standard CI, release metadata, and both native package jobs to pass; inspect retained
-   packages for notice presence, Qt denylist absence, checksums, startup/install lifecycle, and
-   exact inventory.
-4. Merge the reviewed PR; then enable full-SHA enforcement. The selected-Action allowlist and
-   active no-bypass `main`/release-tag rulesets are already enforced.
-5. Re-verify both rulesets and enable public-only scanning/reporting features immediately after
-   visibility changes.
-6. Obtain explicit release approval; tag `v1.0.1`, publish its six verified assets, and return
+- PR #17 head: `665793a7b1ddae8d87ef4b1309c3cbb87b5b0833`
+- Linux CI run `31447586712`: pass, including Ruff, formatting, mypy, and 258 tests
+- Native run `31447586711`: pass
+  - release metadata: pass
+  - macOS arm64 ZIP build/notice/denylist/integrity/startup verification: pass in 1m42s
+  - Windows x64 ZIP/MSI build/notice/denylist/startup/install/uninstall verification: pass in 5m10s
+  - tag-only publisher: correctly skipped for the PR event
+- Retained verification artifacts expire after seven days:
+  - `release-macos-arm64`, 78,833,003 bytes, expires 2026-08-18T00:55:52Z
+  - `release-windows-x64`, 199,358,606 bytes, expires 2026-08-18T00:59:11Z
+- PR #17 merge commit: `49edb74bf9d07df8957b1642957fe52a64627907`
+- Post-merge `main` CI run `31447921264`: pass on the exact merge commit
+- Post-merge Actions policy: `sha_pinning_required=true`
+
+## Gate status
+
+1. [x] Commit and push the preparation branch without `README 2.md`.
+2. [x] Obtain explicit approval before PR-triggered native distribution checks.
+3. [x] Pass Linux CI, release metadata, and both native package jobs on the exact PR head.
+4. [x] Merge through protected `main`, then enable and re-read full-SHA enforcement.
+5. [ ] Obtain explicit release approval; tag `v1.0.1`, publish its six verified assets, and return
    v1.0.0 to draft without deleting its tag/assets.
-7. Re-download v1.0.1 and independently verify all files before requesting visibility approval.
-8. Surface the 17 real-display-name commits, retained records, branches/PRs/Actions history,
+6. [ ] Re-download v1.0.1 and independently verify every file before visibility approval.
+7. [ ] Surface the 17 real-display-name commits, retained records, branches/PRs/Actions history,
    unsigned packages, and exact visibility consequences at the final human gate.
+8. [ ] After visibility changes, re-verify both rulesets and enable/test public-only
+   scanning/reporting features.

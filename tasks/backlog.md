@@ -11,7 +11,6 @@ _Last updated: 2026-08-11_
 
 | ID | Task | Priority | Milestone | Size | Notes |
 |----|------|----------|-----------|------|-------|
-| TASK-043 | Revalidate the release that will become publicly downloadable | High | M3 / Public launch | M | Do not expose the existing v1.0.0 assets until TASK-040 is resolved. Decide whether to retain v1.0.0 or issue a notice-complete patch release, then verify checksums, notices, unsigned-platform warnings, startup/install behavior, and release notes. |
 | TASK-044 | Change repository visibility and run the post-launch verification gate | High | M3 / Public launch | S | With explicit human approval, change `internalforces/BenfordLens` from private to public; immediately verify anonymous source/release access, CI badges and links, rulesets, security features, alerts, and the public visibility of branches, PRs, and Actions history. |
 
 ## TASK-014 Review Record — Completed
