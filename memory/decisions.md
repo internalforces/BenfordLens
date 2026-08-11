@@ -706,3 +706,31 @@ CodeQL analysis passed in run `31451987591`; secret and CodeQL alert lists were 
 both no-bypass rulesets and the immutable Action policy remained active. The macOS and Windows
 signing limitations remain transparent under TD-007 and TD-008. See
 `reports/release-2026-08-11-public-launch.md`.
+
+---
+
+### ADR-024: Pair Every Localized README with Its Own Real-UI Capture
+
+- **Date**: 2026-08-11
+- **Status**: Accepted and fulfilled
+- **Decided by**: User request / Documenter / Implementer / Tester
+
+**Context**: The application already supported English, Korean, Simplified Chinese, Japanese,
+Spanish, French, and Russian, but the public repository exposed only English and Korean README
+entry points. A localized README should not illustrate the product with a UI captured in a
+different language.
+
+**Decision**: Keep one complete root README per supported language using the established
+`README.<locale>.md` naming convention, connect all seven through a shared language selector, and
+pair each newly added README with a 1440×960 overview captured from the real application in the
+same locale. Extend the existing deterministic portfolio asset generator to create every
+translated overview from synthetic data only; do not use user data or a remote service.
+
+**Rationale**: Matching the documentation and product language makes each entry point coherent
+for its intended reader. Reusing the real application and one deterministic dataset preserves the
+visual evidence and makes the assets reproducible under the project's local-only boundary.
+
+**Consequences**: Simplified Chinese, Japanese, French, Spanish, and Russian readers now have full
+README entry points and matching screenshots. The public navigation has seven entries, while the
+four detailed guides remain bilingual by design. Future UI languages should add both a complete
+README and a same-language deterministic screenshot.

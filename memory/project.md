@@ -18,8 +18,9 @@ external server.
 ## Current State
 
 - **Version**: v1.0.1 source and current public Release; v1.0.0 is preserved as a draft
-- **Phase**: Public launch complete; TASK-042 and TASK-044 passed their post-visibility gates
-- **Next milestone**: Continue the next approved public documentation milestone
+- **Phase**: Public launch complete; TASK-042 and TASK-044 passed their post-visibility gates;
+  TASK-045 localized documentation is complete locally
+- **Next milestone**: Review and merge the localized README documentation through protected `main`
 - **Overall health**: 🟢 Product, notices, governance, native packages, tag provenance,
   anonymous distribution, and public security controls are verified; documented signing and
   platform-coverage boundaries remain
@@ -93,6 +94,7 @@ BenfordLens/
 | 2026-08-11 | PR #17 merged at `49edb74` after Linux CI and both approved native package jobs passed; TASK-042 now enforces pinned Actions, exact uv, selected Actions, full-SHA references, dependency alerts/updates, and active no-bypass main/release-tag rulesets, while public-only scans remain gated by private visibility |
 | 2026-08-11 | TASK-043 created annotated tag `v1.0.1` at reviewed `main` commit `021a01f`, passed native macOS arm64 and Windows x64 ZIP/MSI checks in run `31448799504`, safely recovered the publisher from an MSI staging-path defect, published and independently re-downloaded exactly six matching assets, and returned v1.0.0 to draft without changing its tag or assets |
 | 2026-08-11 | After explicit TASK-044 approval and final exposure disclosure, changed `internalforces/BenfordLens` to public; anonymously verified source/history/pages and all six v1.0.1 assets; re-read protections; enabled secret scanning, push protection, and private vulnerability reporting; and passed the first public CodeQL analysis in run `31451987591` |
+| 2026-08-11 | TASK-045 added Simplified Chinese, Japanese, French, Spanish, and Russian README entry points; connected all seven README languages; and generated visually verified localized UI screenshots through the deterministic real-app asset workflow |
 
 ## Verified Implementation Baseline
 
@@ -100,7 +102,7 @@ BenfordLens/
 |------|--------|---------------------|
 | Core analysis | Complete | First-, second-, and combined-digit analysis; user-controlled preprocessing; advisory suitability metrics; optional MAD/Chi-square/KS references |
 | Desktop workflow | Complete | Explicit file/sheet/column/mode choices, responsive results, position-aware drill-down, local CSV export, and local HTML reports |
-| Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs; Windows CJK font handling verified |
+| Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs and seven matching README entry points; Windows CJK font handling verified |
 | Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 258 pytest tests pass locally; TASK-044 evidence PR #21 passed `lint-type-test` in run `31451987687` and the first public CodeQL analysis in run `31451987591` |
 | macOS packaging | v1.0.1 native candidate verified | PR #17 run `31447586711` rebuilt the arm64 ZIP, checked metadata/architecture/translations/notices/Qt denylist, verified ad-hoc integrity, and smoke-tested original/extracted apps; Developer ID/notarization remain absent |
 | Windows packaging | v1.0.1 native candidates verified | PR #17 run `31447586711` rebuilt the x64 ZIP/MSI and passed notice/Qt denylist, extraction/startup, and MSI install/startup/uninstall checks; Authenticode remains absent |

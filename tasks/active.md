@@ -11,6 +11,8 @@ _Last updated: 2026-08-11_
 
 ## In Progress
 
+_No tasks currently in progress._
+
 ## Task Detail Template
 
 ```

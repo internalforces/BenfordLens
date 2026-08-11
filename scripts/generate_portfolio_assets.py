@@ -31,6 +31,7 @@ from benford_lens.ui.main_window import MainWindow  # noqa: E402
 OUTPUT_DIR = ROOT / "docs" / "assets"
 WINDOW_SIZE = (1440, 960)
 GIF_WIDTH = 960
+LOCALIZED_OVERVIEW_LANGUAGES = ("ko", "zh", "ja", "fr", "es", "ru")
 
 
 def build_synthetic_dataset() -> pd.DataFrame:
@@ -148,15 +149,21 @@ def main() -> None:
         settle(application)
         frame_paths.append(capture(window, temp_root / "05-drill-down.png"))
 
-        window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
         snapshot = window.controller.state.analysis_snapshot
         assert snapshot is not None
-        window.preprocessing_panel.show_preview(snapshot.preprocessing_preview)
-        window.expert_statistics_panel.toggle_button.setChecked(False)
-        window.scroll_area.ensureWidgetVisible(window.results_widget, 0, 20)
-        settle(application, 240)
-        capture(window, OUTPUT_DIR / "benford-lens-overview-ko.png")
 
+        for language_code in LOCALIZED_OVERVIEW_LANGUAGES:
+            window.language_combo.setCurrentIndex(window.language_combo.findData(language_code))
+            window.preprocessing_panel.show_preview(snapshot.preprocessing_preview)
+            window.expert_statistics_panel.toggle_button.setChecked(False)
+            window.scroll_area.ensureWidgetVisible(window.results_widget, 0, 20)
+            settle(application, 240)
+            capture(
+                window,
+                OUTPUT_DIR / f"benford-lens-overview-{language_code}.png",
+            )
+
+        window.language_combo.setCurrentIndex(window.language_combo.findData("ko"))
         window.first_result_panel.digit_clicked.emit(DigitPosition.FIRST, 1)
         window.scroll_area.ensureWidgetVisible(window.drill_down_panel, 0, 20)
         settle(application)
