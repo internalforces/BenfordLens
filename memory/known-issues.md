@@ -14,7 +14,7 @@ _Last updated: 2026-08-11_
 | ID | Severity | Description | Found | Owner |
 |----|----------|-------------|-------|-------|
 | ENV-001 | Medium | macOS local env: Recent `.venv`-affecting edits can set macOS hidden flag on native extensions (numpy, pandas, PySide6), causing pytest crashes with faulthandler dump during dynamic library loading. Workaround: `chflags -R nohidden .venv` before running tests. Does not affect Linux CI (ubuntu-latest). | 2026-08-04 | DevEnv |
-| ISS-006 | Medium | Project records describe v1.0.0 as publicly available, but GitHub reports `internalforces/BenfordLens` as private. The Release exists and is published inside the private repository, so unauthenticated users cannot access the source or packages. | 2026-08-11 | Release Manager |
+| ISS-006 | Medium | GitHub still reports `internalforces/BenfordLens` as private. The verified v1.0.1 Release exists inside the private repository and v1.0.0 is preserved as a draft, so unauthenticated users cannot access the source or packages until TASK-044 is explicitly approved. | 2026-08-11 | Release Manager |
 
 ## Technical Debt
 
@@ -43,6 +43,7 @@ _Last updated: 2026-08-11_
 | ISS-004 | The tag workflow's final publication job had no checkout and did not pass repository context to `gh release edit`, so package jobs succeeded but draft publication failed | 2026-08-10 | Published the already verified v1.0.0 draft with explicit repository context, then added `--repo "$GITHUB_REPOSITORY"` to both publication commands for future releases |
 | ISS-005 | Windows-generated SHA-256 files used CRLF endings, which made macOS `shasum -c` interpret the carriage return as part of the package filename | 2026-08-10 | Verified the v1.0.0 hashes after CRLF normalization and changed both Windows checksum writers to emit an explicit LF ending |
 | TD-012 | Replacement packages lacked completed notice and GPL-only Qt-module proof | 2026-08-11 | PR #17 run `31447586711` passed macOS arm64 ZIP and Windows x64 ZIP/MSI builds with notice-presence, complete-inventory, startup/install lifecycle, and forbidden Qt-module checks; TASK-040 is complete and TASK-043 now owns publication/revalidation |
+| ISS-007 | The v1.0.1 publisher downloaded all four verified Windows files but retained the MSI pair under `release-assets/msi/`; its one-level asset gate therefore reported the MSI files missing and stopped before publication | 2026-08-11 | Preserved the protected tag and successful native jobs, manually published exactly the same independently verified six run artifacts through a draft-first recovery, re-downloaded and verified the Release, and changed the publisher gate to validate recursively then flatten the six unique expected files before upload |
 
 ## Issue Template
 

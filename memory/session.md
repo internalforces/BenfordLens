@@ -59,15 +59,33 @@ Harness Version: 1.1
   `665793a`, then merged through the protected branch as `49edb74`. The full-SHA repository policy
   was enabled and re-read as true immediately afterward; post-merge `main` CI run `31447921264`
   also passed.
-- [x] No Release mutation, history rewrite, material record deletion, or visibility change was
-  performed. Native outputs remain expiring Actions artifacts rather than published Releases.
+- [x] Merged the follow-up project-record PR #19 as `021a01f`; its post-merge `main` CI run
+  `31448491305` passed before the release tag was created.
+- [x] Received explicit TASK-043 approval immediately before distribution, created annotated tag
+  object `19def39` for v1.0.1 at exact reviewed `main` commit `021a01f`, and triggered native run
+  `31448799504` without changing repository visibility.
+- [x] The run's metadata, macOS arm64, and Windows x64 jobs passed. The macOS package passed
+  architecture, version, notice, denylist, ad-hoc integrity, extraction, and startup checks; the
+  Windows ZIP/MSI passed notice, denylist, extraction/startup, and install/startup/uninstall checks.
+- [x] The publisher rejected the verified Windows artifact because `actions/download-artifact`
+  preserved its `msi/` subdirectory while the strict gate searched only one directory level.
+  No partial Release existed and the protected tag was not moved or replaced.
+- [x] Recovered from the same immutable run artifacts: independently verified all three package
+  checksums and formats, manually created a draft, uploaded exactly six explicit files, matched
+  every GitHub digest, and published v1.0.1 with its complete trust/support disclosures.
+- [x] Re-downloaded all six assets from the published Release into a fresh directory; all three
+  checksum files, both ZIP integrity checks, and all six GitHub digests matched.
+- [x] Returned v1.0.0 to draft only after v1.0.1 verification. Its annotated tag still resolves
+  to `a59aa6f`, and all six original asset IDs, sizes, and digests are unchanged.
+- [x] Kept the repository private. No history rewrite, tag movement, asset replacement, material
+  record deletion, or TASK-044 visibility change was performed.
 
 ## Current Recommendation
 
-Keep the repository private. TASK-040 is complete and TASK-042 is complete for every feature
-available while private. Merge the follow-up project-record PR, then request the explicit release
-approval for the v1.0.1 tag/publication and v1.0.0 draft transition. Independently re-download and
-verify v1.0.1 under TASK-043 before presenting the final TASK-044 visibility approval.
+Keep the repository private until the separate TASK-044 approval. Merge the TASK-043 evidence and
+publisher-path fix through the protected branch, confirm CI, then present the final exposure
+summary and request explicit visibility approval. TASK-042 remains open only for controls that
+cannot be enabled or proven until the repository becomes public.
 
 ## Previous Session Summary
 
