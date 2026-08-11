@@ -77,15 +77,26 @@ Harness Version: 1.1
   checksum files, both ZIP integrity checks, and all six GitHub digests matched.
 - [x] Returned v1.0.0 to draft only after v1.0.1 verification. Its annotated tag still resolves
   to `a59aa6f`, and all six original asset IDs, sizes, and digests are unchanged.
-- [x] Kept the repository private. No history rewrite, tag movement, asset replacement, material
-  record deletion, or TASK-044 visibility change was performed.
+- [x] Presented the final exposure summary, including the 17 real-display-name commits, 28 AI
+  co-author trailers, retained public history/records, and unsigned-package trust boundaries;
+  received explicit TASK-044 approval immediately before the change.
+- [x] Changed `internalforces/BenfordLens` from private to public and anonymously verified the
+  repository, tag, Release, README/badge/assets, nine branches, 20 pull requests, 71 Actions runs,
+  eight topics, and all six v1.0.1 Release assets.
+- [x] Fresh anonymous downloads matched all three SHA-256 files; both ZIP archives passed integrity
+  checks and the MSI was identified as a valid WiX 5.0.2 x64 installation database.
+- [x] Re-read both active no-bypass rulesets, selected Actions, full-SHA enforcement, read-only
+  workflow defaults, Dependabot protections, and required CI after the visibility transition.
+- [x] Enabled secret scanning, push protection, and private vulnerability reporting; both secret
+  and CodeQL alert lists were empty, and the first public CodeQL analysis passed in run
+  `31451987591` alongside `lint-type-test` run `31451987687` on PR #21.
 
 ## Current Recommendation
 
-Keep the repository private until the separate TASK-044 approval. Merge the TASK-043 evidence and
-publisher-path fix through the protected branch, confirm CI, then present the final exposure
-summary and request explicit visibility approval. TASK-042 remains open only for controls that
-cannot be enabled or proven until the repository becomes public.
+Keep the repository public under the verified rulesets and security controls. Merge PR #21 through
+protected `main` after its recorded checks, then continue with the next approved documentation
+milestone. Retain TD-007 and TD-008 until macOS Developer ID/notarization and Windows signing or
+Store distribution are addressed.
 
 ## Previous Session Summary
 

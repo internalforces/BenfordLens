@@ -674,3 +674,35 @@ is a draft with its annotated tag and all six original assets unchanged. The ove
 remains transparently recorded as failed because its native jobs passed but automated publication
 did not. The recursive normalization fix must merge through normal review and CI before TASK-044.
 See `reports/release-2026-08-11-v1.0.1.md`.
+
+---
+
+### ADR-023: Publish the Audited Repository and Verify the Public Boundary
+
+- **Date**: 2026-08-11
+- **Status**: Accepted and fulfilled
+- **Decided by**: User approval / Release Manager / Security Reviewer / Tester
+
+**Context**: TASK-039–043 completed the exposure audit, license and notice correction, repository
+governance, and immutable v1.0.1 release verification while the repository remained private. The
+remaining gate required a final disclosure and explicit approval immediately before public
+visibility, followed by anonymous and public-only security verification.
+
+**Decision**: After surfacing the retained history and engineering records, 17 real-display-name
+commits, 28 AI co-author trailers, and unsigned-package trust boundaries, accept the user's
+explicit TASK-044 approval and change `internalforces/BenfordLens` to public. Preserve the audited
+history, tags, branches, pull requests, Actions history, v1.0.1 Release, and draft v1.0.0 Release.
+Immediately verify anonymous access and package checksums, re-read all repository protections,
+enable secret scanning, push protection, and private vulnerability reporting, and require a
+successful public CodeQL analysis before closing the gate.
+
+**Rationale**: This follows the prepared no-rewrite exposure decision and makes the verified,
+notice-complete v1.0.1 packages available without weakening the contribution or release controls.
+Anonymous download-and-hash verification proves the actual visitor path rather than relying on
+maintainer access.
+
+**Consequences**: Benford Lens is publicly accessible under the MIT License. The first public
+CodeQL analysis passed in run `31451987591`; secret and CodeQL alert lists were empty at launch;
+both no-bypass rulesets and the immutable Action policy remained active. The macOS and Windows
+signing limitations remain transparent under TD-007 and TD-008. See
+`reports/release-2026-08-11-public-launch.md`.
