@@ -17,13 +17,13 @@ external server.
 
 ## Current State
 
-- **Version**: v1.0.1 source; v1.0.0 is the current private-repository Release
-- **Phase**: PR #17 merged the public-launch source, notice, community, and workflow preparation;
-  the replacement v1.0.1 release and repository visibility remain explicitly gated
-- **Next milestone**: Obtain release approval, publish and independently verify v1.0.1, then
-  present the final repository-visibility approval gate; signing and Linux remain later targets
-- **Overall health**: 🟡 Product, source notices, governance, and approved native v1.0.1 candidates
-  are verified; Release publication, public-only security features, and visibility remain gated
+- **Version**: v1.0.1 source and current private-repository Release; v1.0.0 is preserved as a draft
+- **Phase**: TASK-043 published and independently verified v1.0.1; the repository remains private
+  pending the separate final TASK-044 visibility approval
+- **Next milestone**: Present the final exposure summary, obtain explicit TASK-044 approval, then
+  change visibility and run immediate anonymous/security/protection checks
+- **Overall health**: 🟡 Product, notices, governance, native packages, tag provenance, and the
+  v1.0.1 Release are verified; public-only security features and visibility remain gated
 
 ## Tech Summary
 
@@ -92,6 +92,7 @@ BenfordLens/
 | 2026-08-11 | TASK-040 replaced the broad PySide6 metapackage with Essentials; added deterministic Python/Qt/native license, source, relinking, and local in-app notice coverage; and passed approved macOS arm64 ZIP plus Windows x64 ZIP/MSI verification on PR #17 run `31447586711` |
 | 2026-08-11 | TASK-041 added contributor, support, security, conduct, issue/PR guidance, package project URLs, and complete GitHub description/homepage/topics while keeping the repository private |
 | 2026-08-11 | PR #17 merged at `49edb74` after Linux CI and both approved native package jobs passed; TASK-042 now enforces pinned Actions, exact uv, selected Actions, full-SHA references, dependency alerts/updates, and active no-bypass main/release-tag rulesets, while public-only scans remain gated by private visibility |
+| 2026-08-11 | TASK-043 created annotated tag `v1.0.1` at reviewed `main` commit `021a01f`, passed native macOS arm64 and Windows x64 ZIP/MSI checks in run `31448799504`, safely recovered the publisher from an MSI staging-path defect, published and independently re-downloaded exactly six matching assets, and returned v1.0.0 to draft without changing its tag or assets |
 
 ## Verified Implementation Baseline
 
@@ -104,7 +105,7 @@ BenfordLens/
 | macOS packaging | v1.0.1 native candidate verified | PR #17 run `31447586711` rebuilt the arm64 ZIP, checked metadata/architecture/translations/notices/Qt denylist, verified ad-hoc integrity, and smoke-tested original/extracted apps; Developer ID/notarization remain absent |
 | Windows packaging | v1.0.1 native candidates verified | PR #17 run `31447586711` rebuilt the x64 ZIP/MSI and passed notice/Qt denylist, extraction/startup, and MSI install/startup/uninstall checks; Authenticode remains absent |
 | Linux packaging | Configuration only | PyInstaller spec exists but has not been built or verified on Linux |
-| Release object | Published in private repository | Annotated tag `v1.0.0` targets approved merge commit `a59aa6f`; the Release contains the three expected packages and three matching SHA-256 files, but none are anonymously accessible while repository visibility is private |
+| Release object | v1.0.1 published and verified in private repository | Annotated tag object `19def39` targets reviewed merge commit `021a01f`; the Release contains exactly three packages and three matching SHA-256 files, all independently re-downloaded and verified. v1.0.0 remains intact as a draft; neither release is anonymously accessible while repository visibility is private |
 
 ## Constraints
 

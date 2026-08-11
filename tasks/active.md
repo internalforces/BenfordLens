@@ -30,25 +30,26 @@ _Last updated: 2026-08-11_
   - [x] Full SHA pinning is enforced after the pinned workflow reaches `main`.
   - [ ] Public-only security features are enabled and verified after visibility changes.
 
-### TASK-043: Revalidate the release that will become publicly downloadable
+### TASK-044: Change repository visibility and run the post-launch verification gate
 
 - **Owner**: Release Manager / Security Reviewer / Tester
 - **Priority**: High
 - **Milestone**: M3 / Public launch
-- **Description**: Publish a separately versioned v1.0.1 from an exact reviewed `main` tag so the
-  notice-complete package set, rather than the older v1.0.0 package set, becomes the public
-  download. Preserve immutable provenance and verify every release artifact independently.
+- **Description**: With a separate final human approval, change `internalforces/BenfordLens` from
+  private to public, immediately restore or verify protections affected by the transition, enable
+  public-only security controls, and prove anonymous source and release access.
 - **Definition of Done**:
-  - [x] v1.0.1 is selected instead of silently replacing established v1.0.0 assets.
-  - [ ] Explicit human approval is obtained immediately before the tag-triggered native builds,
-        Release publication, and v1.0.0 draft transition.
-  - [ ] An annotated v1.0.1 tag targets the exact reviewed `main` merge commit.
-  - [ ] Native GitHub-hosted macOS and Windows jobs pass metadata, architecture, notice,
-        denylist, extraction/startup, and MSI install/startup/uninstall checks.
-  - [ ] The v1.0.1 Release contains exactly three packages plus their three SHA-256 files and
-        retains complete platform trust and support disclosures.
-  - [ ] v1.0.0 is returned to draft without deleting or overwriting its tag or assets.
-  - [ ] Every v1.0.1 asset is re-downloaded and independently verified before TASK-044 approval.
+  - [ ] The final exposure summary is presented and explicit human approval is obtained
+        immediately before the visibility change.
+  - [ ] Repository visibility is changed to public only after that approval.
+  - [ ] Anonymous access to source, the v1.0.1 tag, Release notes, all six assets, and checksum
+        validation is verified without maintainer credentials.
+  - [ ] The `main` and semantic release-tag rulesets, selected-Action allowlist, full-SHA policy,
+        dependency protections, and required CI are re-read or reapplied after the transition.
+  - [ ] Secret scanning, push protection, private vulnerability reporting, and CodeQL are enabled
+        and verified where GitHub makes them available to the public repository.
+  - [ ] README badges/links, topics, branches, pull requests, Actions history, and the latest
+        release render correctly to an anonymous visitor.
 
 ## Task Detail Template
 

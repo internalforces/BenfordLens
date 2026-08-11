@@ -61,7 +61,7 @@ external server.
 - [x] Add and package complete third-party license/attribution notices (TASK-040)
 - [x] Add contributor/security guidance and public repository metadata (TASK-041)
 - [ ] Harden Actions references and protect `main` / release tags (TASK-042)
-- [ ] Revalidate the release assets that will become anonymously downloadable (TASK-043)
+- [x] Revalidate the release assets that will become anonymously downloadable (TASK-043)
 - [ ] Change visibility with explicit human approval and pass anonymous post-launch checks
   (TASK-044)
 

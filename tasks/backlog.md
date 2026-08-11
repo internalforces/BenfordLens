@@ -9,9 +9,8 @@ Harness Version: 1.1
 
 _Last updated: 2026-08-11_
 
-| ID | Task | Priority | Milestone | Size | Notes |
-|----|------|----------|-----------|------|-------|
-| TASK-044 | Change repository visibility and run the post-launch verification gate | High | M3 / Public launch | S | With explicit human approval, change `internalforces/BenfordLens` from private to public; immediately verify anonymous source/release access, CI badges and links, rulesets, security features, alerts, and the public visibility of branches, PRs, and Actions history. |
+No unstarted task is currently queued. TASK-044 has moved to `tasks/active.md` after TASK-043
+completed.
 
 ## TASK-014 Review Record — Completed
 

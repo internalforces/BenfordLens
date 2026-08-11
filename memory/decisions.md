@@ -641,3 +641,36 @@ no-bypass server rulesets, the selected-Action allowlist, and dependency protect
 before PR #17; repository-wide full-SHA enforcement was enabled immediately after its merge.
 Public-only security features remain the final TASK-042 launch operation. See
 `reports/security-2026-08-11-github-hardening.md`.
+
+---
+
+### ADR-022: Recover v1.0.1 Publication Without Moving the Protected Tag
+
+- **Date**: 2026-08-11
+- **Status**: Accepted and fulfilled
+- **Decided by**: User approval / Release Manager / Security Reviewer
+
+**Context**: Explicit TASK-043 approval authorized the annotated v1.0.1 tag, native packages,
+Release publication, independent verification, and v1.0.0 draft transition. Tag-triggered run
+`31448799504` passed metadata and both native package jobs, but its publisher stopped before
+creating a Release. `actions/download-artifact` retained the Windows MSI pair below `msi/`, while
+the strict six-file gate searched only the top staging directory.
+
+**Decision**: Do not delete, move, or replace the protected v1.0.1 tag and do not rebuild packages.
+Download the two successful immutable run artifacts by ID, independently validate their inner
+checksums, formats, notices, denylist, and native-job provenance, flatten only the verified MSI
+pair into an exact six-file staging set, and reproduce the workflow's draft-first publication
+manually. Keep the Release draft until all six GitHub-recorded digests match, publish it, then
+re-download all six Release assets into a fresh directory and verify them again. Update the
+publisher to validate recursively and flatten the six unique expected files before upload.
+
+**Rationale**: Reusing the already passed native outputs preserves the approved tag-to-binary
+provenance and avoids an unreviewed tag move or materially different rebuild. Draft-first upload,
+explicit filenames, stored-digest comparison, and a second Release-endpoint download provide the
+same safety properties the failed publisher intended.
+
+**Consequences**: v1.0.1 is the verified latest Release in the still-private repository; v1.0.0
+is a draft with its annotated tag and all six original assets unchanged. The overall Actions run
+remains transparently recorded as failed because its native jobs passed but automated publication
+did not. The recursive normalization fix must merge through normal review and CI before TASK-044.
+See `reports/release-2026-08-11-v1.0.1.md`.
