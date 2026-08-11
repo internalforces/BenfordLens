@@ -9,6 +9,8 @@
     <message><source>Open File…</source><translation>Ouvrir un fichier…</translation></message>
     <message><source>Analyze</source><translation>Analyser</translation></message>
     <message><source>Export Report…</source><translation>Exporter le rapport…</translation></message>
+    <message><source>Third-party notices</source><translation>Mentions tierces</translation></message>
+    <message><source>The third-party notices file is unavailable.</source><translation>Le fichier des mentions tierces n’est pas disponible.</translation></message>
     <message><source>Open a CSV or Excel file to begin.</source><translation>Ouvrez un fichier CSV ou Excel pour commencer.</translation></message>
     <message><source>Open data file</source><translation>Ouvrir un fichier de données</translation></message>
     <message><source>Select sheet</source><translation>Sélectionner une feuille</translation></message>

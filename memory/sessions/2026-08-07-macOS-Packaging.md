@@ -5,7 +5,7 @@ Update Trigger: Read at session start; must update before session ends
 Harness Version: 1.1
 -->
 
-# Current Session — Benford Lens
+# Archived Session — Benford Lens
 
 > Archive this file after the next implementation session is completed.
 

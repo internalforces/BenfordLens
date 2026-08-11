@@ -11,10 +11,59 @@ Harness Version: 1.1
 
 ## Session Info
 
-- **Date**: 2026-08-10
-- **Agent Role**: Release Manager / Tester / Implementer
-- **Session Goal**: Publish the approved v1.0.0 Windows/macOS packages through GitHub Releases,
-  independently verify every asset, and close the release task.
+- **Date**: 2026-08-11
+- **Agent Role**: Planner / Researcher / Implementer / Security Reviewer / Release Manager
+- **Session Goal**: Complete TASK-039–044 and every evidence, merge, package, release,
+  hardening, and visibility gate required for a safe public launch.
+
+## Completed This Session
+
+- [x] Created `codex/public-launch-preparation` from current `origin/main` while preserving the
+  unrelated user-owned `README 2.md` as untracked, unread, and unstaged.
+- [x] Completed TASK-039: scanned 101 commits and all reachable objects, seven remote branches,
+  16 PR conversations, 42 Actions runs/logs, the tag and six Release assets; independently
+  verified every package checksum and archive; found no critical/high-risk exposure.
+- [x] Preserved the complete audited history and engineering evidence under ADR-019, moved the
+  stale `memory/session 2.md` content to a dated archive without deletion, and documented the
+  17 real-display-name commits that must be surfaced again at the visibility gate.
+- [x] Audited exact Python/Qt/native/build-tool licensing, recorded ADR-020, replaced the broad
+  PySide6 metapackage with Essentials, removed Addons, and added a deterministic offline
+  notice/source/hash inventory plus Qt relinking guidance.
+- [x] Added GPL-only Qt module deny rules and completed-package checks for both native platforms,
+  embedded the notice set in source/specs/ZIP/MSI paths, and exposed it through a local-only
+  translated in-app dialog. The approved native package proof remains.
+- [x] Completed TASK-041: added contribution, security, support, conduct, issue/PR guidance;
+  package project URLs; README notice/community links; and verified GitHub description,
+  homepage, and eight topics while keeping visibility private.
+- [x] Prepared TASK-042 under ADR-021: pinned every Action to a full SHA and uv to 0.11.30,
+  restricted Release writes to one tag-only publisher, added uv/Actions Dependabot, CODEOWNERS,
+  public-only CodeQL, and importable tested `main`/release-tag rulesets.
+- [x] Enforced the selected-Action allowlist and active no-bypass `main`/release-tag rulesets on
+  GitHub; enabled the dependency graph, alerts, and security updates; confirmed zero initial open
+  Dependabot alerts. Full-SHA enforcement waits for the pinned workflow merge, and public-only
+  secret scanning/reporting/CodeQL remain unavailable while private.
+- [x] Local gate passes: uv lock check, Ruff, formatting, mypy across 22 source files, workflow/
+  issue-form YAML parsing, tracked Markdown link/image validation, translation compilation, and
+  all 258 tests.
+- [x] PR #17 was opened after the native-build approval gate. The first Linux CI run exposed a
+  platform-assumption bug in the deterministic license generator: macOS-only `macholib` was
+  required in Linux CI. Its exact MIT notice now lives with the other platform-specific notices,
+  the platform-neutral bundle regenerates on every target, and regression coverage preserves the
+  boundary without adding a dependency or weakening notice coverage.
+- [x] The follow-up CI run proved that native NumPy wheels embed platform-specific library paths
+  in otherwise equivalent license files. Bundle verification now checks the exact locked
+  distribution/version set and a recorded full-bundle SHA-256 on every platform, while retaining
+  byte-for-byte canonical reproduction on the macOS arm64 audit platform.
+- [x] No native distribution build, Release mutation, history rewrite, material record deletion,
+  or visibility change was performed.
+
+## Current Recommendation
+
+Keep the repository private. PR #17 is open and its explicitly approved native Windows/macOS
+distribution checks are running. After the focused CI fix and both native checks pass, merge the
+PR, enforce immutable/selected Actions, finish TASK-040/TASK-042, publish a separately versioned
+notice-complete patch release under the release approval gate, and only then request the final
+visibility approval for TASK-044.
 
 ## Previous Session Summary
 
@@ -23,7 +72,7 @@ Windows x64 distribution candidates were built and smoke-tested; Windows compati
 were resolved; public signing and clean-machine verification remain. The detailed handoff is
 archived in `memory/sessions/2026-08-08-Release-Packaging.md`.
 
-## Completed This Session
+## Previous Release Session — Completed Work
 
 - [x] Read the project constitution and required context files in the prescribed order.
 - [x] Fetched the latest remote state and created `codex/portfolio-docs-audit` from
@@ -51,7 +100,7 @@ archived in `memory/sessions/2026-08-08-Release-Packaging.md`.
 - [x] Added the user-selected MIT License and marked ADR-017 accepted.
 - [x] Completed TASK-037.
 
-## Verification
+## Previous Release Verification
 
 - Remote baseline: `origin/main` at `b1d63df` (PR #13)
 - GitHub Actions CI on `b1d63df`: pass
@@ -74,8 +123,9 @@ archived in `memory/sessions/2026-08-08-Release-Packaging.md`.
 ## Current Implementation Status
 
 - v1.0 product scope is feature-complete and merged to `main`.
-- Public v1.0.0 macOS arm64 and Windows x64 ZIP/MSI packages are available through GitHub Releases
-  and have been independently downloaded and checksum-verified.
+- The v1.0.0 macOS arm64 and Windows x64 ZIP/MSI packages exist in the private repository's
+  GitHub Release and have been independently downloaded and checksum-verified by an authenticated
+  maintainer; they are not yet publicly accessible.
 - macOS Developer ID signing/notarization and Windows Authenticode remain future trust
   improvements; the public notes disclose the current unsigned status.
 - Linux has a PyInstaller specification but no target-platform build verification.
@@ -109,8 +159,8 @@ under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT Licen
 
 ## Remaining Work
 
-1. Review and merge the post-release records and workflow-hardening PR; this does not block the
-   already public v1.0.0 packages.
+1. Review and merge the post-release records and workflow-hardening PR. This was completed as
+   PR #16, but repository visibility remained private.
 
 ## Release Distribution Implementation — 2026-08-10
 
@@ -143,7 +193,8 @@ under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT Licen
   to `gh release edit`; package outputs were not affected.
 - Downloaded all six assets from the draft, verified the three package SHA-256 values, tested both
   ZIP archives, and confirmed the MSI is a WiX 5.0.2 x64 installation database.
-- Published the verified draft as public Release v1.0.0 with explicit repository context.
+- Changed the verified draft to a non-draft Release v1.0.0 with explicit repository context; the
+  Release remained accessible only to repository readers because repository visibility was private.
 - Fixed future publication commands to pass `--repo "$GITHUB_REPOSITORY"` and changed Windows
   checksum writers to emit LF endings for cross-platform verification.
 - Follow-up validation passed workflow YAML parsing, Ruff lint/format, mypy across 22 source

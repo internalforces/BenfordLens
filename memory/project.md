@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Project: Benford Lens
 
-_Last updated: 2026-08-10_
+_Last updated: 2026-08-11_
 
 ## Summary
 
@@ -18,11 +18,13 @@ external server.
 ## Current State
 
 - **Version**: v1.0.0
-- **Phase**: v1.0.0 is publicly available through GitHub Releases with verified unsigned Windows
-  x64 ZIP/MSI and macOS arm64 ZIP packages
-- **Next milestone**: Improve platform trust with Authenticode and Developer ID/notarization when
-  credentials are available; Linux remains a later target
-- **Overall health**: 🟢 v1.0.0 published and checksum-verified; platform trust limitations remain
+- **Phase**: v1.0.0 release assets are published inside a private GitHub repository; public
+  repository launch preparation is in progress
+- **Next milestone**: Complete public-surface, license-attribution, GitHub hardening, and release
+  gates before changing repository visibility; signing and Linux remain later targets
+- **Overall health**: 🟡 Product and existing native packages are verified; public governance and
+  source-level distribution notices are prepared, while new native packages, server protections,
+  release publication, and visibility remain gated
 
 ## Tech Summary
 
@@ -86,6 +88,11 @@ BenfordLens/
 | 2026-08-09 | TASK-037 implemented the approved portfolio documentation layer: Korean/English README entry points, four bilingual public guides, reproducible synthetic PNG/GIF assets, archived development plans under `reports/development/`, and an MIT license |
 | 2026-08-10 | ADR-018 adopted GitHub Releases for verified unsigned Windows ZIP/MSI and macOS arm64 ZIP assets; PR #15's native package workflow passed metadata, extracted-app startup, MSI install/startup/uninstall, ad-hoc integrity, and checksum checks |
 | 2026-08-10 | PR #15 merged, annotated tag `v1.0.0` was pushed on merge commit `a59aa6f`, and all six package/checksum assets were published and independently downloaded, checksum-verified, and format-tested in GitHub Release v1.0.0 |
+| 2026-08-11 | TASK-038 confirmed the GitHub repository remains private, inventoried all public-exposure surfaces, found no high-confidence secret-pattern or sensitive-filename matches in Git history, and created TASK-039–044 for the public launch gate |
+| 2026-08-11 | TASK-039 audited all reachable Git history, seven remote branches, 16 PRs, 42 Actions logs, six release assets, and tracked engineering records; no critical/high-risk exposure remained, no history rewrite was needed, and ADR-017 evidence was retained |
+| 2026-08-11 | TASK-040 preparation replaced the broad PySide6 metapackage with Essentials, added deterministic Python/Qt/native license and source inventories, bundled relinking guidance and a local in-app notice view, and added package-policy checks; native artifact validation remains explicitly gated |
+| 2026-08-11 | TASK-041 added contributor, support, security, conduct, issue/PR guidance, package project URLs, and complete GitHub description/homepage/topics while keeping the repository private |
+| 2026-08-11 | TASK-042 preparation pinned all Actions and uv, narrowed release writes, added uv/Actions Dependabot, CODEOWNERS, and public-only CodeQL; GitHub now enforces a selected-Action allowlist, dependency alerts/updates, and active no-bypass main/release-tag rulesets, while full-SHA and public-only scans remain gated |
 
 ## Verified Implementation Baseline
 
@@ -94,11 +101,11 @@ BenfordLens/
 | Core analysis | Complete | First-, second-, and combined-digit analysis; user-controlled preprocessing; advisory suitability metrics; optional MAD/Chi-square/KS references |
 | Desktop workflow | Complete | Explicit file/sheet/column/mode choices, responsive results, position-aware drill-down, local CSV export, and local HTML reports |
 | Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs; Windows CJK font handling verified |
-| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 241 pytest tests passed locally and on PR #15 |
+| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 257 pytest tests pass locally; hosted-runner and native checks await the preparation PR |
 | macOS packaging | Native workflow verified | PR #15 rebuilt the Apple Silicon ZIP, checked metadata/architecture/translations, verified ad-hoc integrity, and smoke-tested original/extracted apps; Developer ID/notarization remain absent |
 | Windows packaging | Native workflow verified | PR #15 rebuilt the x64 ZIP/MSI and passed extraction/startup plus MSI install/startup/uninstall checks; Authenticode remains absent |
 | Linux packaging | Configuration only | PyInstaller spec exists but has not been built or verified on Linux |
-| Public release | Published | Annotated tag `v1.0.0` targets approved merge commit `a59aa6f`; the public Release contains the three expected packages and three matching SHA-256 files |
+| Release object | Published in private repository | Annotated tag `v1.0.0` targets approved merge commit `a59aa6f`; the Release contains the three expected packages and three matching SHA-256 files, but none are anonymously accessible while repository visibility is private |
 
 ## Constraints
 

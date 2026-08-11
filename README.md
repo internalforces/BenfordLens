@@ -55,7 +55,7 @@ running a package.
 
 | Area | Result |
 |------|--------|
-| Automated quality | Ruff, formatting, mypy across 22 source files, and all 241 tests pass on the current baseline |
+| Automated quality | Ruff, formatting, mypy across 22 source files, and all 258 tests pass on the current baseline |
 | Performance | The recorded 100,000-row controller benchmark improved by 30.0–31.8% after repeated digit extraction was removed |
 | State consistency | Combined analysis preprocesses once and stores results, statistics, suitability, and row mappings in one immutable snapshot |
 | Internationalization | Six complete Qt translation catalogs plus built-in English, including catalog-parity and live UI regression tests |
@@ -107,7 +107,7 @@ uv run mypy src/
 QT_QPA_PLATFORM=offscreen uv run pytest
 ```
 
-The current verified result is 241 passing tests. See the
+The current verified result is 257 passing tests. See the
 [verification guide](docs/verification.md) for the test matrix, performance method, packaging
 checks, and explicit verification boundaries.
 
@@ -132,6 +132,15 @@ checks, and explicit verification boundaries.
 Detailed development evidence remains preserved in `memory/`, `tasks/`, and `reports/`; the four
 documents above are the intentionally small public reading path.
 
+## Community and notices
+
+- [Contributing guide](CONTRIBUTING.md) — development setup, project boundaries, and pull requests
+- [Support](SUPPORT.md) — usage help, supported scope, and safe synthetic reproductions
+- [Security policy](SECURITY.md) — private vulnerability reporting and supported versions
+- [Code of Conduct](CODE_OF_CONDUCT.md) — respectful participation and private conduct reports
+- [Third-party notices](THIRD_PARTY_NOTICES.md) — exact runtime inventory, license texts, sources,
+  attributions, and Qt relinking guidance
+
 ## Privacy and interpretation boundary
 
 - Data processing is local and in memory; there is no login, telemetry, cloud analysis, or online
@@ -142,4 +151,5 @@ documents above are the intentionally small public reading path.
 
 ## License
 
-Benford Lens is available under the [MIT License](LICENSE).
+Benford Lens is available under the [MIT License](LICENSE). Third-party components remain subject
+to their respective terms documented in the [third-party notices](THIRD_PARTY_NOTICES.md).

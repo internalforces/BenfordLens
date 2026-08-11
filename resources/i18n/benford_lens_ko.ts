@@ -9,6 +9,8 @@
     <message><source>Open File…</source><translation>파일 열기…</translation></message>
     <message><source>Analyze</source><translation>분석</translation></message>
     <message><source>Export Report…</source><translation>보고서 내보내기…</translation></message>
+    <message><source>Third-party notices</source><translation>타사 소프트웨어 고지</translation></message>
+    <message><source>The third-party notices file is unavailable.</source><translation>타사 소프트웨어 고지 파일을 사용할 수 없습니다.</translation></message>
     <message><source>Open a CSV or Excel file to begin.</source><translation>시작하려면 CSV 또는 Excel 파일을 여세요.</translation></message>
     <message><source>Open data file</source><translation>데이터 파일 열기</translation></message>
     <message><source>Select sheet</source><translation>시트 선택</translation></message>

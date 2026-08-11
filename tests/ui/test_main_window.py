@@ -5,12 +5,12 @@ import pytest
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QFont
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QApplication, QBoxLayout
+from PySide6.QtWidgets import QApplication, QBoxLayout, QDialog, QTextBrowser
 
 from benford_lens.analysis.benford import CombinedBenfordResult, DigitPosition
 from benford_lens.analysis.preprocessing import PreprocessingOptions
 from benford_lens.ui.controller import AnalysisMode
-from benford_lens.ui.main_window import MainWindow
+from benford_lens.ui.main_window import MainWindow, _third_party_notices_path
 
 
 @pytest.fixture
@@ -230,11 +230,32 @@ def test_compact_translated_layout_remains_inside_the_viewport(window, app, tmp_
         window.mode_combo,
         window.analyze_button,
         window.export_report_button,
+        window.notices_button,
         window.language_combo,
     ):
         control_position = control.mapTo(window, QPoint(0, 0))
         assert control_position.x() >= 0
         assert control_position.x() + control.width() <= window.width()
+
+
+def test_third_party_notices_are_available_from_the_local_app(window, monkeypatch):
+    shown = {}
+
+    def fake_exec(dialog):
+        shown["title"] = dialog.windowTitle()
+        browser = dialog.findChild(QTextBrowser)
+        assert browser is not None
+        shown["text"] = browser.toPlainText()
+        return QDialog.DialogCode.Accepted
+
+    monkeypatch.setattr(QDialog, "exec", fake_exec)
+
+    window.notices_button.click()
+
+    assert _third_party_notices_path().is_file()
+    assert shown["title"] == "Third-party notices"
+    assert "PySide6 Essentials" in shown["text"]
+    assert "complete offline notice set" in shown["text"]
 
 
 def test_second_digit_chart_click_shows_matching_original_rows_and_heading(window, tmp_path):

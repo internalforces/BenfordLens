@@ -25,6 +25,7 @@ executable_relative="Benford Lens.app/Contents/MacOS/benford-lens"
 work_dir="$project_root/build/release-macos"
 extract_dir="$(mktemp -d)"
 log_file="$(mktemp)"
+forbidden_qt_pattern='qt(canvaspainter|coap|graphs|grpc|httpserver|lottie|mqtt|networkauth|qmlcompiler|quick3d|quicktimeline|virtualkeyboard|waylandcompositor)'
 
 if command -v uv >/dev/null 2>&1; then
     pyinstaller=(uv run pyinstaller)
@@ -54,6 +55,35 @@ run_startup_smoke_test() {
     fi
     kill "$app_pid"
     wait "$app_pid" 2>/dev/null || true
+}
+
+verify_notice_bundle() {
+    local resources_path="$1"
+    local required_path
+    for required_path in \
+        "$resources_path/THIRD_PARTY_NOTICES.md" \
+        "$resources_path/docs/qt-relinking.md" \
+        "$resources_path/third_party_licenses/GPL-3.0.txt" \
+        "$resources_path/third_party_licenses/LGPL-3.0.txt" \
+        "$resources_path/third_party_licenses/PYTHON_DISTRIBUTIONS.txt" \
+        "$resources_path/third_party_licenses/QT_ATTRIBUTIONS.md" \
+        "$resources_path/third_party_licenses/QT_LICENSE_TEXTS.txt"; do
+        if [[ ! -s "$required_path" ]]; then
+            echo "Required packaged notice is missing or empty: $required_path" >&2
+            return 1
+        fi
+    done
+}
+
+verify_forbidden_qt_modules_absent() {
+    local bundle_path="$1"
+    local findings
+    findings="$(find "$bundle_path" -type f -print | grep -Ei "$forbidden_qt_pattern" || true)"
+    if [[ -n "$findings" ]]; then
+        echo "Unused GPL-only Qt module files were packaged:" >&2
+        echo "$findings" >&2
+        return 1
+    fi
 }
 
 cd "$project_root"
@@ -87,6 +117,9 @@ if [[ "$translation_count" != "6" ]]; then
     exit 1
 fi
 
+verify_notice_bundle "$app_path/Contents/Resources"
+verify_forbidden_qt_modules_absent "$app_path"
+
 xattr -cr "$app_path"
 codesign --sign - --force --all-architectures --timestamp --deep "$app_path"
 codesign --verify --deep --strict "$app_path"
@@ -97,6 +130,8 @@ ditto -c -k --sequesterRsrc --keepParent "$app_path" "$archive_path"
 ditto -x -k "$archive_path" "$extract_dir"
 
 codesign --verify --deep --strict "$extract_dir/Benford Lens.app"
+verify_notice_bundle "$extract_dir/Benford Lens.app/Contents/Resources"
+verify_forbidden_qt_modules_absent "$extract_dir/Benford Lens.app"
 run_startup_smoke_test "$extract_dir/$executable_relative"
 
 (

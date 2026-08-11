@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Architecture — Benford Lens
 
-_Last updated: 2026-08-10_
+_Last updated: 2026-08-11_
 
 ## System Overview
 
@@ -61,6 +61,11 @@ Internationalization (UI Layer only) — implemented M2, expanded M3
     entries use their own script fonts. Both paths include Windows system-font candidates while
     retaining macOS/Linux fallbacks (TASK-030).
 
+Local Legal/Attribution View (UI Layer)
+└── Reads the bundled `THIRD_PARTY_NOTICES.md` into an in-app text dialog. It opens no browser,
+    makes no network request, and uses the same source/bundled path boundary as translation
+    resources.
+
 Analysis Engine (Pandas / NumPy / SciPy — no UI dependency)
 ├── File loaders (CSV, XLSX) — implemented M1: src/benford_lens/io/
 ├── Preprocessing pipeline — implemented M2: src/benford_lens/analysis/preprocessing.py
@@ -85,9 +90,15 @@ Packaging — implemented M2: packaging/*.spec (PyInstaller)
     complete removal are verified by `packaging/build-windows-msi.ps1` (TASK-035 / ADR-016).
     Exact version tags rebuild the Windows ZIP/MSI and macOS arm64 ZIP on native GitHub runners,
     verify their lifecycle behavior, generate SHA-256 files, upload them to a draft Release, and
-    make it public only after every platform succeeds (ADR-018). The first public run produced
-    v1.0.0; release CLI calls now carry explicit repository context, and Windows checksum files use
-    LF endings for portable verification. Linux remains config-only and untested (TD-003).
+    publish it inside the repository only after every platform succeeds (ADR-018). The first tag
+    run produced the non-draft v1.0.0 Release inside the private repository; release CLI calls now
+    carry explicit repository context, and Windows checksum files use LF endings for portable
+    verification. Public-release preparation replaces the broad PySide6 metapackage with
+    PySide6 Essentials, rejects every Qt 6.11 GPL-only module during collection and completed
+    package checks, and embeds the deterministic `THIRD_PARTY_NOTICES.md`,
+    `third_party_licenses/`, and Qt relinking guide in both native package formats (ADR-020).
+    Native verification of this new boundary still requires the explicit distribution-build gate.
+    Linux remains config-only and untested (TD-003).
 ```
 
 ## Data Flow
@@ -131,6 +142,7 @@ at any point.
 | Windows installer | WiX 5.0.2 per-user MSI wrapping the PyInstaller one-folder build (ADR-016) | 2026-08-08 |
 | Portfolio documentation | Korean/English landing pages and four bilingual public guides; internal evidence preserved separately (ADR-017) | 2026-08-09 |
 | Public distribution | Native tag builds publish verified unsigned Windows ZIP/MSI and macOS arm64 ZIP assets with checksums and explicit trust warnings (ADR-018) | 2026-08-10 |
+| Third-party distribution boundary | PySide6 Essentials only; GPL-only Qt module denylist; bundled offline notices, sources, and relinking guidance (ADR-020) | 2026-08-11 |
 
 ## Architecture Constraints
 

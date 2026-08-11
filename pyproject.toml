@@ -1,16 +1,24 @@
 [project]
 name = "benford-lens"
-version = "1.0.0"
+version = "1.0.1"
 description = "Analyze Benford's Law on local CSV/Excel data, entirely on your own machine."
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.11"
 dependencies = [
-    "pyside6>=6.7",
+    "pyside6-essentials>=6.7",
     "pandas>=2.2",
     "scipy>=1.14",
     "matplotlib>=3.9",
     "openpyxl>=3.1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/internalforces/BenfordLens#readme"
+Repository = "https://github.com/internalforces/BenfordLens"
+Documentation = "https://github.com/internalforces/BenfordLens/tree/main/docs"
+Issues = "https://github.com/internalforces/BenfordLens/issues"
+Changelog = "https://github.com/internalforces/BenfordLens/blob/main/CHANGELOG.md"
 
 [project.scripts]
 benford-lens = "benford_lens.__main__:main"

@@ -7,7 +7,7 @@ Harness Version: 1.1
 
 # Decision Log — Benford Lens
 
-_Last updated: 2026-08-09_
+_Last updated: 2026-08-11_
 
 ## Template
 
@@ -510,7 +510,8 @@ on the current build host, so publishing old checksums without reproducible asse
 Actions runners. Produce a Windows x64 portable ZIP, a Windows x64 per-user MSI, and a macOS arm64
 ZIP. Verify extracted startup on both platforms, MSI install/startup/uninstall on Windows, macOS
 bundle metadata/architecture/ad-hoc signature integrity, and all matching SHA-256 files. Upload to
-a draft GitHub Release and make it public only after every platform job passes. Release notes and
+a draft GitHub Release and publish it within the repository only after every platform job passes.
+Release notes and
 README download guidance must disclose that Windows packages lack Authenticode and the macOS app
 lacks Developer ID signing/notarization.
 
@@ -529,4 +530,109 @@ integrity and platform trust, but signing is no longer a prerequisite for initia
 GitHub Actions becomes release infrastructure only; no application code or user data is sent to
 GitHub. TASK-029 completes only after reviewer approval, an annotated `v1.0.0` tag, successful
 native jobs, and verification of all six published asset files. Those gates were satisfied on
-2026-08-10 for the public v1.0.0 Release.
+2026-08-10 for the non-draft v1.0.0 Release inside the private repository; anonymous public access
+still depends on the separate repository-visibility decision.
+
+---
+
+### ADR-019: Preserve the Audited Public Repository History and Engineering Evidence
+
+- **Date**: 2026-08-11
+- **Status**: Accepted
+- **Decided by**: User objective / Planner / Security Reviewer
+
+**Context**: Changing the repository from private to public will expose all reachable Git history,
+remote branches and tags, pull-request conversations, and Actions history/logs. ADR-017 already
+preserves internal engineering evidence unless specific sensitive or unsuitable content is found.
+
+**Decision**: Preserve the complete reachable history, all six fully merged topic branches, the
+v1.0.0 tag, pull-request conversations, Actions logs, and the audited `memory/`, `tasks/`,
+`prompts/`, and `reports/` evidence. Do not rewrite history. Preserve the stale
+`memory/session 2.md` content under the dated session archive. Keep the user-owned untracked
+`README 2.md` outside version control.
+
+**Rationale**: The TASK-039 scan found no critical/high-risk exposure, credential, private-key
+body, personal absolute path, personal email, or source dataset in reachable project history.
+All topic branches are ancestors of `main`, so their contents are already reachable. Retaining the
+records provides traceable engineering evidence without adding a new sensitive surface.
+
+**Trade-offs**: Public history exposes 17 commits with the maintainer's real display name and 28
+AI co-author trailers. The final TASK-044 approval must surface the real-name exposure again. The
+existing release remains blocked separately by incomplete third-party notices and absent repository
+protections.
+
+**Consequences**: No destructive history operation or branch deletion is required. TASK-040,
+TASK-042, and TASK-043 remain mandatory before the visibility change. See
+`reports/security-2026-08-11-public-exposure.md`.
+
+---
+
+### ADR-020: Limit Qt Distribution to the Audited Essentials Runtime
+
+- **Date**: 2026-08-11
+- **Status**: Accepted
+- **Decided by**: User objective / Architect / Security Reviewer / Release Manager
+
+**Context**: The `pyside6` metapackage installed both Essentials and Addons. Although Benford Lens
+uses only QtCore, QtGui, QtWidgets, and QtSvg, the previous private v1.0.0 package consequently
+contained unused Qt Virtual Keyboard files, which Qt 6.11 offers under GPL-3.0-only terms. The
+source repository and future public packages also need a complete, reproducible notice and source
+availability record rather than incidental license files collected by PyInstaller.
+
+**Decision**: Depend on `pyside6-essentials` instead of the `pyside6` metapackage. Maintain a
+complete Qt 6.11 GPL-only module denylist in both native PyInstaller specifications and fail native
+release verification if any matching module file remains. Ship `THIRD_PARTY_NOTICES.md`, the
+offline `third_party_licenses/` set, and `docs/qt-relinking.md` in source and every desktop package,
+and expose the primary notice document through a local-only in-app dialog. Preserve exact
+Qt/PySide source identifiers and license-document hashes. Supersede the private v1.0.0 packages
+with a separately versioned notice-complete release; do not replace or delete the existing release.
+
+**Rationale**: The distribution boundary now matches the code's actual Qt use, removes an unused
+GPL-only module before public exposure, and turns licensing expectations into deterministic tests
+and native package checks. Dynamic Qt loading plus documented library replacement preserves a
+practical relinking path without changing the application's local-only architecture.
+
+**Trade-offs**: Essentials still contains unused permissively/LGPL-licensed Qt modules, so the
+denylist and completed-package scan remain necessary. The checked-in notice set is large, and
+license/source inventories must be updated whenever a locked runtime or packaging tool changes.
+This engineering record is not legal advice.
+
+**Consequences**: The source and static checks can complete before a distribution build, but
+TASK-040 remains open until explicit human approval is received and native Windows/macOS packages
+prove that the complete notice set is present and every denied Qt module is absent. See
+`reports/research-2026-08-11-third-party-licensing.md`.
+
+---
+
+### ADR-021: Gate Public Contributions and Releases with Immutable Automation
+
+- **Date**: 2026-08-11
+- **Status**: Accepted
+- **Decided by**: User objective / Security Reviewer / Release Manager
+
+**Context**: The private repository allowed every Action, used mutable major tags, granted write
+tokens to all release jobs, and had no branch or tag protection. Public pull requests and
+anonymously downloadable packages increase the impact of a compromised workflow dependency,
+over-permissioned job, or moved release tag.
+
+**Decision**: Pin every Action to a full commit SHA with a release-tag comment, pin the uv tool
+version, allow only GitHub-owned Actions plus `astral-sh/setup-uv`, and enable repository-wide
+full-SHA enforcement after the pinned workflow is merged. Give build jobs read-only tokens and
+centralize Release writes in one tag-only publisher after the complete asset set is verified.
+Monitor uv and Actions through Dependabot; run CodeQL when the repository is public. Require PRs
+and current CI for `main`, block main deletion/force-push, and block semantic release-tag deletion
+or movement through repository rulesets with no standing bypass.
+
+**Rationale**: Immutable identities and a narrow allowlist reduce upstream substitution risk.
+Separating build and publication removes write credentials from untrusted PR build paths.
+Rulesets preserve a review/check trail without requiring a second maintainer's approval for this
+currently single-maintainer project.
+
+**Trade-offs**: Dependabot must deliberately update both SHA and version comments. Hosted-runner
+major-version changes need real CI verification. A ruleset with zero required approvals prevents
+direct pushes but cannot provide independent human review by itself. Public-only security
+features must be enabled immediately after visibility changes rather than proven while private.
+
+**Consequences**: `.github/rulesets/` stores importable, tested policy definitions, but their
+server-side enforcement remains a launch operation. See
+`reports/security-2026-08-11-github-hardening.md`.

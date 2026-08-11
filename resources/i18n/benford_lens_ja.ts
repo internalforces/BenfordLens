@@ -9,6 +9,8 @@
     <message><source>Open File…</source><translation>ファイルを開く…</translation></message>
     <message><source>Analyze</source><translation>分析</translation></message>
     <message><source>Export Report…</source><translation>レポートを書き出す…</translation></message>
+    <message><source>Third-party notices</source><translation>サードパーティ通知</translation></message>
+    <message><source>The third-party notices file is unavailable.</source><translation>サードパーティ通知ファイルを利用できません。</translation></message>
     <message><source>Open a CSV or Excel file to begin.</source><translation>開始するには CSV または Excel ファイルを開いてください。</translation></message>
     <message><source>Open data file</source><translation>データファイルを開く</translation></message>
     <message><source>Select sheet</source><translation>シートを選択</translation></message>
