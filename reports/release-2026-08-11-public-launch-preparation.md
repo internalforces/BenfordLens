@@ -42,7 +42,7 @@ desktop Release.
 | Ruff lint | Pass |
 | Ruff format | Pass |
 | mypy | Pass — 22 source files |
-| pytest | Pass — 257 tests |
+| pytest | Pass — 258 tests |
 | Translation compilation | Pass — six catalogs, 95 entries each |
 | Workflow / issue-form YAML parsing | Pass |
 | Tracked Markdown link and image validation | Pass — 50+ local targets and 8+ images |

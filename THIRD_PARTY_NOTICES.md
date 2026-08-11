@@ -137,7 +137,7 @@ Python/.NET implementation is not copied into the installed application.
 | PyInstaller | 6.21.0 | GPL-2.0-or-later with the PyInstaller bootloader/bundling exception; selected files also Apache-2.0 | `PYTHON_DISTRIBUTIONS.txt` |
 | PyInstaller Hooks Contrib | 2026.6 | GPL-2.0-or-later with applicable exception/notice | `PYTHON_DISTRIBUTIONS.txt` |
 | altgraph | 0.17.5 | MIT | `PYTHON_DISTRIBUTIONS.txt` |
-| macholib (macOS build) | 1.16.4 | MIT | `PYTHON_DISTRIBUTIONS.txt` |
+| macholib (macOS build) | 1.16.4 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
 | pefile (Windows build) | 2024.8.26 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
 | pywin32-ctypes (Windows build) | 0.2.3 | permissive upstream license | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
 | setuptools | 83.0.0 | MIT plus vendored notices | `PYTHON_DISTRIBUTIONS.txt` |

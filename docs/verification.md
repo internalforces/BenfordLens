@@ -61,7 +61,7 @@ macOS에서 가상환경 변경 뒤 네이티브 라이브러리 로딩 문제�
 ### 커버리지 경계
 
 표준 라이브러리 `trace`로 측정한 M3 시점 기록은 1,661개 실행 가능 소스 줄 중 1,578개 실행,
-95.00%였습니다. 이후 테스트가 229개에서 257개로 늘었지만 같은 방식의 현재 측정을 다시
+95.00%였습니다. 이후 테스트가 229개에서 258개로 늘었지만 같은 방식의 현재 측정을 다시
 기록하지 않았고 CI도 커버리지를 강제하지 않습니다. 따라서 95.00%는 현재 수치가 아니라
 [M3 이력](../reports/test-coverage-2026-08-06-m3.md)으로만 제시합니다.
 
@@ -150,7 +150,7 @@ The change removed repeated Python-level digit extraction across analysis and dr
 ### Coverage boundary
 
 The M3 historical trace measured 1,578 of 1,661 executable source lines, or 95.00%. The suite has
-since grown from 229 to 257 tests, but an equivalent current measurement has not been recorded and
+since grown from 229 to 258 tests, but an equivalent current measurement has not been recorded and
 CI does not enforce coverage. The number is therefore presented only as
 [M3 history](../reports/test-coverage-2026-08-06-m3.md), not current coverage.
 

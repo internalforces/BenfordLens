@@ -44,17 +44,22 @@ Harness Version: 1.1
   secret scanning/reporting/CodeQL remain unavailable while private.
 - [x] Local gate passes: uv lock check, Ruff, formatting, mypy across 22 source files, workflow/
   issue-form YAML parsing, tracked Markdown link/image validation, translation compilation, and
-  all 257 tests.
+  all 258 tests.
+- [x] PR #17 was opened after the native-build approval gate. The first Linux CI run exposed a
+  platform-assumption bug in the deterministic license generator: macOS-only `macholib` was
+  required in Linux CI. Its exact MIT notice now lives with the other platform-specific notices,
+  the platform-neutral bundle regenerates on every target, and regression coverage preserves the
+  boundary without adding a dependency or weakening notice coverage.
 - [x] No native distribution build, Release mutation, history rewrite, material record deletion,
   or visibility change was performed.
 
 ## Current Recommendation
 
-Keep the repository private. The next operation that can make progress is the explicit approval
-gate for native Windows/macOS distribution checks when the preparation PR is opened. If those
-checks pass, merge the PR, enforce immutable/selected Actions, finish TASK-040/TASK-042, publish a
-separately versioned notice-complete patch release under the release approval gate, and only then
-request the final visibility approval for TASK-044.
+Keep the repository private. PR #17 is open and its explicitly approved native Windows/macOS
+distribution checks are running. After the focused CI fix and both native checks pass, merge the
+PR, enforce immutable/selected Actions, finish TASK-040/TASK-042, publish a separately versioned
+notice-complete patch release under the release approval gate, and only then request the final
+visibility approval for TASK-044.
 
 ## Previous Session Summary
 

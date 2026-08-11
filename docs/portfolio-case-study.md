@@ -167,7 +167,7 @@ problems:
 
 - A complete CSV/XLSX → preprocessing → analysis → drill-down → HTML report workflow.
 - First, second, and combined modes share one state model and reusable result UI.
-- Ruff, formatting, mypy, and all 257 tests pass on the current baseline.
+- Ruff, formatting, mypy, and all 258 tests pass on the current baseline.
 - macOS arm64 and Windows x64 ZIP/MSI candidates were built and smoke-tested.
 - Processing remains local, and the original input file is never modified.
 

@@ -119,9 +119,29 @@ def test_python_license_bundle_is_reproducible(tmp_path: Path) -> None:
 def test_python_inventory_contains_source_hashes() -> None:
     inventory = json.loads((LICENSE_DIR / "PYTHON_DISTRIBUTIONS.json").read_text())
     assert inventory["schema_version"] == 1
+    assert inventory["platform_specific_locked_distributions"] == {
+        "macholib": "1.16.4",
+        "pefile": "2024.8.26",
+        "pywin32-ctypes": "0.2.3",
+        "tzdata": "2026.3",
+    }
+    generated_names = {
+        distribution["name"].lower().replace("_", "-")
+        for distribution in inventory["distributions"]
+    }
+    assert generated_names.isdisjoint(inventory["platform_specific_locked_distributions"])
     for distribution in inventory["distributions"]:
         for document in distribution["license_documents"]:
             assert len(document["sha256"]) == 64
+
+
+def test_platform_specific_license_notices_are_preserved() -> None:
+    inventory = json.loads((LICENSE_DIR / "PYTHON_DISTRIBUTIONS.json").read_text())
+    notices = (LICENSE_DIR / "PLATFORM_SPECIFIC_DISTRIBUTIONS.txt").read_text()
+    for name, version in inventory["platform_specific_locked_distributions"].items():
+        assert f"{name} {version}" in notices
+    assert "Copyright 2006-2010 - Bob Ippolito" in notices
+    assert "Copyright 2010-2020 - Ronald Oussoren" in notices
 
 
 def test_qt_inventory_identifies_exact_sources_and_license_hashes() -> None:

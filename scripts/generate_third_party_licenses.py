@@ -40,15 +40,15 @@ EXPECTED_DISTRIBUTIONS = {
     # Packaging tools. They are documented even when their Python packages are not copied into
     # the application; the PyInstaller bootloader is part of the generated executable.
     "altgraph": "0.17.5",
-    "macholib": "1.16.4",
     "pyinstaller": "6.21.0",
     "pyinstaller-hooks-contrib": "2026.6",
     "setuptools": "83.0.0",
 }
 
-# Locked only for the other packaged target. Their notices are maintained separately because this
-# script must be reproducible from either one native environment without cross-installing wheels.
+# Installed only on one packaged target. Their notices are maintained separately because this
+# script must be reproducible from macOS, Windows, or Linux CI without cross-installing wheels.
 PLATFORM_SPECIFIC_DISTRIBUTIONS = {
+    "macholib": "1.16.4",
     "pefile": "2024.8.26",
     "pywin32-ctypes": "0.2.3",
     "tzdata": "2026.3",
