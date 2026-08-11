@@ -62,9 +62,10 @@ alert list was empty. Private vulnerability reporting was enabled, and Dependabo
 security fixes remain active. GitHub left the optional non-provider-pattern and validity-check
 extensions disabled; they are not part of the TASK-044 completion gate.
 
-The repository's pinned advanced CodeQL workflow is present on `main`. Its first public analysis
-is intentionally triggered by the protected evidence pull request for this record; TASK-042 and
-TASK-044 remain open until that run succeeds and the final result is recorded here.
+The repository's pinned advanced CodeQL workflow ran successfully on the protected evidence pull
+request in run `31451987591`; its CodeQL check passed in 52 seconds and uploaded the first public
+analysis. The code-scanning alert API then returned an empty list. The same pull request's
+`lint-type-test` check passed in run `31451987687`.
 
 ## Retained distribution boundaries
 

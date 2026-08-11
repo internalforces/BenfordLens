@@ -80,3 +80,12 @@ HTTP 403을 반환했다. 이 세 기능과 push protection, 첫 CodeQL 실행�
 - GitHub, [Creating repository rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)
 - GitHub, [Available rules for rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
 - GitHub, [Code scanning with CodeQL](https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning)
+
+## 공개 전환 후 이행
+
+TASK-044 승인 후 저장소를 공개로 전환했다. 두 ruleset, selected Actions,
+전체 SHA 강제, 읽기 전용 기본 workflow 권한, Dependabot 보호는 변경 후에도
+유지됐다. Secret scanning, push protection, private vulnerability reporting을 활성화했고
+초기 secret/CodeQL alert 목록은 비어 있었다. 공개 상태의 첫 CodeQL 분석은 PR #21
+run `31451987591`에서 52초 만에 통과했다. 세부 근거는
+`reports/release-2026-08-11-public-launch.md`에 기록했다.

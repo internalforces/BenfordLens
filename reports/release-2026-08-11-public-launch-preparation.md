@@ -81,7 +81,7 @@ asset, or visibility mutation was produced during the local gate.
 5. [x] Obtain explicit release approval; tag `v1.0.1`, publish its six verified assets, and return
    v1.0.0 to draft without deleting its tag/assets.
 6. [x] Re-download v1.0.1 and independently verify every file before visibility approval.
-7. [ ] Surface the 17 real-display-name commits, retained records, branches/PRs/Actions history,
+7. [x] Surface the 17 real-display-name commits, retained records, branches/PRs/Actions history,
    unsigned packages, and exact visibility consequences at the final human gate.
-8. [ ] After visibility changes, re-verify both rulesets and enable/test public-only
+8. [x] After visibility changes, re-verify both rulesets and enable/test public-only
    scanning/reporting features.

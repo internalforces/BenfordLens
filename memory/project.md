@@ -17,13 +17,12 @@ external server.
 
 ## Current State
 
-- **Version**: v1.0.1 source and current private-repository Release; v1.0.0 is preserved as a draft
-- **Phase**: TASK-043 published and independently verified v1.0.1; the repository remains private
-  pending the separate final TASK-044 visibility approval
-- **Next milestone**: Present the final exposure summary, obtain explicit TASK-044 approval, then
-  change visibility and run immediate anonymous/security/protection checks
-- **Overall health**: 🟡 Product, notices, governance, native packages, tag provenance, and the
-  v1.0.1 Release are verified; public-only security features and visibility remain gated
+- **Version**: v1.0.1 source and current public Release; v1.0.0 is preserved as a draft
+- **Phase**: Public launch complete; TASK-042 and TASK-044 passed their post-visibility gates
+- **Next milestone**: Continue the next approved public documentation milestone
+- **Overall health**: 🟢 Product, notices, governance, native packages, tag provenance,
+  anonymous distribution, and public security controls are verified; documented signing and
+  platform-coverage boundaries remain
 
 ## Tech Summary
 
@@ -93,6 +92,7 @@ BenfordLens/
 | 2026-08-11 | TASK-041 added contributor, support, security, conduct, issue/PR guidance, package project URLs, and complete GitHub description/homepage/topics while keeping the repository private |
 | 2026-08-11 | PR #17 merged at `49edb74` after Linux CI and both approved native package jobs passed; TASK-042 now enforces pinned Actions, exact uv, selected Actions, full-SHA references, dependency alerts/updates, and active no-bypass main/release-tag rulesets, while public-only scans remain gated by private visibility |
 | 2026-08-11 | TASK-043 created annotated tag `v1.0.1` at reviewed `main` commit `021a01f`, passed native macOS arm64 and Windows x64 ZIP/MSI checks in run `31448799504`, safely recovered the publisher from an MSI staging-path defect, published and independently re-downloaded exactly six matching assets, and returned v1.0.0 to draft without changing its tag or assets |
+| 2026-08-11 | After explicit TASK-044 approval and final exposure disclosure, changed `internalforces/BenfordLens` to public; anonymously verified source/history/pages and all six v1.0.1 assets; re-read protections; enabled secret scanning, push protection, and private vulnerability reporting; and passed the first public CodeQL analysis in run `31451987591` |
 
 ## Verified Implementation Baseline
 
@@ -101,11 +101,11 @@ BenfordLens/
 | Core analysis | Complete | First-, second-, and combined-digit analysis; user-controlled preprocessing; advisory suitability metrics; optional MAD/Chi-square/KS references |
 | Desktop workflow | Complete | Explicit file/sheet/column/mode choices, responsive results, position-aware drill-down, local CSV export, and local HTML reports |
 | Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs; Windows CJK font handling verified |
-| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 258 pytest tests pass locally; PR #17 CI passed at `665793a` and post-merge `main` run `31447921264` passed at `49edb74` |
+| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 258 pytest tests pass locally; TASK-044 evidence PR #21 passed `lint-type-test` in run `31451987687` and the first public CodeQL analysis in run `31451987591` |
 | macOS packaging | v1.0.1 native candidate verified | PR #17 run `31447586711` rebuilt the arm64 ZIP, checked metadata/architecture/translations/notices/Qt denylist, verified ad-hoc integrity, and smoke-tested original/extracted apps; Developer ID/notarization remain absent |
 | Windows packaging | v1.0.1 native candidates verified | PR #17 run `31447586711` rebuilt the x64 ZIP/MSI and passed notice/Qt denylist, extraction/startup, and MSI install/startup/uninstall checks; Authenticode remains absent |
 | Linux packaging | Configuration only | PyInstaller spec exists but has not been built or verified on Linux |
-| Release object | v1.0.1 published and verified in private repository | Annotated tag object `19def39` targets reviewed merge commit `021a01f`; the Release contains exactly three packages and three matching SHA-256 files, all independently re-downloaded and verified. v1.0.0 remains intact as a draft; neither release is anonymously accessible while repository visibility is private |
+| Release object | v1.0.1 public and anonymously verified | Annotated tag object `19def39` targets reviewed merge commit `021a01f`; the public Release contains exactly three packages and three matching SHA-256 files, all freshly downloaded without credentials and checksum-verified. v1.0.0 remains intact as a draft with its tag and six retained assets. |
 
 ## Constraints
 
