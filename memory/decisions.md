@@ -602,6 +602,9 @@ TASK-040 remains open until explicit human approval is received and native Windo
 prove that the complete notice set is present and every denied Qt module is absent. See
 `reports/research-2026-08-11-third-party-licensing.md`.
 
+**Fulfilled**: The user-approved PR #17 native run `31447586711` passed those macOS arm64 ZIP and
+Windows x64 ZIP/MSI checks at commit `665793a`; TASK-040 was completed on 2026-08-11.
+
 ---
 
 ### ADR-021: Gate Public Contributions and Releases with Immutable Automation
@@ -633,6 +636,101 @@ major-version changes need real CI verification. A ruleset with zero required ap
 direct pushes but cannot provide independent human review by itself. Public-only security
 features must be enabled immediately after visibility changes rather than proven while private.
 
-**Consequences**: `.github/rulesets/` stores importable, tested policy definitions, but their
-server-side enforcement remains a launch operation. See
+**Consequences**: `.github/rulesets/` stores importable, tested policy definitions. Active
+no-bypass server rulesets, the selected-Action allowlist, and dependency protections were applied
+before PR #17; repository-wide full-SHA enforcement was enabled immediately after its merge.
+Public-only security features remain the final TASK-042 launch operation. See
 `reports/security-2026-08-11-github-hardening.md`.
+
+---
+
+### ADR-022: Recover v1.0.1 Publication Without Moving the Protected Tag
+
+- **Date**: 2026-08-11
+- **Status**: Accepted and fulfilled
+- **Decided by**: User approval / Release Manager / Security Reviewer
+
+**Context**: Explicit TASK-043 approval authorized the annotated v1.0.1 tag, native packages,
+Release publication, independent verification, and v1.0.0 draft transition. Tag-triggered run
+`31448799504` passed metadata and both native package jobs, but its publisher stopped before
+creating a Release. `actions/download-artifact` retained the Windows MSI pair below `msi/`, while
+the strict six-file gate searched only the top staging directory.
+
+**Decision**: Do not delete, move, or replace the protected v1.0.1 tag and do not rebuild packages.
+Download the two successful immutable run artifacts by ID, independently validate their inner
+checksums, formats, notices, denylist, and native-job provenance, flatten only the verified MSI
+pair into an exact six-file staging set, and reproduce the workflow's draft-first publication
+manually. Keep the Release draft until all six GitHub-recorded digests match, publish it, then
+re-download all six Release assets into a fresh directory and verify them again. Update the
+publisher to validate recursively and flatten the six unique expected files before upload.
+
+**Rationale**: Reusing the already passed native outputs preserves the approved tag-to-binary
+provenance and avoids an unreviewed tag move or materially different rebuild. Draft-first upload,
+explicit filenames, stored-digest comparison, and a second Release-endpoint download provide the
+same safety properties the failed publisher intended.
+
+**Consequences**: v1.0.1 is the verified latest Release in the still-private repository; v1.0.0
+is a draft with its annotated tag and all six original assets unchanged. The overall Actions run
+remains transparently recorded as failed because its native jobs passed but automated publication
+did not. The recursive normalization fix must merge through normal review and CI before TASK-044.
+See `reports/release-2026-08-11-v1.0.1.md`.
+
+---
+
+### ADR-023: Publish the Audited Repository and Verify the Public Boundary
+
+- **Date**: 2026-08-11
+- **Status**: Accepted and fulfilled
+- **Decided by**: User approval / Release Manager / Security Reviewer / Tester
+
+**Context**: TASK-039–043 completed the exposure audit, license and notice correction, repository
+governance, and immutable v1.0.1 release verification while the repository remained private. The
+remaining gate required a final disclosure and explicit approval immediately before public
+visibility, followed by anonymous and public-only security verification.
+
+**Decision**: After surfacing the retained history and engineering records, 17 real-display-name
+commits, 28 AI co-author trailers, and unsigned-package trust boundaries, accept the user's
+explicit TASK-044 approval and change `internalforces/BenfordLens` to public. Preserve the audited
+history, tags, branches, pull requests, Actions history, v1.0.1 Release, and draft v1.0.0 Release.
+Immediately verify anonymous access and package checksums, re-read all repository protections,
+enable secret scanning, push protection, and private vulnerability reporting, and require a
+successful public CodeQL analysis before closing the gate.
+
+**Rationale**: This follows the prepared no-rewrite exposure decision and makes the verified,
+notice-complete v1.0.1 packages available without weakening the contribution or release controls.
+Anonymous download-and-hash verification proves the actual visitor path rather than relying on
+maintainer access.
+
+**Consequences**: Benford Lens is publicly accessible under the MIT License. The first public
+CodeQL analysis passed in run `31451987591`; secret and CodeQL alert lists were empty at launch;
+both no-bypass rulesets and the immutable Action policy remained active. The macOS and Windows
+signing limitations remain transparent under TD-007 and TD-008. See
+`reports/release-2026-08-11-public-launch.md`.
+
+---
+
+### ADR-024: Pair Every Localized README with Its Own Real-UI Capture
+
+- **Date**: 2026-08-11
+- **Status**: Accepted and fulfilled
+- **Decided by**: User request / Documenter / Implementer / Tester
+
+**Context**: The application already supported English, Korean, Simplified Chinese, Japanese,
+Spanish, French, and Russian, but the public repository exposed only English and Korean README
+entry points. A localized README should not illustrate the product with a UI captured in a
+different language.
+
+**Decision**: Keep one complete root README per supported language using the established
+`README.<locale>.md` naming convention, connect all seven through a shared language selector, and
+pair each newly added README with a 1440×960 overview captured from the real application in the
+same locale. Extend the existing deterministic portfolio asset generator to create every
+translated overview from synthetic data only; do not use user data or a remote service.
+
+**Rationale**: Matching the documentation and product language makes each entry point coherent
+for its intended reader. Reusing the real application and one deterministic dataset preserves the
+visual evidence and makes the assets reproducible under the project's local-only boundary.
+
+**Consequences**: Simplified Chinese, Japanese, French, Spanish, and Russian readers now have full
+README entry points and matching screenshots. The public navigation has seven entries, while the
+four detailed guides remain bilingual by design. Future UI languages should add both a complete
+README and a same-language deterministic screenshot.

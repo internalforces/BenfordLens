@@ -12,9 +12,11 @@ Harness Version: 1.1
 ## Session Info
 
 - **Date**: 2026-08-11
-- **Agent Role**: Planner / Researcher / Implementer / Security Reviewer / Release Manager
+- **Agent Role**: Planner / Researcher / Implementer / Documenter / Tester / Security Reviewer /
+  Release Manager
 - **Session Goal**: Complete TASK-039–044 and every evidence, merge, package, release,
-  hardening, and visibility gate required for a safe public launch.
+  hardening, and visibility gate required for a safe public launch, then complete the approved
+  localized README expansion in TASK-045.
 
 ## Completed This Session
 
@@ -31,7 +33,8 @@ Harness Version: 1.1
   notice/source/hash inventory plus Qt relinking guidance.
 - [x] Added GPL-only Qt module deny rules and completed-package checks for both native platforms,
   embedded the notice set in source/specs/ZIP/MSI paths, and exposed it through a local-only
-  translated in-app dialog. The approved native package proof remains.
+  translated in-app dialog. Approved PR #17 run `31447586711` passed the resulting macOS arm64
+  ZIP and Windows x64 ZIP/MSI package checks, completing TASK-040.
 - [x] Completed TASK-041: added contribution, security, support, conduct, issue/PR guidance;
   package project URLs; README notice/community links; and verified GitHub description,
   homepage, and eight topics while keeping visibility private.
@@ -40,8 +43,8 @@ Harness Version: 1.1
   public-only CodeQL, and importable tested `main`/release-tag rulesets.
 - [x] Enforced the selected-Action allowlist and active no-bypass `main`/release-tag rulesets on
   GitHub; enabled the dependency graph, alerts, and security updates; confirmed zero initial open
-  Dependabot alerts. Full-SHA enforcement waits for the pinned workflow merge, and public-only
-  secret scanning/reporting/CodeQL remain unavailable while private.
+  Dependabot alerts. Full-SHA enforcement is now enabled after the pinned workflow merge;
+  public-only secret scanning/reporting/CodeQL remain unavailable while private.
 - [x] Local gate passes: uv lock check, Ruff, formatting, mypy across 22 source files, workflow/
   issue-form YAML parsing, tracked Markdown link/image validation, translation compilation, and
   all 258 tests.
@@ -54,16 +57,54 @@ Harness Version: 1.1
   in otherwise equivalent license files. Bundle verification now checks the exact locked
   distribution/version set and a recorded full-bundle SHA-256 on every platform, while retaining
   byte-for-byte canonical reproduction on the macOS arm64 audit platform.
-- [x] No native distribution build, Release mutation, history rewrite, material record deletion,
-  or visibility change was performed.
+- [x] PR #17 passed Linux CI plus explicitly approved macOS and Windows native verification at
+  `665793a`, then merged through the protected branch as `49edb74`. The full-SHA repository policy
+  was enabled and re-read as true immediately afterward; post-merge `main` CI run `31447921264`
+  also passed.
+- [x] Merged the follow-up project-record PR #19 as `021a01f`; its post-merge `main` CI run
+  `31448491305` passed before the release tag was created.
+- [x] Received explicit TASK-043 approval immediately before distribution, created annotated tag
+  object `19def39` for v1.0.1 at exact reviewed `main` commit `021a01f`, and triggered native run
+  `31448799504` without changing repository visibility.
+- [x] The run's metadata, macOS arm64, and Windows x64 jobs passed. The macOS package passed
+  architecture, version, notice, denylist, ad-hoc integrity, extraction, and startup checks; the
+  Windows ZIP/MSI passed notice, denylist, extraction/startup, and install/startup/uninstall checks.
+- [x] The publisher rejected the verified Windows artifact because `actions/download-artifact`
+  preserved its `msi/` subdirectory while the strict gate searched only one directory level.
+  No partial Release existed and the protected tag was not moved or replaced.
+- [x] Recovered from the same immutable run artifacts: independently verified all three package
+  checksums and formats, manually created a draft, uploaded exactly six explicit files, matched
+  every GitHub digest, and published v1.0.1 with its complete trust/support disclosures.
+- [x] Re-downloaded all six assets from the published Release into a fresh directory; all three
+  checksum files, both ZIP integrity checks, and all six GitHub digests matched.
+- [x] Returned v1.0.0 to draft only after v1.0.1 verification. Its annotated tag still resolves
+  to `a59aa6f`, and all six original asset IDs, sizes, and digests are unchanged.
+- [x] Presented the final exposure summary, including the 17 real-display-name commits, 28 AI
+  co-author trailers, retained public history/records, and unsigned-package trust boundaries;
+  received explicit TASK-044 approval immediately before the change.
+- [x] Changed `internalforces/BenfordLens` from private to public and anonymously verified the
+  repository, tag, Release, README/badge/assets, nine branches, 20 pull requests, 71 Actions runs,
+  eight topics, and all six v1.0.1 Release assets.
+- [x] Fresh anonymous downloads matched all three SHA-256 files; both ZIP archives passed integrity
+  checks and the MSI was identified as a valid WiX 5.0.2 x64 installation database.
+- [x] Re-read both active no-bypass rulesets, selected Actions, full-SHA enforcement, read-only
+  workflow defaults, Dependabot protections, and required CI after the visibility transition.
+- [x] Enabled secret scanning, push protection, and private vulnerability reporting; both secret
+  and CodeQL alert lists were empty, and the first public CodeQL analysis passed in run
+  `31451987591` alongside `lint-type-test` run `31451987687` on PR #21.
+- [x] Completed TASK-045: added complete Simplified Chinese, Japanese, French, Spanish, and
+  Russian README entry points, linked all seven language selectors, and generated visually
+  verified 1440×960 screenshots of the real localized UI from deterministic synthetic data.
+- [x] Extended the portfolio asset generator to reproduce all six translated overview images;
+  verified local README links/images and restricted wording; and passed Ruff, formatting, mypy,
+  and all 259 locally collected tests with `PYTHONPATH=src` and Qt offscreen.
 
 ## Current Recommendation
 
-Keep the repository private. PR #17 is open and its explicitly approved native Windows/macOS
-distribution checks are running. After the focused CI fix and both native checks pass, merge the
-PR, enforce immutable/selected Actions, finish TASK-040/TASK-042, publish a separately versioned
-notice-complete patch release under the release approval gate, and only then request the final
-visibility approval for TASK-044.
+Keep the repository public under the verified rulesets and security controls. Merge the completed
+public-launch evidence and localized README work through protected `main`, then continue with the
+next approved milestone. Retain TD-007 and TD-008 until macOS Developer ID/notarization and
+Windows signing or Store distribution are addressed.
 
 ## Previous Session Summary
 
@@ -134,9 +175,10 @@ archived in `memory/sessions/2026-08-08-Release-Packaging.md`.
 ## Portfolio Documentation State
 
 Accepted ADR-017 retains internal harness evidence while exposing a small public portfolio layer:
-English and Korean README entry points, four bilingual guides, and synthetic-data visuals. The
-public README navigation does not expose session/task history, while evidence remains available
-under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT License.
+seven localized README entry points, four bilingual guides, and synthetic-data visuals. Each
+README now uses a matching localized real-app overview image. The public README navigation does
+not expose session/task history, while evidence remains available under `memory/`, `tasks/`, and
+`reports/`. The repository uses the MIT License.
 
 ## Follow-up Research — 2026-08-10
 

@@ -13,10 +13,12 @@ TASK-039 found no critical or high-risk exposure in the Git repository, GitHub c
 Actions logs, release metadata, or downloadable release archives. The existing engineering
 records are suitable to retain under ADR-017. No Git history rewrite is recommended.
 
-The repository must remain private until the independent launch blockers in TASK-040, TASK-042,
-and TASK-043 are resolved. In particular, the existing v1.0.0 packages do not contain the complete
-project-level third-party notice set required by TASK-040. The final visibility approval must also
-acknowledge the maintainer display name described below.
+The repository must remain private until TASK-043 is resolved and the final TASK-044 approval is
+received. TASK-040 was subsequently completed by the notice-complete PR #17 native builds;
+TASK-042 is complete for private-repository controls, with public-only features deliberately left
+for immediate post-visibility verification. The existing v1.0.0 packages still do not contain the
+complete project-level notice set and must not become the public download. The final visibility
+approval must also acknowledge the maintainer display name described below.
 
 GitHub documents that changing a private repository to public exposes the code and Actions history
 and logs, permits public forks, publishes activity, and disables push rulesets. Protections must
@@ -98,10 +100,11 @@ embedded-byte review found:
   byte-sequence false positives; and
 - no provider-token candidate after the stricter member-level validation.
 
-The release packages contain incidental dependency license files (47 matching members in the
-macOS ZIP and 30 in the Windows ZIP), but this is not a complete redistribution notice solution.
-TD-012 and TASK-040 remain the authoritative blocker. The compressed MSI payload requires the
-approved native Windows/package verification in TASK-043 after the notice work is complete.
+The audited v1.0.0 packages contain incidental dependency license files (47 matching members in
+the macOS ZIP and 30 in the Windows ZIP), but this is not a complete redistribution notice
+solution. TD-012 and TASK-040 were resolved after the audit by PR #17 run `31447586711`; TASK-043
+still requires the separately versioned v1.0.1 Release to be published and independently
+revalidated before any package becomes anonymously downloadable.
 
 ## Repository security state
 
@@ -129,8 +132,8 @@ GitHub disables push rulesets during a private-to-public transition.
 
 | ID | Severity | Finding | Disposition |
 |---|---|---|---|
-| EXP-001 | Medium | Public packages lack a complete project-level third-party notice set | Open under TD-012 / TASK-040; blocks TASK-043 and public visibility |
-| EXP-002 | Medium | Repository protections and security features are absent in the private state | Open under TD-011 / TASK-042; verify again immediately after TASK-044 visibility change |
+| EXP-001 | Medium | Public packages lack a complete project-level third-party notice set | Resolved for v1.0.1 by TASK-040 and PR #17 native run `31447586711`; TASK-043 publication/revalidation remains |
+| EXP-002 | Medium | Repository protections and security features are absent in the private state | Selected Actions, full-SHA enforcement, dependency protection, and no-bypass rulesets now active; public-only controls remain under TD-011 / TASK-042 for immediate post-TASK-044 verification |
 | EXP-003 | Low | Seventeen commits expose the maintainer's real display name | Accepted for preparation; surface again immediately before final visibility approval |
 | EXP-004 | Low | Packages contain upstream sample CSVs, build paths, and public attribution strings | Accepted third-party content; include in TASK-040 inventory and notices |
 | EXP-005 | Low | Stale tracked session filename looked like an accidental duplicate | Resolved by preserving the record under the dated session archive |

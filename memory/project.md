@@ -17,14 +17,13 @@ external server.
 
 ## Current State
 
-- **Version**: v1.0.0
-- **Phase**: v1.0.0 release assets are published inside a private GitHub repository; public
-  repository launch preparation is in progress
-- **Next milestone**: Complete public-surface, license-attribution, GitHub hardening, and release
-  gates before changing repository visibility; signing and Linux remain later targets
-- **Overall health**: 🟡 Product and existing native packages are verified; public governance and
-  source-level distribution notices are prepared, while new native packages, server protections,
-  release publication, and visibility remain gated
+- **Version**: v1.0.1 source and current public Release; v1.0.0 is preserved as a draft
+- **Phase**: Public launch complete; TASK-042 and TASK-044 passed their post-visibility gates;
+  TASK-045 localized documentation is complete locally
+- **Next milestone**: Review and merge the localized README documentation through protected `main`
+- **Overall health**: 🟢 Product, notices, governance, native packages, tag provenance,
+  anonymous distribution, and public security controls are verified; documented signing and
+  platform-coverage boundaries remain
 
 ## Tech Summary
 
@@ -90,9 +89,12 @@ BenfordLens/
 | 2026-08-10 | PR #15 merged, annotated tag `v1.0.0` was pushed on merge commit `a59aa6f`, and all six package/checksum assets were published and independently downloaded, checksum-verified, and format-tested in GitHub Release v1.0.0 |
 | 2026-08-11 | TASK-038 confirmed the GitHub repository remains private, inventoried all public-exposure surfaces, found no high-confidence secret-pattern or sensitive-filename matches in Git history, and created TASK-039–044 for the public launch gate |
 | 2026-08-11 | TASK-039 audited all reachable Git history, seven remote branches, 16 PRs, 42 Actions logs, six release assets, and tracked engineering records; no critical/high-risk exposure remained, no history rewrite was needed, and ADR-017 evidence was retained |
-| 2026-08-11 | TASK-040 preparation replaced the broad PySide6 metapackage with Essentials, added deterministic Python/Qt/native license and source inventories, bundled relinking guidance and a local in-app notice view, and added package-policy checks; native artifact validation remains explicitly gated |
+| 2026-08-11 | TASK-040 replaced the broad PySide6 metapackage with Essentials; added deterministic Python/Qt/native license, source, relinking, and local in-app notice coverage; and passed approved macOS arm64 ZIP plus Windows x64 ZIP/MSI verification on PR #17 run `31447586711` |
 | 2026-08-11 | TASK-041 added contributor, support, security, conduct, issue/PR guidance, package project URLs, and complete GitHub description/homepage/topics while keeping the repository private |
-| 2026-08-11 | TASK-042 preparation pinned all Actions and uv, narrowed release writes, added uv/Actions Dependabot, CODEOWNERS, and public-only CodeQL; GitHub now enforces a selected-Action allowlist, dependency alerts/updates, and active no-bypass main/release-tag rulesets, while full-SHA and public-only scans remain gated |
+| 2026-08-11 | PR #17 merged at `49edb74` after Linux CI and both approved native package jobs passed; TASK-042 now enforces pinned Actions, exact uv, selected Actions, full-SHA references, dependency alerts/updates, and active no-bypass main/release-tag rulesets, while public-only scans remain gated by private visibility |
+| 2026-08-11 | TASK-043 created annotated tag `v1.0.1` at reviewed `main` commit `021a01f`, passed native macOS arm64 and Windows x64 ZIP/MSI checks in run `31448799504`, safely recovered the publisher from an MSI staging-path defect, published and independently re-downloaded exactly six matching assets, and returned v1.0.0 to draft without changing its tag or assets |
+| 2026-08-11 | After explicit TASK-044 approval and final exposure disclosure, changed `internalforces/BenfordLens` to public; anonymously verified source/history/pages and all six v1.0.1 assets; re-read protections; enabled secret scanning, push protection, and private vulnerability reporting; and passed the first public CodeQL analysis in run `31451987591` |
+| 2026-08-11 | TASK-045 added Simplified Chinese, Japanese, French, Spanish, and Russian README entry points; connected all seven README languages; and generated visually verified localized UI screenshots through the deterministic real-app asset workflow |
 
 ## Verified Implementation Baseline
 
@@ -100,12 +102,12 @@ BenfordLens/
 |------|--------|---------------------|
 | Core analysis | Complete | First-, second-, and combined-digit analysis; user-controlled preprocessing; advisory suitability metrics; optional MAD/Chi-square/KS references |
 | Desktop workflow | Complete | Explicit file/sheet/column/mode choices, responsive results, position-aware drill-down, local CSV export, and local HTML reports |
-| Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs; Windows CJK font handling verified |
-| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 257 pytest tests pass locally; hosted-runner and native checks await the preparation PR |
-| macOS packaging | Native workflow verified | PR #15 rebuilt the Apple Silicon ZIP, checked metadata/architecture/translations, verified ad-hoc integrity, and smoke-tested original/extracted apps; Developer ID/notarization remain absent |
-| Windows packaging | Native workflow verified | PR #15 rebuilt the x64 ZIP/MSI and passed extraction/startup plus MSI install/startup/uninstall checks; Authenticode remains absent |
+| Internationalization | Complete for current scope | English plus complete KO/ZH/JA/ES/FR/RU catalogs and seven matching README entry points; Windows CJK font handling verified |
+| Automated quality gate | Passing | Ruff, format check, mypy (22 source files), and 258 pytest tests pass locally; TASK-044 evidence PR #21 passed `lint-type-test` in run `31451987687` and the first public CodeQL analysis in run `31451987591` |
+| macOS packaging | v1.0.1 native candidate verified | PR #17 run `31447586711` rebuilt the arm64 ZIP, checked metadata/architecture/translations/notices/Qt denylist, verified ad-hoc integrity, and smoke-tested original/extracted apps; Developer ID/notarization remain absent |
+| Windows packaging | v1.0.1 native candidates verified | PR #17 run `31447586711` rebuilt the x64 ZIP/MSI and passed notice/Qt denylist, extraction/startup, and MSI install/startup/uninstall checks; Authenticode remains absent |
 | Linux packaging | Configuration only | PyInstaller spec exists but has not been built or verified on Linux |
-| Release object | Published in private repository | Annotated tag `v1.0.0` targets approved merge commit `a59aa6f`; the Release contains the three expected packages and three matching SHA-256 files, but none are anonymously accessible while repository visibility is private |
+| Release object | v1.0.1 public and anonymously verified | Annotated tag object `19def39` targets reviewed merge commit `021a01f`; the public Release contains exactly three packages and three matching SHA-256 files, all freshly downloaded without credentials and checksum-verified. v1.0.0 remains intact as a draft with its tag and six retained assets. |
 
 ## Constraints
 

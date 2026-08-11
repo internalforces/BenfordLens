@@ -48,10 +48,13 @@ Release 쓰기 권한을 받지 않는다.
   태그 삭제와 이동을 차단하며 bypass가 없다.
 - dependency graph가 SPDX SBOM 45개 구성 요소를 반환한다.
 - Dependabot alerts와 security updates가 활성화되어 있고 초기 open alert는 0개다.
+- PR #17이 Linux CI와 승인된 macOS/Windows 네이티브 검증을 통과하고 merge commit
+  `49edb74`로 병합된 직후 repository-wide `sha_pinning_required=true`를 적용하고 API로
+  다시 읽어 확인했다. 같은 merge commit의 `main` CI run `31447921264`도 성공했다.
 
-전체 SHA 강제 설정만 의도적으로 아직 끄었다. 현재 `main`의 기존 workflow가 mutable major
-tag를 사용하므로 준비 branch가 merge되기 전에 `sha_pinning_required=true`로 바꾸면 기존
-workflow 실행이 중단된다. Merge 직후 이 설정을 켜고 API로 다시 확인한다.
+전체 SHA 강제 설정은 준비 branch가 merge되기 전까지 의도적으로 끈 상태로 유지했다.
+기존 `main` workflow의 mutable major tag가 제거된 후 바로 활성화했으므로 현재 허용된
+외부 Action도 전체 커밋 SHA 없이는 실행할 수 없다.
 
 Secret scanning은 비공개 상태에서 enable 요청이 HTTP 422
 (`Secret scanning is not available for this repository`)로 거절됐다. Private vulnerability
@@ -59,13 +62,13 @@ reporting endpoint는 HTTP 404, code-scanning alerts endpoint는 아직 활성�
 HTTP 403을 반환했다. 이 세 기능과 push protection, 첫 CodeQL 실행은 공개 전환 직후
 활성화·검증하고 ruleset도 visibility 변경 후 다시 확인한다.
 
-## 남은 검증 게이트
+## 검증 결과와 남은 게이트
 
-- 이 변경은 release workflow의 path에 해당하므로 PR 생성 시 Windows/macOS 배포 빌드가
-  실행된다. 프로젝트 헌법에 따라 그 직전에 사람 승인을 받아야 한다.
-- 새 Action 주요 버전과 uv 버전은 PR의 실제 hosted runner에서 검증한다.
-- Ruleset JSON과 실제 GitHub API 응답은 대상·규칙·status context·active 상태·bypass
-  부재가 일치한다. 실제 PR merge gate와 visibility 변경 후 상태를 다시 확인해야 한다.
+- 명시적 사람 승인 뒤 실행한 PR #17 Linux CI `31447586712`와 native run `31447586711`이
+  새 Action 주요 버전, uv 0.11.30, macOS arm64 ZIP, Windows x64 ZIP/MSI를 모두 검증했다.
+- `Protect main` ruleset이 실제 PR merge gate를 적용했고 PR #17은 required check 통과 뒤
+  merge됐다. 두 ruleset의 대상·규칙·status context·active 상태·bypass 부재도 merge 후
+  다시 읽어 일치함을 확인했다.
 - CodeQL upload, secret scanning, private vulnerability reporting은 공개 전환 뒤에만
   최종 검증할 수 있다.
 
@@ -77,3 +80,12 @@ HTTP 403을 반환했다. 이 세 기능과 push protection, 첫 CodeQL 실행�
 - GitHub, [Creating repository rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)
 - GitHub, [Available rules for rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
 - GitHub, [Code scanning with CodeQL](https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning)
+
+## 공개 전환 후 이행
+
+TASK-044 승인 후 저장소를 공개로 전환했다. 두 ruleset, selected Actions,
+전체 SHA 강제, 읽기 전용 기본 workflow 권한, Dependabot 보호는 변경 후에도
+유지됐다. Secret scanning, push protection, private vulnerability reporting을 활성화했고
+초기 secret/CodeQL alert 목록은 비어 있었다. 공개 상태의 첫 CodeQL 분석은 PR #21
+run `31451987591`에서 52초 만에 통과했다. 세부 근거는
+`reports/release-2026-08-11-public-launch.md`에 기록했다.

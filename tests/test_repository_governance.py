@@ -32,6 +32,15 @@ def test_workflows_use_explicit_least_privilege_permissions() -> None:
     assert "security-events: write" in codeql
 
 
+def test_release_publisher_normalizes_nested_verified_assets() -> None:
+    release = (WORKFLOW_DIR / "release.yml").read_text(encoding="utf-8")
+
+    assert "find release-assets -type f -exec basename" in release
+    assert 'source_path="$(find release-assets -type f -name "$filename" -print -quit)"' in release
+    assert 'mv "$source_path" "$target_path"' in release
+    assert "find release-assets -maxdepth 1 -type f -exec basename" not in release
+
+
 def test_dependabot_covers_uv_and_github_actions() -> None:
     content = (PROJECT_ROOT / ".github" / "dependabot.yml").read_text(encoding="utf-8")
     assert 'package-ecosystem: "uv"' in content
