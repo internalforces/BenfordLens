@@ -12,9 +12,11 @@ Harness Version: 1.1
 ## Session Info
 
 - **Date**: 2026-08-11
-- **Agent Role**: Planner / Researcher / Implementer / Security Reviewer / Release Manager
+- **Agent Role**: Planner / Researcher / Implementer / Documenter / Tester / Security Reviewer /
+  Release Manager
 - **Session Goal**: Complete TASK-039–044 and every evidence, merge, package, release,
-  hardening, and visibility gate required for a safe public launch.
+  hardening, and visibility gate required for a safe public launch, then complete the approved
+  localized README expansion in TASK-045.
 
 ## Completed This Session
 
@@ -90,13 +92,19 @@ Harness Version: 1.1
 - [x] Enabled secret scanning, push protection, and private vulnerability reporting; both secret
   and CodeQL alert lists were empty, and the first public CodeQL analysis passed in run
   `31451987591` alongside `lint-type-test` run `31451987687` on PR #21.
+- [x] Completed TASK-045: added complete Simplified Chinese, Japanese, French, Spanish, and
+  Russian README entry points, linked all seven language selectors, and generated visually
+  verified 1440×960 screenshots of the real localized UI from deterministic synthetic data.
+- [x] Extended the portfolio asset generator to reproduce all six translated overview images;
+  verified local README links/images and restricted wording; and passed Ruff, formatting, mypy,
+  and all 259 locally collected tests with `PYTHONPATH=src` and Qt offscreen.
 
 ## Current Recommendation
 
-Keep the repository public under the verified rulesets and security controls. Merge PR #21 through
-protected `main` after its recorded checks, then continue with the next approved documentation
-milestone. Retain TD-007 and TD-008 until macOS Developer ID/notarization and Windows signing or
-Store distribution are addressed.
+Keep the repository public under the verified rulesets and security controls. Merge the completed
+public-launch evidence and localized README work through protected `main`, then continue with the
+next approved milestone. Retain TD-007 and TD-008 until macOS Developer ID/notarization and
+Windows signing or Store distribution are addressed.
 
 ## Previous Session Summary
 
@@ -167,9 +175,10 @@ archived in `memory/sessions/2026-08-08-Release-Packaging.md`.
 ## Portfolio Documentation State
 
 Accepted ADR-017 retains internal harness evidence while exposing a small public portfolio layer:
-English and Korean README entry points, four bilingual guides, and synthetic-data visuals. The
-public README navigation does not expose session/task history, while evidence remains available
-under `memory/`, `tasks/`, and `reports/`. The repository now uses the MIT License.
+seven localized README entry points, four bilingual guides, and synthetic-data visuals. Each
+README now uses a matching localized real-app overview image. The public README navigation does
+not expose session/task history, while evidence remains available under `memory/`, `tasks/`, and
+`reports/`. The repository uses the MIT License.
 
 ## Follow-up Research — 2026-08-10
 

@@ -1,6 +1,8 @@
 # Benford Lens
 
-**한국어** · [English](README.md)
+**한국어** · [English](README.md) · [简体中文](README.zh.md) ·
+[日本語](README.ja.md) · [Français](README.fr.md) · [Español](README.es.md) ·
+[Русский](README.ru.md)
 
 ![CI](https://github.com/internalforces/BenfordLens/actions/workflows/ci.yml/badge.svg)
 
@@ -31,9 +33,7 @@ Benford Lens는 이 문제를 로컬 파일 불러오기, 사용자 주도 전�
 - 분석 스냅샷을 기반으로 독립 실행형 HTML 보고서를 로컬에 저장합니다.
 - 영어·한국어·중국어·일본어·스페인어·프랑스어·러시아어 UI를 선택합니다.
 
-![Benford Lens 사용 흐름](docs/assets/benford-lens-workflow.gif)
-
-위 시각 자료는 모두 결정론적 합성 데이터로 실제 애플리케이션을 구동해 캡처했습니다.
+위 화면은 결정론적 합성 데이터로 실제 애플리케이션을 구동해 캡처했습니다.
 
 ## 다운로드
 
@@ -52,7 +52,7 @@ Benford Lens는 이 문제를 로컬 파일 불러오기, 사용자 주도 전�
 
 | 영역 | 결과 |
 |------|------|
-| 자동화 품질 | 현재 기준선에서 Ruff·형식 검사·22개 소스 파일 mypy·257개 테스트가 모두 통과 |
+| 자동화 품질 | 현재 기준선에서 Ruff·형식 검사·22개 소스 파일 mypy·258개 테스트가 모두 통과 |
 | 성능 | 반복 자릿수 추출을 제거해 기록된 10만 행 컨트롤러 벤치마크가 30.0–31.8% 개선 |
 | 상태 일관성 | 결합 분석에서 전처리를 한 번만 수행하고 결과·통계·적합성 맥락·행 매핑을 하나의 불변 스냅샷에 저장 |
 | 국제화 | 내장 영어와 6개 완전한 Qt 번역 카탈로그, 카탈로그 동등성 및 실제 UI 회귀 테스트 |
@@ -103,7 +103,7 @@ uv run mypy src/
 QT_QPA_PLATFORM=offscreen uv run pytest
 ```
 
-현재 검증 결과는 257개 테스트 통과입니다. 테스트 범위, 성능 측정 방식, 패키징 검사, 명확한
+현재 검증 결과는 258개 테스트 통과입니다. 테스트 범위, 성능 측정 방식, 패키징 검사, 명확한
 검증 경계는 [검증 문서](docs/verification.md)에 정리했습니다.
 
 ## 패키징과 공개 상태

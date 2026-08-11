@@ -1,6 +1,8 @@
 # Benford Lens
 
-[한국어](README.ko.md) · **English**
+[한국어](README.ko.md) · **English** · [简体中文](README.zh.md) ·
+[日本語](README.ja.md) · [Français](README.fr.md) · [Español](README.es.md) ·
+[Русский](README.ru.md)
 
 ![CI](https://github.com/internalforces/BenfordLens/actions/workflows/ci.yml/badge.svg)
 
@@ -107,7 +109,7 @@ uv run mypy src/
 QT_QPA_PLATFORM=offscreen uv run pytest
 ```
 
-The current verified result is 257 passing tests. See the
+The current verified result is 258 passing tests. See the
 [verification guide](docs/verification.md) for the test matrix, performance method, packaging
 checks, and explicit verification boundaries.
 
