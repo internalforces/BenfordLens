@@ -2,7 +2,7 @@
 
 This module never decides whether Benford's Law "applies" to a dataset;
 it only computes observed vs. expected significant-digit distributions and
-leaves interpretation to the user, per AGENTS.md. Existing first-digit entry
+leaves interpretation to the user. Existing first-digit entry
 points remain available as compatibility-preserving public APIs.
 """
 

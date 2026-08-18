@@ -80,9 +80,8 @@ def test_summarize_result_flags_small_sample_as_not_meaningful():
 
 
 def test_summarize_result_flags_a_close_match_for_a_large_benford_like_sample():
-    # Regression test for TD-002 (memory/known-issues.md): no test previously
-    # exercised the "close to the expected Benford distribution" branch of
-    # summarize_result — the >=30-sample test above actually hit the
+    # Regression coverage for summarize_result's "close to the expected
+    # Benford distribution" branch — the >=30-sample test above actually hit the
     # small-sample branch instead. Powers of 2 are a classic sample whose
     # leading digits closely follow Benford's Law.
     close_result = analyze_first_digit([2**k for k in range(1, 101)])

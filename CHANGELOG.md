@@ -61,8 +61,8 @@ notices.
 - Improved 100k-row analysis performance by 30.0–31.8% in the recorded controller benchmark.
 - Added a scroll-safe desktop workflow, responsive combined layouts, and readable chart minimums.
 - Kept all result and report guidance neutral and reference-oriented.
-- Moved historical implementation plans and design specs under `reports/development/` so the
-  public `docs/` path contains only the case study, architecture, verification, and user guide.
+- Established a focused public documentation path containing the case study, architecture,
+  verification, and user guide.
 
 ### Security and privacy
 

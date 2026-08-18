@@ -128,8 +128,8 @@ def test_high_missing_rate_adds_a_caution_note():
 
 
 def test_notes_carry_codes_and_params_not_prose():
-    # The Analysis Engine must not originate user-facing strings (AGENTS.md);
-    # notes are structured so the presentation layer can translate them.
+    # Notes are structured so the presentation layer, rather than the Analysis
+    # Engine, owns and translates user-facing strings.
     raw = pd.Series(range(10))
     preprocessed = pd.Series(range(10), dtype=float)
 

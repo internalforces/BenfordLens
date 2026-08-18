@@ -2,7 +2,7 @@
 
 Applies user-chosen handling rules to a raw column before Benford analysis;
 never decides on its own which values are "wrong" — every rule here is an
-explicit, user-selectable option, per AGENTS.md.
+explicit, user-selectable option.
 """
 
 from __future__ import annotations

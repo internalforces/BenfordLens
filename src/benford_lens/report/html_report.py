@@ -1,7 +1,7 @@
 """HTML report rendering (stdlib templating only — no new dependency).
 
-Report wording follows AGENTS.md's Product Philosophy & Tone Rules: neutral,
-exploratory, and focused on interpreting distribution characteristics.
+Report wording stays neutral, exploratory, and focused on interpreting
+distribution characteristics without presenting an automatic conclusion.
 """
 
 from __future__ import annotations

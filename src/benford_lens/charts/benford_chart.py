@@ -3,8 +3,8 @@
 This module is UI-agnostic Matplotlib code, so like the Analysis Engine it
 does not own user-facing prose: summarize_result() returns a code plus its
 numbers, and the presentation layer renders it in the user's language. The
-templates it maps to follow AGENTS.md's Product Philosophy & Tone Rules:
-neutral and exploratory, never accusatory or conclusive.
+templates it maps to remain neutral and exploratory rather than accusatory or
+conclusive.
 """
 
 from __future__ import annotations

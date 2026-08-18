@@ -3,7 +3,7 @@
 Both render the same structured codes, from two separate template tables
 (the UI's must be `tr()` literals so `pyside6-lupdate` can extract them).
 These tests keep the two tables from drifting apart and hold every template
-to AGENTS.md's Product Philosophy & Tone Rules.
+to the project's neutral, exploratory wording boundary.
 """
 
 import pytest
