@@ -1,7 +1,7 @@
 """Main application window: file open, manual column selection, analyze, chart.
 
 Column selection is always an explicit user click on a table row — this
-module never auto-picks or auto-analyzes a column, per AGENTS.md.
+module never auto-picks or auto-analyzes a column.
 """
 
 from __future__ import annotations
@@ -478,8 +478,8 @@ class MainWindow(QMainWindow):
     def _summary_templates(self) -> dict[str, str]:
         """Translatable template per result-summary code.
 
-        Wording is neutral and exploratory per AGENTS.md and directs users to
-        interpret the comparison alongside the characteristics of the data.
+        Wording is neutral and exploratory and directs users to interpret the
+        comparison alongside the characteristics of the data.
         """
         return {
             SUMMARY_NO_VALID_VALUES: self.tr(

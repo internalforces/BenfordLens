@@ -1,7 +1,7 @@
 """Suitability panel: an advisory 🟢/🟡/🔴 signal plus the underlying notes.
 
-Never states or implies whether Benford's Law applies to the data — see
-AGENTS.md's Product Philosophy & Tone Rules.
+Never states or implies whether Benford's Law applies to the data; it presents
+characteristics for the user to review.
 """
 
 from __future__ import annotations
@@ -122,8 +122,8 @@ class SuitabilityPanel(QWidget):
     def _note_templates(self) -> dict[str, str]:
         """Translatable template per advisory-note code.
 
-        Wording is neutral and exploratory per AGENTS.md: these describe data
-        characteristics only, never a verdict about the data.
+        Wording is neutral and exploratory: these describe data characteristics
+        only, never a verdict about the data.
         """
         return {
             NOTE_SAMPLE_TOO_SMALL: self.tr(

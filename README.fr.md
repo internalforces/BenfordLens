@@ -59,7 +59,7 @@ correspondante sur la page de la Release.
 
 | Domaine | Résultat |
 |---------|----------|
-| Qualité automatisée | Ruff, le contrôle du formatage, mypy sur 22 fichiers source et les 258 tests réussissent sur la base actuelle |
+| Qualité automatisée | Ruff, le contrôle du formatage, mypy sur 22 fichiers source et les 259 tests réussissent sur la base actuelle |
 | Performances | La suppression de l’extraction répétée des chiffres a amélioré de 30,0 à 31,8 % le benchmark enregistré du contrôleur sur 100 000 lignes |
 | Cohérence de l’état | L’analyse combinée ne prétraite qu’une fois et conserve résultats, statistiques, contexte d’applicabilité et correspondances de lignes dans un instantané immuable |
 | Internationalisation | Six catalogues Qt complets en plus de l’anglais intégré, avec tests de parité des catalogues et de l’interface réelle |
@@ -113,7 +113,7 @@ uv run mypy src/
 QT_QPA_PLATFORM=offscreen uv run pytest
 ```
 
-Le résultat actuellement vérifié est de 258 tests réussis. Consultez le
+Le résultat actuellement vérifié est de 259 tests réussis. Consultez le
 [guide de vérification](docs/verification.md) pour la matrice de tests, la méthode de mesure des
 performances, les contrôles de paquetage et les limites explicites de la vérification.
 
@@ -136,9 +136,10 @@ performances, les contrôles de paquetage et les limites explicites de la vérif
 - [Architecture](docs/architecture.md) — couches, flux de données, modèle d’état et limite de confidentialité
 - [Vérification](docs/verification.md) — tests automatisés, éléments de performance et contrôles de publication
 - [Guide d’utilisation](docs/user-guide.md) — chargement, prétraitement, analyse, exploration et export
+- [Feuille de route](roadmap.md) — l’unique jalon de distribution restant nécessaire
 
-Les preuves de développement détaillées restent conservées dans `memory/`, `tasks/` et `reports/`.
-Les quatre documents ci-dessus constituent volontairement un parcours public restreint.
+Les documents ci-dessus constituent le parcours public actuellement maintenu. Les détails
+d’implémentation historiques restent consultables dans l’historique Git lorsque nécessaire.
 
 ## Communauté et mentions
 

@@ -14,6 +14,7 @@ project's local-first, user-directed analysis boundary.
 ## Development setup
 
 Benford Lens targets Python 3.11 and uses [uv](https://docs.astral.sh/uv/).
+`pyproject.toml` and `uv.lock` are the authoritative dependency and tool configuration.
 
 ```bash
 uv sync --locked --group dev
@@ -32,7 +33,7 @@ check, or user-data upload path may be introduced.
    characteristics; it does not make an automatic applicability or misconduct determination.
 5. Discuss a new external dependency or supported file format in an issue before implementation.
 6. Update English and all six translation catalogs when changing UI text.
-7. Add focused tests and update relevant documentation, notices, and project records.
+7. Add focused tests and update relevant documentation, notices, and release notes.
 
 ## Verify locally
 
@@ -45,6 +46,10 @@ QT_QPA_PLATFORM=offscreen uv run pytest
 
 Packaging changes should also run the static notice-policy tests. Native distribution builds and
 release publication are maintainer-gated because they create downloadable artifacts.
+
+The remaining product milestone is tracked in [the roadmap](roadmap.md). New file formats,
+network-connected behavior, public analysis API changes, or new runtime dependencies must be
+discussed and explicitly approved before implementation.
 
 ## Pull requests
 

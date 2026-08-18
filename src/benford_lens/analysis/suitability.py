@@ -2,7 +2,7 @@
 
 This module surfaces data characteristics as an advisory signal only. It
 never states or implies whether Benford's Law applies to a dataset — that
-judgment always belongs to the user, per AGENTS.md.
+judgment always belongs to the user.
 """
 
 from __future__ import annotations
@@ -15,8 +15,7 @@ import pandas as pd
 
 from benford_lens.analysis.benford import MIN_MEANINGFUL_SAMPLE
 
-# See ADR-006 (memory/decisions.md) for the rationale behind these
-# thresholds — heuristic advisory defaults, not a statistical test.
+# These thresholds are heuristic advisory defaults, not a statistical test.
 _GOOD_SAMPLE_COUNT = 300
 _GOOD_DIGIT_RANGE = 4
 _GOOD_DISTINCT_RATIO = 0.3
@@ -62,9 +61,8 @@ class SuitabilityMetrics:
 class SuitabilityNote:
     """One advisory observation, as a stable code plus the numbers behind it.
 
-    Deliberately carries no prose. The Analysis Engine has no user-facing
-    strings (AGENTS.md), and the presentation layer needs to be able to
-    render these in the user's chosen language.
+    Deliberately carries no prose so the presentation layer can render each
+    note in the user's chosen language.
     """
 
     code: str

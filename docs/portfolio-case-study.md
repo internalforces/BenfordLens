@@ -60,8 +60,7 @@ UI, 드릴다운, HTML 보고서는 모두 이 스냅샷을 읽습니다. 그 �
 | 첫째 + 둘째 | 0.281804초 | 0.192316초 | 31.8% |
 
 측정은 파일 입출력과 차트 렌더링을 제외한 동일 개발 환경의 비교이며, 모든 사용자 환경에 대한
-성능 보장은 아닙니다. 자세한 조건은
-[`reports/performance-2026-08-06-m3.md`](../reports/performance-2026-08-06-m3.md)에 남겼습니다.
+성능 보장은 아닙니다. 자세한 조건은 [검증 문서](verification.md)에 정리되어 있습니다.
 
 ### 핵심 판단 3 — 번역을 넘어선 다국어 UI 안정성
 
@@ -78,19 +77,18 @@ UI, 드릴다운, HTML 보고서는 모두 이 스냅샷을 읽습니다. 그 �
 
 - CSV/XLSX 입력부터 전처리, 분석, 드릴다운, HTML 보고서까지 한 제품 흐름으로 완성했습니다.
 - 첫째·둘째·결합 분석을 동일한 상태 모델과 재사용 가능한 UI로 구현했습니다.
-- 현재 기준선에서 Ruff·형식 검사·mypy와 257개 테스트가 통과합니다.
+- 현재 기준선에서 Ruff·형식 검사·mypy와 259개 테스트가 통과합니다.
 - macOS arm64 앱 후보와 Windows x64 ZIP/MSI 후보를 빌드하고 실행·설치·제거를 검증했습니다.
 - 모든 데이터 처리는 로컬에 남으며 원본 입력 파일은 수정하지 않습니다.
 
 ### 회고와 남은 경계
 
 가장 큰 교훈은 통계 기능보다 상태 일관성, 표현 방식, 운영체제별 UI, 배포 신뢰가 제품 완성도를
-좌우한다는 점입니다. 상세 세션과 의사결정 기록을 보존해 문제 해결 근거를 추적할 수 있지만,
-공개 문서는 결과와 핵심 판단에 집중하도록 분리했습니다.
+좌우한다는 점입니다. 공개 문서는 현재 결과, 재현 방법과 핵심 판단에 집중합니다.
 
-아직 완료로 표현하지 않는 항목도 명확합니다. macOS Developer ID 서명·공증, Windows
-Authenticode 서명, 각 클린 머신 검증, Linux 대상 빌드, 공개 v1.0.0 태그/Release가 남아
-있습니다.
+v1.0.1 소스와 macOS/Windows 패키지는 공개되어 있습니다. 남은 필수 마일스톤은 macOS
+Developer ID 서명·공증과 Windows의 승인된 서명 경로를 적용한 뒤 각 플랫폼의 클린 머신에서
+검증하는 것입니다. Linux 패키지는 현재 제공하지 않습니다.
 
 ---
 
@@ -149,8 +147,7 @@ aligned first/second digit pairs once for reuse by analysis and drill-down.
 | First + second | 0.281804 s | 0.192316 s | 31.8% |
 
 These are controlled comparative development measurements, not a universal performance promise.
-The full method is preserved in
-[`reports/performance-2026-08-06-m3.md`](../reports/performance-2026-08-06-m3.md).
+The full method is summarized in the [verification guide](verification.md).
 
 ### Decision 3 — multilingual desktop resilience beyond translation
 
@@ -167,15 +164,16 @@ problems:
 
 - A complete CSV/XLSX → preprocessing → analysis → drill-down → HTML report workflow.
 - First, second, and combined modes share one state model and reusable result UI.
-- Ruff, formatting, mypy, and all 258 tests pass on the current baseline.
+- Ruff, formatting, mypy, and all 259 tests pass on the current baseline.
 - macOS arm64 and Windows x64 ZIP/MSI candidates were built and smoke-tested.
 - Processing remains local, and the original input file is never modified.
 
 ### Retrospective and remaining boundaries
 
 The strongest lesson is that state consistency, careful presentation, platform UI behavior, and
-distribution trust matter as much as the statistical feature itself. Detailed decisions and
-session evidence remain preserved, while the public narrative focuses on outcomes and reasoning.
+distribution trust matter as much as the statistical feature itself. Public documentation now
+focuses on current outcomes, reproducible checks, and durable design reasoning.
 
-Developer ID signing/notarization, Authenticode signing, clean-machine checks, a Linux target
-build, and the public v1.0.0 tag/Release are still pending and are not presented as complete.
+The v1.0.1 source and macOS/Windows packages are public. The remaining required milestone is to
+apply Developer ID signing/notarization on macOS and an approved signed Windows distribution path,
+then verify both on clean supported machines. A Linux package is not currently offered.

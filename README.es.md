@@ -57,7 +57,7 @@ la Release.
 
 | Área | Resultado |
 |------|-----------|
-| Calidad automatizada | Ruff, la comprobación de formato, mypy sobre 22 archivos fuente y las 258 pruebas pasan en la base actual |
+| Calidad automatizada | Ruff, la comprobación de formato, mypy sobre 22 archivos fuente y las 259 pruebas pasan en la base actual |
 | Rendimiento | Eliminar la extracción repetida de dígitos mejoró entre un 30,0 y un 31,8 % el benchmark registrado del controlador con 100 000 filas |
 | Coherencia del estado | El análisis combinado preprocesa una sola vez y guarda resultados, estadísticas, contexto de aplicabilidad y correspondencias de filas en una instantánea inmutable |
 | Internacionalización | Seis catálogos Qt completos además del inglés integrado, con pruebas de paridad de catálogos y regresión de la interfaz real |
@@ -111,7 +111,7 @@ uv run mypy src/
 QT_QPA_PLATFORM=offscreen uv run pytest
 ```
 
-El resultado verificado actual es de 258 pruebas superadas. Consulta la
+El resultado verificado actual es de 259 pruebas superadas. Consulta la
 [guía de verificación](docs/verification.md) para ver la matriz de pruebas, el método de medición
 del rendimiento, las comprobaciones de empaquetado y los límites explícitos de la verificación.
 
@@ -132,9 +132,10 @@ del rendimiento, las comprobaciones de empaquetado y los límites explícitos de
 - [Arquitectura](docs/architecture.md) — capas, flujo de datos, modelo de estado y límite de privacidad
 - [Verificación](docs/verification.md) — pruebas automatizadas, evidencia de rendimiento y comprobaciones de publicación
 - [Guía de usuario](docs/user-guide.md) — carga, preprocesamiento, análisis, exploración y exportación
+- [Hoja de ruta](roadmap.md) — el único hito de distribución posterior necesario
 
-La evidencia detallada del desarrollo se conserva en `memory/`, `tasks/` y `reports/`. Los cuatro
-documentos anteriores forman intencionadamente una ruta pública de lectura reducida.
+Los documentos anteriores forman la ruta pública que se mantiene actualmente. Los detalles
+históricos de implementación pueden consultarse en el historial de Git cuando sea necesario.
 
 ## Comunidad y avisos
 
