@@ -6915,10 +6915,10 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ===============================================================================
-pyinstaller 6.21.0
+pyinstaller 6.22.2
 ===============================================================================
 
---- pyinstaller-6.21.0.dist-info/licenses/COPYING.txt ---
+--- pyinstaller-6.22.2.dist-info/licenses/COPYING.txt ---
 
 ================================
  The PyInstaller licensing terms
