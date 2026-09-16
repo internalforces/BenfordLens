@@ -17,7 +17,7 @@ as the compliance record.
 - `uv.lock` resolved for Python 3.11 on both target platforms
 - Qt for Python / PySide6 Essentials 6.11.2 and Shiboken6 6.11.2
 - Qt 6.11.2 dynamically loaded libraries used by the packaged application
-- PyInstaller 6.21.0 and PyInstaller Hooks Contrib 2026.6
+- PyInstaller 6.22.2 and PyInstaller Hooks Contrib 2026.6
 - WixToolset.Sdk 5.0.2 for the Windows MSI
 
 `third_party_licenses/PYTHON_DISTRIBUTIONS.json` records hashes for the license files extracted
@@ -134,7 +134,7 @@ Python/.NET implementation is not copied into the installed application.
 
 | Tool/component | Version | License | Notice location |
 |---|---:|---|---|
-| PyInstaller | 6.21.0 | GPL-2.0-or-later with the PyInstaller bootloader/bundling exception; selected files also Apache-2.0 | `PYTHON_DISTRIBUTIONS.txt` |
+| PyInstaller | 6.22.2 | GPL-2.0-or-later with the PyInstaller bootloader/bundling exception; selected files also Apache-2.0 | `PYTHON_DISTRIBUTIONS.txt` |
 | PyInstaller Hooks Contrib | 2026.6 | GPL-2.0-or-later with applicable exception/notice | `PYTHON_DISTRIBUTIONS.txt` |
 | altgraph | 0.17.5 | MIT | `PYTHON_DISTRIBUTIONS.txt` |
 | macholib (macOS build) | 1.16.4 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |

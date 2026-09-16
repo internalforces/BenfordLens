@@ -40,7 +40,7 @@ EXPECTED_DISTRIBUTIONS = {
     # Packaging tools. They are documented even when their Python packages are not copied into
     # the application; the PyInstaller bootloader is part of the generated executable.
     "altgraph": "0.17.5",
-    "pyinstaller": "6.21.0",
+    "pyinstaller": "6.22.2",
     "pyinstaller-hooks-contrib": "2026.6",
     "setuptools": "83.0.0",
 }
