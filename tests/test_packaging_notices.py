@@ -24,10 +24,10 @@ RUNTIME_VERSIONS = {
     "pandas": "3.0.5",
     "pillow": "12.3.0",
     "pyparsing": "3.3.2",
-    "pyside6-essentials": "6.11.1",
+    "pyside6-essentials": "6.11.2",
     "python-dateutil": "2.9.0.post0",
     "scipy": "1.17.1",
-    "shiboken6": "6.11.1",
+    "shiboken6": "6.11.2",
     "six": "1.17.0",
     "tzdata": "2026.3",
 }
@@ -78,7 +78,7 @@ def test_minimal_qt_runtime_excludes_addons_distribution() -> None:
     assert not any(item.split(">=", maxsplit=1)[0] == "pyside6" for item in dependencies)
 
     packages = _lock_packages()
-    assert packages["pyside6-essentials"] == {"6.11.1"}
+    assert packages["pyside6-essentials"] == {"6.11.2"}
     assert "pyside6" not in packages
     assert "pyside6-addons" not in packages
 

@@ -32,10 +32,10 @@ EXPECTED_DISTRIBUTIONS = {
     "pandas": "3.0.5",
     "pillow": "12.3.0",
     "pyparsing": "3.3.2",
-    "pyside6_essentials": "6.11.1",
+    "pyside6_essentials": "6.11.2",
     "python-dateutil": "2.9.0.post0",
     "scipy": "1.17.1",
-    "shiboken6": "6.11.1",
+    "shiboken6": "6.11.2",
     "six": "1.17.0",
     # Packaging tools. They are documented even when their Python packages are not copied into
     # the application; the PyInstaller bootloader is part of the generated executable.

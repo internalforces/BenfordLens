@@ -8113,7 +8113,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ===============================================================================
-PySide6_Essentials 6.11.1
+PySide6_Essentials 6.11.2
 ===============================================================================
 License metadata only; the applicable full text is provided by the manual license files named in THIRD_PARTY_NOTICES.md.
 Metadata: LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
@@ -10433,7 +10433,7 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
       the Mozilla Public License, v. 2.0.
 
 ===============================================================================
-shiboken6 6.11.1
+shiboken6 6.11.2
 ===============================================================================
 License metadata only; the applicable full text is provided by the manual license files named in THIRD_PARTY_NOTICES.md.
 Metadata: LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
