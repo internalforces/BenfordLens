@@ -15,8 +15,8 @@ as the compliance record.
 - Python 3.11.15
 - macOS arm64 and Windows x64
 - `uv.lock` resolved for Python 3.11 on both target platforms
-- Qt for Python / PySide6 Essentials 6.11.1 and Shiboken6 6.11.1
-- Qt 6.11.1 dynamically loaded libraries used by the packaged application
+- Qt for Python / PySide6 Essentials 6.11.2 and Shiboken6 6.11.2
+- Qt 6.11.2 dynamically loaded libraries used by the packaged application
 - PyInstaller 6.21.0 and PyInstaller Hooks Contrib 2026.6
 - WixToolset.Sdk 5.0.2 for the Windows MSI
 
@@ -40,10 +40,10 @@ source tags, commits or source-archive hash, and license-text hashes.
 | pandas | 3.0.5 | BSD-3-Clause plus bundled notices | <https://github.com/pandas-dev/pandas> |
 | Pillow | 12.3.0 | MIT-CMU plus bundled codec/library licenses | <https://github.com/python-pillow/Pillow> |
 | pyparsing | 3.3.2 | MIT | <https://github.com/pyparsing/pyparsing> |
-| PySide6 Essentials | 6.11.1 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only, or Qt commercial terms when separately obtained | <https://code.qt.io/cgit/pyside/pyside-setup.git/> |
+| PySide6 Essentials | 6.11.2 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only, or Qt commercial terms when separately obtained | <https://code.qt.io/cgit/pyside/pyside-setup.git/> |
 | python-dateutil | 2.9.0.post0 | Apache-2.0 OR BSD-3-Clause | <https://github.com/dateutil/dateutil> |
 | SciPy | 1.17.1 | BSD-3-Clause plus bundled native/component licenses | <https://github.com/scipy/scipy> |
-| Shiboken6 | 6.11.1 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only, or Qt commercial terms when separately obtained | <https://code.qt.io/cgit/pyside/pyside-setup.git/> |
+| Shiboken6 | 6.11.2 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only, or Qt commercial terms when separately obtained | <https://code.qt.io/cgit/pyside/pyside-setup.git/> |
 | six | 1.17.0 | MIT | <https://github.com/benjaminp/six> |
 | tzdata (Windows) | 2026.3 | Apache-2.0; timezone data retains its upstream status/notices | <https://github.com/python/tzdata> |
 
