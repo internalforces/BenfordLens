@@ -25,11 +25,11 @@ EXPECTED_DISTRIBUTIONS = {
     "et_xmlfile": "2.0.0",
     "fonttools": "4.63.0",
     "kiwisolver": "1.5.0",
-    "matplotlib": "3.11.1",
+    "matplotlib": "3.11.2",
     "numpy": "2.4.6",
     "openpyxl": "3.1.5",
     "packaging": "26.2",
-    "pandas": "3.0.5",
+    "pandas": "3.0.6",
     "pillow": "12.3.0",
     "pyparsing": "3.3.2",
     "pyside6_essentials": "6.11.2",
@@ -40,8 +40,8 @@ EXPECTED_DISTRIBUTIONS = {
     # Packaging tools. They are documented even when their Python packages are not copied into
     # the application; the PyInstaller bootloader is part of the generated executable.
     "altgraph": "0.17.5",
-    "pyinstaller": "6.22.2",
-    "pyinstaller-hooks-contrib": "2026.6",
+    "pyinstaller": "6.22.3",
+    "pyinstaller-hooks-contrib": "2026.7",
     "setuptools": "83.0.0",
 }
 
