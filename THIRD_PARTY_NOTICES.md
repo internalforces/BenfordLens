@@ -17,7 +17,7 @@ as the compliance record.
 - `uv.lock` resolved for Python 3.11 on both target platforms
 - Qt for Python / PySide6 Essentials 6.11.2 and Shiboken6 6.11.2
 - Qt 6.11.2 dynamically loaded libraries used by the packaged application
-- PyInstaller 6.22.2 and PyInstaller Hooks Contrib 2026.6
+- PyInstaller 6.22.3 and PyInstaller Hooks Contrib 2026.7
 - WixToolset.Sdk 5.0.2 for the Windows MSI
 
 `third_party_licenses/PYTHON_DISTRIBUTIONS.json` records hashes for the license files extracted
@@ -33,11 +33,11 @@ source tags, commits or source-archive hash, and license-text hashes.
 | et_xmlfile | 2.0.0 | MIT | <https://foss.heptapod.net/openpyxl/et_xmlfile> |
 | fonttools | 4.63.0 | MIT plus bundled notices | <https://github.com/fonttools/fonttools> |
 | kiwisolver | 1.5.0 | BSD-3-Clause | <https://github.com/nucleic/kiwi> |
-| Matplotlib | 3.11.1 | Matplotlib license plus bundled software/font licenses | <https://github.com/matplotlib/matplotlib> |
+| Matplotlib | 3.11.2 | Matplotlib license plus bundled software/font licenses | <https://github.com/matplotlib/matplotlib> |
 | NumPy | 2.4.6 | BSD-3-Clause plus bundled component licenses | <https://github.com/numpy/numpy> |
 | openpyxl | 3.1.5 | MIT | <https://foss.heptapod.net/openpyxl/openpyxl> |
 | packaging | 26.2 | Apache-2.0 OR BSD-2-Clause | <https://github.com/pypa/packaging> |
-| pandas | 3.0.5 | BSD-3-Clause plus bundled notices | <https://github.com/pandas-dev/pandas> |
+| pandas | 3.0.6 | BSD-3-Clause plus bundled notices | <https://github.com/pandas-dev/pandas> |
 | Pillow | 12.3.0 | MIT-CMU plus bundled codec/library licenses | <https://github.com/python-pillow/Pillow> |
 | pyparsing | 3.3.2 | MIT | <https://github.com/pyparsing/pyparsing> |
 | PySide6 Essentials | 6.11.2 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only, or Qt commercial terms when separately obtained | <https://code.qt.io/cgit/pyside/pyside-setup.git/> |
@@ -134,8 +134,8 @@ Python/.NET implementation is not copied into the installed application.
 
 | Tool/component | Version | License | Notice location |
 |---|---:|---|---|
-| PyInstaller | 6.22.2 | GPL-2.0-or-later with the PyInstaller bootloader/bundling exception; selected files also Apache-2.0 | `PYTHON_DISTRIBUTIONS.txt` |
-| PyInstaller Hooks Contrib | 2026.6 | GPL-2.0-or-later with applicable exception/notice | `PYTHON_DISTRIBUTIONS.txt` |
+| PyInstaller | 6.22.3 | GPL-2.0-or-later with the PyInstaller bootloader/bundling exception; selected files also Apache-2.0 | `PYTHON_DISTRIBUTIONS.txt` |
+| PyInstaller Hooks Contrib | 2026.7 | GPL-2.0-or-later with applicable exception/notice | `PYTHON_DISTRIBUTIONS.txt` |
 | altgraph | 0.17.5 | MIT | `PYTHON_DISTRIBUTIONS.txt` |
 | macholib (macOS build) | 1.16.4 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
 | pefile (Windows build) | 2024.8.26 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |

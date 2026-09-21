@@ -601,10 +601,10 @@ to indicate the copyright and license terms:
 #------------------------------------------------------------------------------
 
 ===============================================================================
-matplotlib 3.11.1
+matplotlib 3.11.2
 ===============================================================================
 
---- matplotlib-3.11.1.dist-info/LICENSE ---
+--- matplotlib-3.11.2.dist-info/LICENSE ---
 
 License agreement for matplotlib versions 1.3.0 and later
 =========================================================
@@ -4267,10 +4267,10 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ===============================================================================
-pandas 3.0.5
+pandas 3.0.6
 ===============================================================================
 
---- pandas-3.0.5.dist-info/LICENSE ---
+--- pandas-3.0.6.dist-info/LICENSE ---
 
 BSD 3-Clause License
 
@@ -6915,10 +6915,10 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ===============================================================================
-pyinstaller 6.22.2
+pyinstaller 6.22.3
 ===============================================================================
 
---- pyinstaller-6.22.2.dist-info/licenses/COPYING.txt ---
+--- pyinstaller-6.22.3.dist-info/licenses/COPYING.txt ---
 
 ================================
  The PyInstaller licensing terms
@@ -6967,6 +6967,18 @@ Version 2.0.
 
 Run-time Hooks are in the directory
 ./PyInstaller/hooks/rthooks
+
+
+Additional Run-time Modules
+----------------------------------
+
+In addition to run-time hooks, PyInstaller may embed additional run-time
+modules in the final executable. At the time of writing, these include
+the splash-screen module (``pyi_splash``) and modules from utility package
+for run-time hooks (``_pyi_rth_utils``). All these files are licensed under
+the Apache License, Version 2.0, and are located in the following directory:
+
+./PyInstaller/fake-modules
 
 
 The PyInstaller.isolated submodule
@@ -7558,10 +7570,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ===============================================================================
-pyinstaller-hooks-contrib 2026.6
+pyinstaller-hooks-contrib 2026.7
 ===============================================================================
 
---- pyinstaller_hooks_contrib-2026.6.dist-info/licenses/LICENSE ---
+--- pyinstaller_hooks_contrib-2026.7.dist-info/licenses/LICENSE ---
 
 ============================================
 PyInstaller Community Hooks: License details

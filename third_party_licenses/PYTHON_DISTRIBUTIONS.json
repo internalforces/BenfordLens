@@ -68,7 +68,7 @@
     {
       "license_documents": [
         {
-          "path": "matplotlib-3.11.1.dist-info/LICENSE",
+          "path": "matplotlib-3.11.2.dist-info/LICENSE",
           "sha256": "822e8e528147569a41975592aee19c11992ab667ba50451cd929031d5fc74491"
         },
         {
@@ -82,7 +82,7 @@
       ],
       "license_expression": null,
       "name": "matplotlib",
-      "version": "3.11.1"
+      "version": "3.11.2"
     },
     {
       "license_documents": [
@@ -195,13 +195,13 @@
     {
       "license_documents": [
         {
-          "path": "pandas-3.0.5.dist-info/LICENSE",
+          "path": "pandas-3.0.6.dist-info/LICENSE",
           "sha256": "380ff3eaa4d1ea5daa4b6db780dd7fd8062d0732cc4ce1b95c001f9d8105e76c"
         }
       ],
       "license_expression": null,
       "name": "pandas",
-      "version": "3.0.5"
+      "version": "3.0.6"
     },
     {
       "license_documents": [
@@ -217,24 +217,24 @@
     {
       "license_documents": [
         {
-          "path": "pyinstaller-6.22.2.dist-info/licenses/COPYING.txt",
-          "sha256": "dcf75fdb959db1e3b41c0f8505069d2ece781b5ec6b3d0a4d30975cfc6580245"
+          "path": "pyinstaller-6.22.3.dist-info/licenses/COPYING.txt",
+          "sha256": "0598064c7d2718e38d7914a7d08343b2fa008e3bea9ebba2aa7a6ffa5900dd64"
         }
       ],
       "license_expression": null,
       "name": "pyinstaller",
-      "version": "6.22.2"
+      "version": "6.22.3"
     },
     {
       "license_documents": [
         {
-          "path": "pyinstaller_hooks_contrib-2026.6.dist-info/licenses/LICENSE",
+          "path": "pyinstaller_hooks_contrib-2026.7.dist-info/licenses/LICENSE",
           "sha256": "91d0baaff00773038e72c0a1fc9d5d2d38706b7a2b9c04f34296608f931b9cd0"
         }
       ],
       "license_expression": null,
       "name": "pyinstaller-hooks-contrib",
-      "version": "2026.6"
+      "version": "2026.7"
     },
     {
       "license_documents": [
@@ -384,7 +384,7 @@
       "version": "1.17.0"
     }
   ],
-  "license_bundle_sha256": "4b9e9a283cd5be6d0a00250d8281a4b36ae6a94927413496fa159a58f8b8c2a4",
+  "license_bundle_sha256": "1d59716e02460a5b4c557551ec652b25167b14ba4e74c30c65c492c00babf4b7",
   "platform_specific_locked_distributions": {
     "macholib": "1.16.4",
     "pefile": "2024.8.26",
