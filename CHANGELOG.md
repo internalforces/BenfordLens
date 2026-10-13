@@ -2,6 +2,13 @@
 
 All notable changes to Benford Lens are documented in this file.
 
+## Unreleased
+
+- Updated PySide6 Essentials and Shiboken6 to 6.12.0 and synchronized the Python distribution
+  license inventory, notices, and verification fixtures.
+- Documented that the retained Qt 6.11.1 source audit must be refreshed for 6.12.0 before new
+  binaries are distributed.
+
 ## 1.0.1 — 2026-08-11
 
 This public-readiness patch supersedes the private v1.0.0 desktop packages with a reduced,
