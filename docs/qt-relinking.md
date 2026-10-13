@@ -16,7 +16,8 @@ MIT License.
 
 ## Rebuild from source
 
-Use Python 3.11 on the target operating system:
+Use Python 3.11 on the target operating system. The locked PySide6/Shiboken6 6.12.0 macOS
+wheels require macOS 14 or newer:
 
 ```text
 uv sync --frozen --group dev

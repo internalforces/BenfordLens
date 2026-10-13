@@ -6,6 +6,7 @@ All notable changes to Benford Lens are documented in this file.
 
 - Updated PySide6 Essentials and Shiboken6 to 6.12.0 and synchronized the Python distribution
   license inventory, notices, and verification fixtures.
+- The PySide6/Shiboken6 6.12.0 macOS wheels require macOS 14 or newer.
 - Documented that the retained Qt 6.11.1 source audit must be refreshed for 6.12.0 before new
   binaries are distributed.
 
