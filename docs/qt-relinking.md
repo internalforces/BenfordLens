@@ -1,7 +1,7 @@
 # Replacing or Rebuilding the Qt Libraries
 
-Benford Lens release packages use dynamically loaded Qt 6.11 libraries through PySide6 Essentials
-6.11.1. This guide documents the package layout and practical replacement/rebuild path. It is not
+The current lock uses dynamically loaded Qt 6.12.0 libraries through PySide6 Essentials
+6.12.0. This guide documents the package layout and practical replacement/rebuild path. It is not
 legal advice and does not limit the rights provided by the GNU LGPLv3 or another applicable Qt
 license.
 
@@ -9,12 +9,15 @@ license.
 
 Start with [`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md). The exact source tags, commits,
 archive hash, third-party attributions, and license-text hashes are recorded under
-`third_party_licenses/`. Benford Lens application source is available in this repository under the
+`third_party_licenses/`. The Qt source records and attributions still describe the prior 6.11.1
+audit; refresh them for 6.12.0 and verify both native targets before distributing new binaries.
+Benford Lens application source is available in this repository under the
 MIT License.
 
 ## Rebuild from source
 
-Use Python 3.11 on the target operating system:
+Use Python 3.11 on the target operating system. The locked PySide6/Shiboken6 6.12.0 macOS
+wheels require macOS 14 or newer:
 
 ```text
 uv sync --frozen --group dev

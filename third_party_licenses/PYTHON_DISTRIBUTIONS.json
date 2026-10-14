@@ -251,7 +251,7 @@
       "license_documents": [],
       "license_expression": null,
       "name": "PySide6_Essentials",
-      "version": "6.11.2"
+      "version": "6.12.0"
     },
     {
       "license_documents": [
@@ -370,7 +370,7 @@
       "license_documents": [],
       "license_expression": null,
       "name": "shiboken6",
-      "version": "6.11.2"
+      "version": "6.12.0"
     },
     {
       "license_documents": [
@@ -384,7 +384,7 @@
       "version": "1.17.0"
     }
   ],
-  "license_bundle_sha256": "1d59716e02460a5b4c557551ec652b25167b14ba4e74c30c65c492c00babf4b7",
+  "license_bundle_sha256": "4c2635ed4cb7d90a7fd188dd9d7bd4de48e206f1adda5233c825c7eb7b085083",
   "platform_specific_locked_distributions": {
     "macholib": "1.16.4",
     "pefile": "2024.8.26",
