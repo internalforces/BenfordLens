@@ -41,7 +41,7 @@ the Qt source notice set and reconcile it with the native packaged libraries on 
 | openpyxl | 3.1.5 | MIT | <https://foss.heptapod.net/openpyxl/openpyxl> |
 | packaging | 26.2 | Apache-2.0 OR BSD-2-Clause | <https://github.com/pypa/packaging> |
 | pandas | 3.0.6 | BSD-3-Clause plus bundled notices | <https://github.com/pandas-dev/pandas> |
-| Pillow | 12.3.0 | MIT-CMU plus bundled codec/library licenses | <https://github.com/python-pillow/Pillow> |
+| Pillow | 13.0.0 | MIT-CMU plus bundled codec/library licenses | <https://github.com/python-pillow/Pillow> |
 | pyparsing | 3.3.2 | MIT | <https://github.com/pyparsing/pyparsing> |
 | PySide6 Essentials | 6.12.0 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only, or Qt commercial terms when separately obtained | <https://code.qt.io/cgit/pyside/pyside-setup.git/> |
 | python-dateutil | 2.9.0.post0 | Apache-2.0 OR BSD-3-Clause | <https://github.com/dateutil/dateutil> |
