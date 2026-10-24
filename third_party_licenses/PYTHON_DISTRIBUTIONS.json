@@ -206,13 +206,13 @@
     {
       "license_documents": [
         {
-          "path": "pillow-12.3.0.dist-info/licenses/LICENSE",
+          "path": "pillow-13.0.0.dist-info/licenses/LICENSE",
           "sha256": "dda12a98c1979cf3d94df1cff45d27a4cb3f04a60c76f76902ac54cac03ec0ce"
         }
       ],
       "license_expression": "MIT-CMU",
       "name": "pillow",
-      "version": "12.3.0"
+      "version": "13.0.0"
     },
     {
       "license_documents": [
@@ -384,7 +384,7 @@
       "version": "1.17.0"
     }
   ],
-  "license_bundle_sha256": "4c2635ed4cb7d90a7fd188dd9d7bd4de48e206f1adda5233c825c7eb7b085083",
+  "license_bundle_sha256": "c401613e94748610a10240e23b2c0f71b36bedc75c78e66532ae3f020d9276c9",
   "platform_specific_locked_distributions": {
     "macholib": "1.16.4",
     "pefile": "2024.8.26",

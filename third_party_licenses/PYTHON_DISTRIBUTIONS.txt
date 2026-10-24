@@ -5334,10 +5334,10 @@ https://opensource.apple.com/source/tcl/tcl-14/tcl/license.terms
   terms specified in this license.
 
 ===============================================================================
-pillow 12.3.0
+pillow 13.0.0
 ===============================================================================
 
---- pillow-12.3.0.dist-info/licenses/LICENSE ---
+--- pillow-13.0.0.dist-info/licenses/LICENSE ---
 
 The Python Imaging Library (PIL) is
 
