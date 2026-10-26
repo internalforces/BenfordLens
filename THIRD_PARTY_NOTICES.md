@@ -143,7 +143,7 @@ Python/.NET implementation is not copied into the installed application.
 | macholib (macOS build) | 1.16.4 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
 | pefile (Windows build) | 2024.8.26 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
 | pywin32-ctypes (Windows build) | 0.2.3 | permissive upstream license | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
-| setuptools | 83.0.0 | MIT plus vendored notices | `PYTHON_DISTRIBUTIONS.txt` |
+| setuptools | 84.1.0 | MIT plus vendored notices | `PYTHON_DISTRIBUTIONS.txt` |
 | WixToolset.Sdk | 5.0.2 | Microsoft Reciprocal License | `WIX-5.0.2-MS-RL.txt` |
 
 PyInstaller's official documentation states that its exception permits distribution of generated

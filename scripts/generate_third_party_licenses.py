@@ -42,7 +42,7 @@ EXPECTED_DISTRIBUTIONS = {
     "altgraph": "0.17.5",
     "pyinstaller": "6.22.3",
     "pyinstaller-hooks-contrib": "2026.7",
-    "setuptools": "83.0.0",
+    "setuptools": "84.1.0",
 }
 
 # Installed only on one packaged target. Their notices are maintained separately so the inventory

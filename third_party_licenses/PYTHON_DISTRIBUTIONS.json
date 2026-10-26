@@ -388,7 +388,7 @@
     {
       "license_documents": [
         {
-          "path": "setuptools-83.0.0.dist-info/licenses/LICENSE",
+          "path": "setuptools-84.1.0.dist-info/licenses/LICENSE",
           "sha256": "86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741"
         },
         {
@@ -458,7 +458,7 @@
       ],
       "license_expression": "MIT",
       "name": "setuptools",
-      "version": "83.0.0"
+      "version": "84.1.0"
     },
     {
       "license_documents": [],
@@ -478,7 +478,7 @@
       "version": "1.17.0"
     }
   ],
-  "license_bundle_sha256": "a3cd5b5445e92751116bddbe060126cb7fe82838ab608f61ce1d6d8d4634100e",
+  "license_bundle_sha256": "a477a843a67e955a4b6972018dea87ade76091b1c6454705fc5ed697c517586a",
   "platform_specific_locked_distributions": {
     "macholib": "1.16.4",
     "pefile": "2024.8.26",
