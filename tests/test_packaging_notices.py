@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.metadata
 import json
 import re
 import subprocess
 import sys
 import tomllib
 from pathlib import Path
+
+import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 LICENSE_DIR = PROJECT_ROOT / "third_party_licenses"
@@ -21,7 +24,7 @@ RUNTIME_VERSIONS = {
     "numpy": "2.4.6",
     "openpyxl": "3.1.5",
     "packaging": "26.2",
-    "pandas": "3.0.6",
+    "pandas": "3.1.0",
     "pillow": "13.0.0",
     "pyparsing": "3.3.2",
     "pyside6-essentials": "6.12.0",
@@ -162,6 +165,21 @@ def test_python_inventory_contains_source_hashes() -> None:
     for distribution in inventory["distributions"]:
         for document in distribution["license_documents"]:
             assert len(document["sha256"]) == 64
+
+
+@pytest.mark.parametrize("name, license_dir", [("pandas", "licenses/"), ("et_xmlfile", "")])
+def test_python_inventory_includes_all_declared_license_files(name: str, license_dir: str) -> None:
+    distribution = importlib.metadata.distribution(name)
+    declared_files = distribution.metadata.get_all("License-File")
+    assert declared_files
+    inventory = json.loads((LICENSE_DIR / "PYTHON_DISTRIBUTIONS.json").read_text())
+    package = next(item for item in inventory["distributions"] if item["name"] == name)
+    bundled_paths = {document["path"] for document in package["license_documents"]}
+    expected_paths = {
+        f"{name}-{distribution.version}.dist-info/{license_dir}{filename}"
+        for filename in declared_files
+    }
+    assert expected_paths <= bundled_paths
 
 
 def test_platform_specific_license_notices_are_preserved() -> None:
