@@ -9314,10 +9314,10 @@ modified, and redistributed under the following conditions:
    they desire.
 
 ===============================================================================
-setuptools 83.0.0
+setuptools 84.1.0
 ===============================================================================
 
---- setuptools-83.0.0.dist-info/licenses/LICENSE ---
+--- setuptools-84.1.0.dist-info/licenses/LICENSE ---
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
