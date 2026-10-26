@@ -29,7 +29,7 @@ EXPECTED_DISTRIBUTIONS = {
     "numpy": "2.4.6",
     "openpyxl": "3.1.5",
     "packaging": "26.2",
-    "pandas": "3.0.6",
+    "pandas": "3.1.0",
     "pillow": "13.0.0",
     "pyparsing": "3.3.2",
     "pyside6_essentials": "6.12.0",
@@ -72,9 +72,11 @@ def _license_documents(
     distribution: importlib.metadata.Distribution,
 ) -> list[tuple[str, str]]:
     documents: list[tuple[str, str]] = []
+    declared_files = set(distribution.metadata.get_all("License-File") or ())
     for entry in sorted(distribution.files or (), key=str):
         logical_path = str(entry)
-        if not _LICENSE_FILE.search(logical_path):
+        declared_path = logical_path.partition(".dist-info/")[2].removeprefix("licenses/")
+        if not _LICENSE_FILE.search(logical_path) and declared_path not in declared_files:
             continue
         path = distribution.locate_file(entry)
         if not path.is_file():
