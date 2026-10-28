@@ -40,7 +40,7 @@ the Qt source notice set and reconcile it with the native packaged libraries on 
 | NumPy | 2.4.6 | BSD-3-Clause plus bundled component licenses | <https://github.com/numpy/numpy> |
 | openpyxl | 3.1.5 | MIT | <https://foss.heptapod.net/openpyxl/openpyxl> |
 | packaging | 26.2 | Apache-2.0 OR BSD-2-Clause | <https://github.com/pypa/packaging> |
-| pandas | 3.0.6 | BSD-3-Clause plus bundled notices | <https://github.com/pandas-dev/pandas> |
+| pandas | 3.1.0 | BSD-3-Clause plus bundled notices | <https://github.com/pandas-dev/pandas> |
 | Pillow | 13.0.0 | MIT-CMU plus bundled codec/library licenses | <https://github.com/python-pillow/Pillow> |
 | pyparsing | 3.3.2 | MIT | <https://github.com/pyparsing/pyparsing> |
 | PySide6 Essentials | 6.12.0 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only, or Qt commercial terms when separately obtained | <https://code.qt.io/cgit/pyside/pyside-setup.git/> |
@@ -143,7 +143,7 @@ Python/.NET implementation is not copied into the installed application.
 | macholib (macOS build) | 1.16.4 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
 | pefile (Windows build) | 2024.8.26 | MIT | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
 | pywin32-ctypes (Windows build) | 0.2.3 | permissive upstream license | `PLATFORM_SPECIFIC_DISTRIBUTIONS.txt` |
-| setuptools | 83.0.0 | MIT plus vendored notices | `PYTHON_DISTRIBUTIONS.txt` |
+| setuptools | 84.1.0 | MIT plus vendored notices | `PYTHON_DISTRIBUTIONS.txt` |
 | WixToolset.Sdk | 5.0.2 | Microsoft Reciprocal License | `WIX-5.0.2-MS-RL.txt` |
 
 PyInstaller's official documentation states that its exception permits distribution of generated
