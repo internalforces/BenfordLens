@@ -101,7 +101,7 @@ jobs:
 
   macos-arm64:
     needs: release-metadata
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 45
     env:
       RELEASE_VERSION: ${{ needs.release-metadata.outputs.version }}
