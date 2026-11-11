@@ -217,85 +217,85 @@
     {
       "license_documents": [
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSE",
           "sha256": "9850f6b5bdef7346503065807b878deb8058b976c5c329f4c4d23bf4796ce9ae"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/BOTTLENECK_LICENCE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/BOTTLENECK_LICENCE",
           "sha256": "f196618c1d51dfe6f7813e5ac6e2092b7b08266f45c6f033c7cad2a65cc80004"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/DATEUTIL_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/DATEUTIL_LICENSE",
           "sha256": "9313256b27c4a1b7666c433acbf70a447383df0ea8c4b59bee0b6e412a281f92"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/HAVEN_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/HAVEN_LICENSE",
           "sha256": "48216b40b3d1b19452923dd6fd74655bf5c0df9d76b51eb0efade7e0b88bfbcc"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/HAVEN_MIT",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/HAVEN_MIT",
           "sha256": "87217d0a79195441ab615a3abb3ab6777502e57804ea83f973df975a67ebd720"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/KLIB_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/KLIB_LICENSE",
           "sha256": "1f56e6ecc3595dfc8b1b919d5cef257aecedd7117ee3c0a8019586b56518e941"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/MUSL_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/MUSL_LICENSE",
           "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/NUMPY_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/NUMPY_LICENSE",
           "sha256": "263223390c43a9d4a0841e0209265fd927a198f8e89c8eee809b7437d7e5e8c2"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/PACKAGING_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/PACKAGING_LICENSE",
           "sha256": "de7e499c573f7aaf50a05db4369f2f5fb7a2742e60dea7bcffd4528e0482eb8a"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/PSF_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/PSF_LICENSE",
           "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/PYPERCLIP_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/PYPERCLIP_LICENSE",
           "sha256": "a72b0acc9389e4c17ced890ef1b03455e04978d39e25636099b93efb76b74ead"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/PYUPGRADE_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/PYUPGRADE_LICENSE",
           "sha256": "ec1e7339c4ff924852df2f5d74170120e3a722aab28c8b6ef20660c3dbe9a2b7"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/SAS7BDAT_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/SAS7BDAT_LICENSE",
           "sha256": "87f66446c8696b72fe695187e915dd409dcb3f44b0fe3454c227da986bbb026e"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/STATSBASE_JL_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/STATSBASE_JL_LICENSE",
           "sha256": "f371ccf0fb892a4cd9f2e550c4b8cf4362793d17028dc642ad55c1e01a41dfe1"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/ULTRAJSON_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/ULTRAJSON_LICENSE",
           "sha256": "36866344f0a486541bd9800f1a407a056c0c214a82c658f059694daf3dc394d2"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/LICENSES/XSIMD_LICENSE",
+          "path": "pandas-3.1.1.dist-info/licenses/LICENSES/XSIMD_LICENSE",
           "sha256": "501352acba62cc54e8e3d293754d606f919c9b425b962193c211f9fa29cd9940"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-APACHE",
+          "path": "pandas-3.1.1.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-APACHE",
           "sha256": "097a889aa954d04e088b790b10a4014d6189561d0a6013935a73ce3d4ddaaf06"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-BOOST",
+          "path": "pandas-3.1.1.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-BOOST",
           "sha256": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
         },
         {
-          "path": "pandas-3.1.0.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-MIT",
+          "path": "pandas-3.1.1.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-MIT",
           "sha256": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6"
         }
       ],
       "license_expression": "BSD-3-Clause",
       "name": "pandas",
-      "version": "3.1.0"
+      "version": "3.1.1"
     },
     {
       "license_documents": [
@@ -478,7 +478,7 @@
       "version": "1.17.0"
     }
   ],
-  "license_bundle_sha256": "a477a843a67e955a4b6972018dea87ade76091b1c6454705fc5ed697c517586a",
+  "license_bundle_sha256": "8989c07b09e8f27916db305e227585c27c9588882e3be4b2a496e8a2b9134e68",
   "platform_specific_locked_distributions": {
     "macholib": "1.16.4",
     "pefile": "2024.8.26",

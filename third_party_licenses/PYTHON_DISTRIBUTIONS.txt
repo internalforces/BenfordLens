@@ -4654,10 +4654,10 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ===============================================================================
-pandas 3.1.0
+pandas 3.1.1
 ===============================================================================
 
---- pandas-3.1.0.dist-info/licenses/LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSE ---
 
 BSD 3-Clause License
 
@@ -4691,7 +4691,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/BOTTLENECK_LICENCE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/BOTTLENECK_LICENCE ---
 
 Copyright (c) 2010-2019 Keith Goodman
 Copyright (c) 2019 Bottleneck Developers
@@ -4719,7 +4719,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/DATEUTIL_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/DATEUTIL_LICENSE ---
 
 Copyright 2017- Paul Ganssle <paul@ganssle.io>
 Copyright 2017- dateutil contributors (see AUTHORS file)
@@ -4776,7 +4776,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 The above BSD License Applies to all code, even that also covered by Apache 2.0.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/HAVEN_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/HAVEN_LICENSE ---
 
 # MIT License
 
@@ -4800,7 +4800,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/HAVEN_MIT ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/HAVEN_MIT ---
 
 Based on http://opensource.org/licenses/MIT
 
@@ -4835,7 +4835,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/KLIB_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/KLIB_LICENSE ---
 
 The MIT License
 
@@ -4861,7 +4861,7 @@ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/MUSL_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/MUSL_LICENSE ---
 
 musl as a whole is licensed under the following standard MIT license:
 
@@ -5057,7 +5057,7 @@ negated the permissions granted in the license. In the spirit of
 permissive licensing, and of not having licensing issues being an
 obstacle to adoption, that text has been removed.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/NUMPY_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/NUMPY_LICENSE ---
 
 Copyright (c) 2005-2023, NumPy Developers.
 All rights reserved.
@@ -5090,7 +5090,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/PACKAGING_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/PACKAGING_LICENSE ---
 
 
                                  Apache License
@@ -5295,7 +5295,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/PSF_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/PSF_LICENSE ---
 
 A. HISTORY OF THE SOFTWARE
 ==========================
@@ -5577,7 +5577,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/PYPERCLIP_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/PYPERCLIP_LICENSE ---
 
 Copyright (c) 2014, Al Sweigart
 All rights reserved.
@@ -5607,7 +5607,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/PYUPGRADE_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/PYUPGRADE_LICENSE ---
 
 Copyright (c) 2017 Anthony Sottile
 
@@ -5629,7 +5629,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/SAS7BDAT_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/SAS7BDAT_LICENSE ---
 
 Copyright (c) 2015-2019 Jared Hobbs
 
@@ -5651,7 +5651,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/STATSBASE_JL_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/STATSBASE_JL_LICENSE ---
 
 StatsBase.jl is licensed under the MIT License:
 
@@ -5677,7 +5677,7 @@ StatsBase.jl is licensed under the MIT License:
 > OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 > WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/ULTRAJSON_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/ULTRAJSON_LICENSE ---
 
 Developed by ESN, an Electronic Arts Inc. studio.
 Copyright (c) 2014, Electronic Arts Inc.
@@ -5794,7 +5794,7 @@ https://opensource.apple.com/source/tcl/tcl-14/tcl/license.terms
   permission to use and distribute the software in accordance with the
   terms specified in this license.
 
---- pandas-3.1.0.dist-info/licenses/LICENSES/XSIMD_LICENSE ---
+--- pandas-3.1.1.dist-info/licenses/LICENSES/XSIMD_LICENSE ---
 
 Copyright (c) 2016, Johan Mabille, Sylvain Corlay, Wolf Vollprecht and Martin Renou
 Copyright (c) 2016, QuantStack
@@ -5826,7 +5826,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
---- pandas-3.1.0.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-APACHE ---
+--- pandas-3.1.1.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-APACHE ---
 
                                  Apache License
                            Version 2.0, January 2004
@@ -6019,7 +6019,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    See the License for the specific language governing permissions and
    limitations under the License.
 
---- pandas-3.1.0.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-BOOST ---
+--- pandas-3.1.1.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-BOOST ---
 
 Boost Software License - Version 1.0 - August 17th, 2003
 
@@ -6045,7 +6045,7 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 
---- pandas-3.1.0.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-MIT ---
+--- pandas-3.1.1.dist-info/licenses/subprojects/fast_float-8.2.10/LICENSE-MIT ---
 
 MIT License
 
