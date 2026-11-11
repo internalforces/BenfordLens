@@ -24,7 +24,7 @@ RUNTIME_VERSIONS = {
     "numpy": "2.4.6",
     "openpyxl": "3.1.5",
     "packaging": "26.2",
-    "pandas": "3.1.0",
+    "pandas": "3.1.1",
     "pillow": "13.0.0",
     "pyparsing": "3.3.2",
     "pyside6-essentials": "6.12.0",
